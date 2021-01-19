@@ -1,7 +1,7 @@
 {
   "builders": {
-    "ng-expand": {
-      "implementation": "./src/builder.ts",
+    "expand": {
+      "implementation": "./dist/builder.js",
       "schema": "./src/schema.json",
       "description": "Expands the root angular.json from a project's angular.json."
     }

@@ -1,5 +1,5 @@
 {
-  "name": "@nowant/ng-expand",
+  "name": "@nowant/ng-build-expander",
   "version": "1.0.0",
   "description": "",
   "main": "dist/builder.js",
