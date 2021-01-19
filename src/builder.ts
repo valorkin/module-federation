@@ -27,12 +27,7 @@ const overrideLocalToRootPaths = (localProjectAngularJson: JsonObject, localRoot
       return;
     }
 
-    if (srcPattern.test(path)) {
-      targetProperty[targetPropertyKey] = prepandRootPath(path, localRootPath);
-      return;
-    }
-
-    if (fileExtensionsPattern.test(path)) {
+    if (srcPattern.test(path) || fileExtensionsPattern.test(path)) {
       targetProperty[targetPropertyKey] = prepandRootPath(path, localRootPath);
     }
   });
