@@ -4,6 +4,9 @@
   "properties": {
     "project": {
       "type": "string"
+    },
+    "projectsRootPath": {
+      "type": "string"
     }
   }
 }

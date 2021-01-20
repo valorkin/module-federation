@@ -1,9 +1,11 @@
 import { JsonObject } from '@angular-devkit/core';
 
+// with array
 export const isCommonObject = (item: any): boolean => {
   return (item !== null && typeof item === 'object');
 }
 
+// without array
 export const isObject = (item: any): boolean => {
   return (isCommonObject(item) && !Array.isArray(item));
 }
