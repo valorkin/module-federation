@@ -6,7 +6,8 @@
   "builders": "builders.json",
   "scripts": {
     "build": "tsc",
-    "test": "ts-node node_modules/jasmine/bin/jasmine src/builder.spec.ts"
+    "test": "ts-node node_modules/jasmine/bin/jasmine src/builder.spec.ts",
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "",
