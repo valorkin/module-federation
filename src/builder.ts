@@ -1,5 +1,4 @@
 import { BuilderOutput, createBuilder } from '@angular-devkit/architect';
-import { JsonObject } from '@angular-devkit/core';
 
 import { mergeDeep, traverse } from './object.util';
 import { readFileAsJson, writeFileAsJson } from './file.util';
@@ -9,6 +8,7 @@ import { BuilderOptions, JsonObjectMaps } from './builder.interface';
  * Helper function
  */
 const prepandRootPath = (path: string, rootPath: string): string => {
+  // Regexp pattern to remove `./`, `../` or `/` chars from the path start
   const cleanPath = path.replace(/^\.[.]?\/|^\//, '');
   return `${rootPath}/${cleanPath}`;
 }
@@ -16,18 +16,34 @@ const prepandRootPath = (path: string, rootPath: string): string => {
 /**
  * Helper function
  */
-const overrideLocalInToRootPaths = (localProjectAngularJson: JsonObject, localRootPath: string): void => {
-  // Regexp pattern to define source paths `src/*`
-  const srcPattern = /^[.]?[/]?src[/]?/;
+const createDirectoryPattern = (directory: string): RegExp => {
+  return new RegExp(`^[.]?[/]?${directory}[/]?`);
+}
+
+/**
+ * Helper function
+ */
+const overrideLocalInToRootPaths = (localProjectAngularJson: any, localRootPath: string): void => {
+  // Regexp pattern to define dirs such as `src/*`, `dist/*`
+  const directoryPatterns = ['src', 'dist']
+    .map(directory => createDirectoryPattern(directory));
+
   // Regexp pattern to define file paths such as `tsconfig.app.json`
   const fileExtensionsPattern = /\.[^/.]+$/;
+
+  // override local root path
+  localProjectAngularJson.root = localProjectAngularJson.root
+    ? prepandRootPath(localProjectAngularJson.root, localRootPath)
+    : localRootPath;
 
   traverse(localProjectAngularJson, (targetPropertyKey: string, path: any, targetProperty: any): void => {
     if (typeof path !== 'string') {
       return;
     }
 
-    if (srcPattern.test(path) || fileExtensionsPattern.test(path)) {
+    const isDirectoryPattern = directoryPatterns.some(pattern => pattern.test(path));
+
+    if (isDirectoryPattern || fileExtensionsPattern.test(path)) {
       targetProperty[targetPropertyKey] = prepandRootPath(path, localRootPath);
     }
   });
@@ -46,7 +62,7 @@ function builder(options: BuilderOptions) {
       .catch(error => reject(error)) as JsonObjectMaps;
 
     // getting local project's config from root `angular.json`
-    const rootProjectAngularJson = rootAngularJson.projects[options.project] as JsonObject || {};
+    const rootProjectAngularJson = rootAngularJson.projects[options.project] as JsonObjectMaps || {};
 
     // getting local project's `projects/project/angular.json`
     const localProjectsRootPath = options.projectsRootPath || rootAngularJson.newProjectRoot;
@@ -56,7 +72,7 @@ function builder(options: BuilderOptions) {
       .catch(error => reject(error)) as JsonObjectMaps;
 
     // getting local project's config from local `projects/project/angular.json`
-    const localProjectAngularJson = localAngularJson.projects[options.project] as JsonObject || {};
+    const localProjectAngularJson = localAngularJson.projects[options.project] as JsonObjectMaps || {};
 
     // overriding local paths `src/` into root paths `projects/project/src`
     // overriding file paths `tsconfig.app.json` into root paths `projects/project/tsconfig.app.json`
