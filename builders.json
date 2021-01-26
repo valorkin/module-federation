@@ -1,9 +1,9 @@
 {
   "builders": {
-    "expand": {
-      "implementation": "./dist/builder.js",
-      "schema": "./src/schema.json",
-      "description": "Expands the root angular.json from a project's angular.json."
+    "browser": {
+      "implementation": "./dist/browser/index.js",
+      "schema": "./src/browser/schema.json",
+      "description": "Builds and expands a local project from the root"
     }
   }
 }
