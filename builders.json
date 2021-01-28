@@ -4,6 +4,11 @@
       "implementation": "./dist/browser/index.js",
       "schema": "./src/browser/schema.json",
       "description": "Builds and expands a local project from the root"
+    },
+    "dev-server": {
+      "implementation": "./dist/dev-server/index.js",
+      "schema": "./src/dev-server/schema.json",
+      "description": "Serves and expands a local project from the root"
     }
   }
 }
