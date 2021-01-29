@@ -67,7 +67,9 @@ export const expandWorkspaceOptions = async (options: any, context: BuilderConte
     const projectFromLocalAngularJson = projectLocalAngularJson.projects[projectName] as any || {};
     const projectFromLocalAngularJsonArchitect = projectFromLocalAngularJson.architect[projectCommand] || {};
     const projectFromLocalAngularJsonOptions = projectFromLocalAngularJsonArchitect.options || {};
-    const projectFromLocalAngularJsonConfigurations = projectFromLocalAngularJsonArchitect.configurations[projectConfiguration] || {};
+    const projectFromLocalAngularJsonConfigurations = projectFromLocalAngularJsonArchitect.configurations
+      ? projectFromLocalAngularJsonArchitect.configurations[projectConfiguration] || {}
+      : {};
 
     // overriding local paths `src/` into root paths `projects/project/src`
     // overriding file paths `tsconfig.app.json` into root paths `projects/project/tsconfig.app.json`

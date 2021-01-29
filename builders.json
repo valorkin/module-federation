@@ -3,12 +3,17 @@
     "browser": {
       "implementation": "./dist/browser/index.js",
       "schema": "./src/browser/schema.json",
-      "description": "Builds and expands a local project from the root"
+      "description": "Builds a local project"
     },
     "dev-server": {
       "implementation": "./dist/dev-server/index.js",
       "schema": "./src/dev-server/schema.json",
-      "description": "Serves and expands a local project from the root"
+      "description": "Serves a local project"
+    },
+    "karma": {
+      "implementation": "./dist/karma/index.js",
+      "schema": "./src/karma/schema.json",
+      "description": "Run the unit tests from a local project"
     }
   }
 }
