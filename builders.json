@@ -2,17 +2,17 @@
   "builders": {
     "browser": {
       "implementation": "./dist/browser/index.js",
-      "schema": "./src/browser/schema.json",
+      "schema": "./node_modules/ngx-build-plus/src/browser/schema.json",
       "description": "Builds a local project"
     },
     "dev-server": {
       "implementation": "./dist/dev-server/index.js",
-      "schema": "./src/dev-server/schema.json",
+      "schema": "./node_modules/ngx-build-plus/src/plus-dev-server/schema.json",
       "description": "Serves a local project"
     },
     "karma": {
       "implementation": "./dist/karma/index.js",
-      "schema": "./src/karma/schema.json",
+      "schema": "./node_modules/ngx-build-plus/src/karma/schema.json",
       "description": "Run the unit tests from a local project"
     }
   }
