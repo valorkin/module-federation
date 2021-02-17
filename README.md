@@ -1,13 +1,19 @@
 # Overview
 
-This builder helps to expand root `angular.json` from local `projects/project/angular.json`
+This builder helps to expand the root `angular.json` from a local `projects/project/angular.json`
 
 
 ## Steps to run this
 
 #### Prerequisites
 
-Make sure you have `npm` available on your system
+Make sure you have `yarn` available on your system
 ```bash
-npm install && npm run build
+yarn install
+```
+
+#### Build command
+
+```bash
+npm run build
 ```

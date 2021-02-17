@@ -1,19 +1,27 @@
 {
-  "name": "@valorkin/ng-build-expander",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/builder.js",
+  "name": "@nowant/ng-build-expander",
+  "version": "0.0.3",
+  "description": "Expands the Angular Workspace targets!",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valorkin/ng-build-expander"
+  },
+  "main": "src/index.ts",
+  "typings": "src/index.d.ts",
   "builders": "builders.json",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@angular/compiler": "~11.0.9",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@angular-devkit/build-angular": ">=0.1100.7",
+    "rxjs": ">=6.0.0",
+    "ngx-build-plus": ">=11.0.0"
   },
   "devDependencies": {
     "@angular-devkit/architect": "~0.1100.7",

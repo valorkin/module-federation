@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": "tsconfig",
-    "target": "es6",
+    "baseUrl": "",
+    "target": "es2016",
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "dist",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -14,8 +13,23 @@
     "noUnusedLocals": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "strictNullChecks": true,
-    "types": ["node", "jasmine"]
-  }
+    "types": ["node", "jasmine"],
+    "lib": [
+      "es2017"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+  },
+  "exclude": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "packages/_/devkit/**/*files/**/*",
+    "packages/schematics/*/*/*files/**/*",
+    "tmp/**/*",
+    "scripts/patches/**/*",
+    "tests/**/*"
+  ]
 }
