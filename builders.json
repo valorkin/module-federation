@@ -2,17 +2,17 @@
   "builders": {
     "browser": {
       "implementation": "./src/browser",
-      "schema": "./node_modules/ngx-build-plus/src/browser/schema.json",
-      "description": "Extends and build the build target from a local project"
+      "schema": "./src/browser/schema.json",
+      "description": "Extends and builds the build target from a local project"
     },
     "dev-server": {
       "implementation": "./src/dev-server",
-      "schema": "./node_modules/ngx-build-plus/src/plus-dev-server/schema.json",
+      "schema": "./src/dev-server/schema.json",
       "description": "Extends and serves the serve target from a local project"
     },
     "karma": {
       "implementation": "./src/karma",
-      "schema": "./node_modules/ngx-build-plus/src/karma/schema.json",
+      "schema": "./src/karma/schema.json",
       "description": "Extends and runs the test target from a local project"
     }
   }
