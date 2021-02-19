@@ -27,7 +27,7 @@ export async function serveWebpackBrowser(options: any, context: BuilderContext,
   const expandedOptions = await expandWorkspaceOptions(options, context)
     .catch(error => console.log(error));
 
-  const overridedContext = overrideBuilderContext(options.browserTarget, context);
+  const overridedContext = overrideBuilderContext(expandedOptions.browserTarget, context);
   return serveWebpackBrowserPlus(expandedOptions, overridedContext, transforms)
     .toPromise();
 }
