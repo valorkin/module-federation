@@ -1,6 +1,6 @@
 {
   "name": "@nowant/ng-build-expander",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Expands the Angular Workspace targets!",
   "license": "MIT",
   "repository": {

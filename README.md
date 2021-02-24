@@ -1,19 +1,92 @@
-# Overview
+# ng-build-expander: expand your workspace from another one
 
-This builder helps to expand the root `angular.json` from a local `projects/project/angular.json`
+`ng-build-expander` is an Angular build expander that allows you to conveniently expand your current workspace (`angular.json`) from another one. There are `build`, `serve`, and `test` targets available.
 
+## Getting started
 
-## Steps to run this
+### Install correct dependency versions
 
-#### Prerequisites
+Requirements:
 
-Make sure you have `yarn` available on your system
-```bash
-yarn install
+* Make sure you have `yarn` available on your system;
+* Use Angular >=11.0.7;
+* Use Webpack >=5.18.0.
+
+#### How to use
+
+Please, carefully read following instructions below to configure `ng-build-expander`:
+
+1. Create two Angular projects using the CLI: `app1` and `app2`
+2. Go to `app1` project, create `/projects` directory and move `app2` project there.
+3. Go to `app1` root directory and install ng-build-expander using following command: `yarn add @nowant/ng-build-expander`
+4. Open `app1` `angular.json` and include `app2` project to expand its options, like so:
+
+```json
+{
+  ...
+  "architect": {
+    ...
+     "app2": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "packages/app2",
+      "sourceRoot": "packages/app2/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@nowant/ng-build-expander:browser",
+          "configurations": {
+            "production": {}
+          }
+        },
+        "serve": {
+          "builder": "@nowant/ng-build-expander:dev-server",
+          "options": {
+            "port": 4202
+          },
+          "configurations": {
+            "production": {}
+          }
+        },
+        "test": {
+          "builder": "@nowant/ng-build-expander:karma"
+        },
+        ...
+      }
+    }
+  }
+}
 ```
 
-#### Build command
+5. Now you're able to run following commands from `app1` root directory:
 
-```bash
-npm run build
-```
+Build commands:
+
+* `ng run app2:build`
+
+* `ng run app2:build --configuration=production`
+
+Serve commands:
+
+* `ng run app2:serve`
+* `ng run app2:serve --configuration=production`
+
+Test commands:
+
+* `ng run app2:test`
+
+1. Have fun ;)
+
+## Webpack version-specific issues
+
+If you can't install webpack>=5.0.0:
+
+* Remove `node_modules`, `yarn.lock`
+* Add following your `package.json`:
+
+  ```json
+  "resolutions": {
+    "webpack": "^5.0.0"
+  }
+
+* `yarn install`
