@@ -19,12 +19,12 @@ Please, carefully read following instructions below to configure `ng-build-expan
 1. Create two Angular projects using the CLI: `app1` and `app2`
 2. Go to `app1` project, create `/projects` directory and move `app2` project there.
 3. Go to `app1` root directory and install ng-build-expander using following command: `yarn add @nowant/ng-build-expander`
-4. Open `app1` `angular.json` and include `app2` project to expand its options, like so:
+4. Open `app1` `angular.json` and include `app2` project in `projects` to expand its options, like so:
 
 ```json
 {
   ...
-  "architect": {
+  "projects": {
     ...
      "app2": {
       "projectType": "application",
@@ -63,7 +63,6 @@ Please, carefully read following instructions below to configure `ng-build-expan
 Build commands:
 
 * `ng run app2:build`
-
 * `ng run app2:build --configuration=production`
 
 Serve commands:
@@ -75,14 +74,14 @@ Test commands:
 
 * `ng run app2:test`
 
-1. Have fun ;)
+6. Have fun ;)
 
 ## Webpack version-specific issues
 
 If you can't install webpack>=5.0.0:
 
-* Remove `node_modules`, `yarn.lock`
-* Add following your `package.json`:
+* Remove `node_modules`, `yarn.lock`, `package-lock.json`
+* Add following to your `package.json`:
 
   ```json
   "resolutions": {
