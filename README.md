@@ -1,6 +1,6 @@
 # ng-build-expander: expand your workspace from another one
 
-`ng-build-expander` is an Angular build expander that allows you to conveniently expand your current workspace (`angular.json`) from another one. There are `build`, `serve`, and `test` targets available.
+`ng-build-expander` is an Angular build expander that allows you to conveniently expand your current workspace (`angular.json`) from another one. There are `build`, `serve`, `extract-i18n`, and `test` targets available.
 
 ## Getting started
 
@@ -48,6 +48,9 @@ Please, carefully read following instructions below to configure `ng-build-expan
             "production": {}
           }
         },
+        "extract-i18n": {
+          "builder": "@nowant/ng-build-expander:extract-i18n"
+        },
         "test": {
           "builder": "@nowant/ng-build-expander:karma"
         },
@@ -69,6 +72,10 @@ Serve commands:
 
 * `ng run app2:serve`
 * `ng run app2:serve --configuration=production`
+
+Extract i18n commands:
+
+* `ng run app2:extract-i18n`
 
 Test commands:
 
