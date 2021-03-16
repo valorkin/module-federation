@@ -12,7 +12,7 @@ export const readFileAsJson = (path: string, format = 'utf8'): Promise<JsonObjec
   });
 }
 
-export const writeFileAsJson = async (path: string, data: JsonObject, format = 'utf8'): Promise<void> => {
+export const writeFileAsJson = async (path: string, data: any, format = 'utf8'): Promise<void> => {
   try {
     return await promises.writeFile(path, JSON.stringify(data, null, 2), format);
   } catch (error) {
