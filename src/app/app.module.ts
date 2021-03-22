@@ -3,6 +3,7 @@ import { createCustomElement } from '@angular/elements';
 import { BrowserModule } from '@angular/platform-browser';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { AppComponent } from './app.component';
+import { PluginLauncherComponent } from './plugin-launcher/plugin-launcher.component';
 import { PluginLauncherModule } from './plugin-launcher/plugin-launcher.module';
 
 @NgModule({
@@ -15,12 +16,11 @@ import { PluginLauncherModule } from './plugin-launcher/plugin-launcher.module';
     AlertModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [AppComponent]
+  entryComponents: [PluginLauncherComponent]
 })
 export class AppModule {
   constructor(readonly injector: Injector) {
-    const ngElement = createCustomElement(AppComponent, {injector});
+    const ngElement = createCustomElement(PluginLauncherComponent, {injector});
     customElements.define('ngce-alert', ngElement);
   }
 
