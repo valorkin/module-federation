@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
+import { AlertModule } from 'ngx-bootstrap/alert';
 import { AppComponent } from './app.component';
+import { PluginLauncherModule } from './plugin-launcher/plugin-launcher.module';
 
 @NgModule({
   declarations: [
@@ -10,9 +11,19 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    PluginLauncherModule,
+    AlertModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(readonly injector: Injector) {
+    const ngElement = createCustomElement(AppComponent, {injector});
+    customElements.define('ngce-alert', ngElement);
+  }
+
+  ngDoBootstrap() {
+  }
+}
