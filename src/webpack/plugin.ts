@@ -114,6 +114,12 @@ export const executePlugin = async (options: IPluginsJsonGeneratorInternalOption
       modules: []
     }
 
+    const issues = remotePackageJson?.bugs ? remotePackageJson.bugs.url : null;
+
+    if (issues) {
+      descriptor.issues = issues;
+    }
+
     const rootRemotesDir = join(options.remotesDir, '../');
     const remoteWebpackPath = `${options.remotesDir}${remoteAppName}/webpack.extra.js`;
     descriptor.modules = await readModuleDescriptors(rootRemotesDir, remoteWebpackPath);
