@@ -62,32 +62,36 @@ import { TOPIC_SYSTEM_PLUGIN } from '../../api/events/default-topics';
  */
 @Injectable({ providedIn: 'root' })
 export class PluginManagerService implements OnDestroy {
-    private registry: Map<string, RegistrationEntry> = new Map<string, RegistrationEntry>();
+  private registry: Map<string, RegistrationEntry> = new Map<string, RegistrationEntry>();
 
-    constructor(private lookupService: LookupService, /*private messageBus: MessagingService,*/
-                private topics: MessagingTopics) {
+  constructor(private lookupService: LookupService, /*private messageBus: MessagingService,*/
+              private topics: MessagingTopics) {
+    this.getConfigurationFromWindow();
+  }
+
+  register(descriptor: Partial<PluginDescriptor>): void {
+      // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('register', 'start', descriptor.name));
+      this.registry.set(descriptor.name, new RegistrationEntry(descriptor));
+      // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('register', 'end', descriptor.name));
+  }
+
+
+  ngOnDestroy(): void {
+      // todo: do proper cleanup of subscribers also here.
+      this.registry.clear();
+  }
+
+  private getConfigurationFromWindow(): void {
+    const plugins: Array<Partial<PluginDescriptor>> = window.__appShellPluginsJson__;
+
+    if (!plugins) {
+      throw new Error(`CustomElementsPluginLauncherPluginsJsonResolveError: Configuration of 'plugins.json' is not provided`);
     }
 
-    loadConfiguration(plugins: Array<Partial<PluginDescriptor>>): void {
-        // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('configuration', 'start'));
-        plugins.forEach(c => this.lookupService.addPlugin(c));
-        // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('configuration', 'end'));
-    }
-
-
-    register(descriptor: Partial<PluginDescriptor>): void {
-        // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('register', 'start', descriptor.name));
-        this.registry.set(descriptor.name, new RegistrationEntry(descriptor));
-        // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('register', 'end', descriptor.name));
-    }
-
-
-    ngOnDestroy(): void {
-        // todo: do proper cleanup of subscribers also here.
-        this.registry.clear();
-    }
-
-
+    // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('configuration', 'start'));
+    plugins.forEach(c => this.lookupService.addPlugin(c));
+    // this.messageBus.publish(TOPIC_SYSTEM_PLUGIN, createMessage('configuration', 'end'));
+  }
 }
 
 function createMessage(type: string, status: string, pluginName?: string): MapMessage<string> {
