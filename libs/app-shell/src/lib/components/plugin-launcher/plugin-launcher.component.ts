@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Compiler,
     Component,
+    Injector,
     ElementRef,
     Input,
     Output,
@@ -13,7 +14,8 @@ import {
     Renderer2,
     SimpleChanges,
     Type,
-    ViewChild
+    ViewChild,
+    NgZone
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { loadRemoteModule } from '../../api/plugins/federation-utils';
@@ -25,12 +27,16 @@ import {
 } from '../../api/plugins/lookup/plugin-descriptor.model';
 import { LookupService } from '../../api/plugins/lookup/lookup.service';
 import { PluginManagerService } from '../../api/plugins/plugin-manager.service';
+import { getBaseUrl } from '../../api/urls/url-utils';
+import { REMOTE_BASE_URL } from '../../tokens';
+import { overrideElementUrls } from '../../api/urls/url-dom-utils';
 
 @Component({
     selector: 'fds-plugin-launcher',
     styleUrls: ['./plugin-launcher.component.scss'],
     template: `
-        <ng-container *ngComponentOutlet="_ngComponent; ngModuleFactory: _ngModule"></ng-container>
+        <ng-container *ngComponentOutlet="_ngComponent; ngModuleFactory: _ngModule; injector: _ngComponentInjector">
+        </ng-container>
         <iframe
             *ngIf="_safeIframeUri"
             #iframe
@@ -64,6 +70,9 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     @ViewChild('iframe', { static: false })
     iframeEl: ElementRef;
 
+    baseUrl: string;
+
+    _ngComponentInjector: Injector;
     _ngComponent: Type<any>;
     _ngModule: NgModuleFactory<any>;
 
@@ -75,10 +84,12 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         private readonly _elementRef: ElementRef,
         private readonly _cd: ChangeDetectorRef,
         private readonly _render: Renderer2,
-        private readonly pluginManagerService: PluginManagerService,
-        private readonly lookupService: LookupService,
+        private readonly injector: Injector,
+        private readonly ngZone: NgZone,
         private readonly sanitizer: DomSanitizer,
-        private readonly compiler: Compiler) {
+        private readonly compiler: Compiler,
+        private readonly pluginManagerService: PluginManagerService,
+        private readonly lookupService: LookupService) {
     }
 
     async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -118,6 +129,8 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         if (!remoteModule) {
             return;
         }
+
+        this.baseUrl = getBaseUrl(this.descriptor.uri);
 
         const moduleOrCustomElementName = remoteModule[pluginModule.name];
         const isNotIframeType = pluginModule.type !== 'iframe' && !this.iframeUri;
@@ -200,6 +213,7 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         }
 
         this._render.appendChild(this._elementRef.nativeElement, element);
+        this.overrideElementUrls();
     }
 
     private async renderComponent(module: any, pluginModule: AngularIvyComponentDescriptor, remoteModule: DescriptorsModule): Promise<void> {
@@ -228,6 +242,8 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
             );
         }
 
+        this.injectBaseUrlToComponent();
+        this.overrideElementUrls();
         this._cd.detectChanges();
     }
 
@@ -237,5 +253,30 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
             : error;
 
         this.error.emit(message);
+    }
+
+    private overrideElementUrls() {
+        this.ngZone.runOutsideAngular(() =>
+            window.setTimeout(() => {
+                overrideElementUrls(this._elementRef.nativeElement, this.baseUrl);
+            })
+        );
+    }
+
+    /**
+     * Injects the domain name to dynamically created component
+     * To be used for UrlOverriderPipe
+     */
+    private injectBaseUrlToComponent() {
+        this._ngComponentInjector = Injector.create({
+            providers: [
+                {
+                    provide: REMOTE_BASE_URL,
+                    deps: [],
+                    useValue: this.baseUrl
+                },
+            ],
+            parent: this.injector
+        })
     }
 }
