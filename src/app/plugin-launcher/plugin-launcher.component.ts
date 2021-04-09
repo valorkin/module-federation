@@ -112,6 +112,18 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
       return;
     }
 
+    const isIframeByPluginType = pluginModule.type === 'iframe';
+    const isNotIframeType = !isIframeByPluginType && !this.iframeUri;
+
+    if (isNotIframeType) {
+      this._safeIframeUri = null;
+    }
+
+    if (isIframeByPluginType) {
+      // if module type is an iframe we should not load one as a remote module
+      return this.renderIframe(descriptor, pluginModule as IframePageDescriptor);
+    }
+
     const remoteModule = await this.loadRemoteModule(descriptor, pluginModule)
       .catch((error) => this.dispatchError(error));
 
@@ -120,15 +132,6 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     }
 
     const moduleOrCustomElementName = remoteModule[pluginModule.name];
-    const isNotIframeType = pluginModule.type !== 'iframe' && !this.iframeUri;
-
-    if (isNotIframeType) {
-      this._safeIframeUri = null;
-    }
-
-    if (pluginModule.type === 'iframe') {
-      return this.renderIframe(descriptor, pluginModule);
-    }
 
     if (pluginModule.type === 'custom-element') {
       return this.renderCustomElement(moduleOrCustomElementName);
