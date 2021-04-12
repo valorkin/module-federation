@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "concat": "cat dist/ng-elements/runtime.7b63b9fd40098a2e8207.js dist/ng-elements/polyfills.00096ed7d93ed26ee6df.js dist/ng-elements/main.6fcd0da2730f8b85b658.js > dist/ng-elements/ngel-injector.min.js"
   },
   "private": true,
   "dependencies": {

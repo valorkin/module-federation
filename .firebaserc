@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "module-federation"
+  },
+  "targets": {
+    "module-federation": {
+      "hosting": {
+        "ngel-injector": [
+          "ng-el-injector"
+        ]
+      }
+    }
   }
 }

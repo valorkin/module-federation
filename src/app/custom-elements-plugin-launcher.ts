@@ -15,9 +15,10 @@ import { PluginLauncherModule } from './plugin-launcher/plugin-launcher.module';
 export class CustomElementsPluginLauncher {
   constructor(readonly injector: Injector) {
     const ngElement = createCustomElement(PluginLauncherComponent, {injector});
-    customElements.define('ngce-alert', ngElement);
+    customElements.define('ngel-injector', ngElement);
   }
 
+  // tslint:disable-next-line:typedef
   ngDoBootstrap() {
   }
 }

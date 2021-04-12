@@ -1,5 +1,6 @@
 {
-  "hosting": {
+  "hosting": [{
+    "target": "ngel-injector",
     "public": "dist/ng-elements",
     "ignore": [
       "firebase.json",
@@ -12,5 +13,5 @@
         "destination": "/index.html"
       }
     ]
-  }
+  }]
 }
