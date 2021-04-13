@@ -10,7 +10,7 @@ const mfe6Config = {
   main: 'main',
   port: 4206,
   publicPath: 'http://localhost:4206/',
-  projectRoot: '../packages/webcomp-auth-app',
+  projectRoot: './',
   plugins: [
     new CleanWebpackPlugin()
   ],
@@ -18,7 +18,7 @@ const mfe6Config = {
     "rxjs"
   ],
   exposes: {
-    './Login': '../packages/webcomp-auth-app/component',
+    './Login': './component',
   }
 };
 
@@ -29,7 +29,7 @@ function _webComponentConfigTemplate(projectConfig) {
     entry: `${projectRoot}/${main}`,
     mode: "development",
     devServer: {
-      contentBase: path.normalize(path.join(__dirname, '../dist', projectName)),
+      contentBase: path.normalize(path.join(__dirname, '../../dist', projectName)),
       port
     },
     module: {
@@ -48,7 +48,7 @@ function _webComponentConfigTemplate(projectConfig) {
     output: {
       publicPath,
       uniqueName: name,
-      path: path.normalize(path.normalize(path.join(__dirname, '../dist', projectName))),
+      path: path.normalize(path.normalize(path.join(__dirname, '../../dist', projectName))),
       filename: '[name].js'
     },
     resolve: {

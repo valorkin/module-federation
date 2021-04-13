@@ -19,7 +19,7 @@
     "c-serve-04": "ng serve content-recommended-categories --no-watch",
     "c-serve-05": "ng serve nx-app --no-watch",
     "c-serve-06": "ng serve ngrx-app --no-watch",
-    "c-serve-07": "npm start --prefix mf-builder",
+    "c-serve-07": "cd ./packages/webcomp-auth-app/ && npm start",
     "c-serve-08": "cd ./packages/iframe-source-website/ && ng serve --port 5400 --no-watch --no-progress",
     "c-serve-09": "cd ./packages/cflp-app/ && ng serve --port 5000 --no-watch --no-progress"
   },
@@ -47,6 +47,7 @@
     "@angular/router": "11.0.0-next.6",
     "@fundamental-ngx/app-shell": "0.2.38",
     "@fundamental-ngx/core": "0.24.1",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
     "rxjs": "6.6.0",
     "terser": "5.3.7",
     "tslib": "2.0.0",
