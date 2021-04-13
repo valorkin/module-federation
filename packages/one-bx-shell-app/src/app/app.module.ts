@@ -37,7 +37,7 @@ import {
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot(APP_ROUTES),
+    RouterModule.forRoot(APP_ROUTES, { relativeLinkResolution: 'legacy' }),
     HttpClientModule,
     FormsModule,
     IconModule,
