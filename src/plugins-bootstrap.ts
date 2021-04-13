@@ -7,7 +7,12 @@ export const loadPluginsJson = (): Promise<void> => {
     const pathToFile = './assets/config/plugins.json';
     const response = await window.fetch(pathToFile) as Response;
 
-    const json = response.ok ? await response.json() : [];
+    let json = [];
+    try {
+      if (response.ok) {
+        json = await response.json();
+      }
+    } catch (e) {}
     const windowConfig = Array.isArray(window.__appShellPluginsJson__) ? window.__appShellPluginsJson__ : [];
 
     window.__appShellPluginsJson__ = json.concat(windowConfig);
