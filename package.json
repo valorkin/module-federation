@@ -7,11 +7,10 @@
   "scripts": {
     "start": "concurrently \"npm:c-serve-*\"",
     "start:prod": "concurrently \"npm:c-serve-*\" -- --prod",
-    "postinstall": "lerna bootstrap && npm run inst:builder",
+    "postinstall": "lerna bootstrap",
     "lerna": "lerna",
     "ng": "ng",
     "build": "ng build",
-    "inst:builder": "yarn --cwd mf-builder",
     "//01": "commands to serve all the apps in parallel",
     "c-serve-01-shell": "ng serve one-bx-shell-app --no-watch",
     "c-serve-02": "ng serve content-req-app --no-watch",
@@ -19,7 +18,7 @@
     "c-serve-04": "ng serve content-recommended-categories --no-watch",
     "c-serve-05": "ng serve nx-app --no-watch",
     "c-serve-06": "ng serve ngrx-app --no-watch",
-    "c-serve-07": "cd ./packages/webcomp-auth-app/ && npm start",
+    "c-serve-07": "npm start --prefix ./packages/webcomp-auth-app/",
     "c-serve-08": "cd ./packages/iframe-source-website/ && ng serve --port 5400 --no-watch --no-progress",
     "c-serve-09": "cd ./packages/cflp-app/ && ng serve --port 5000 --no-watch --no-progress"
   },
