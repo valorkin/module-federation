@@ -20,7 +20,9 @@
     "@angular/platform-browser": "~11.2.9",
     "@angular/platform-browser-dynamic": "~11.2.9",
     "@angular/router": "~11.2.9",
+    "@fundamental-ngx/app-shell": "^0.2.38",
     "@fundamental-ngx/core": "0.28.1",
+    "@pscoped/ngx-pub-sub": "^3.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
