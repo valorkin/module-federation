@@ -23,6 +23,7 @@
     "@fundamental-ngx/app-shell": "^0.2.38",
     "@fundamental-ngx/core": "0.28.1",
     "@pscoped/ngx-pub-sub": "^3.0.0",
+    "ngx-build-plus": "^11.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
@@ -46,5 +47,8 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.0.7"
+  },
+  "resolutions": {
+    "webpack": "^5.4.0"
   }
 }
