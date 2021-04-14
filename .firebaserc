@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "default": "module-federation"
+  },
+  "targets": {
+    "module-federation": {
+      "hosting": {
+        "mf-demo-cflp-app": [
+          "mf-demo-cflp-app"
+        ],
+        "mf-demo-cnt-rcmmnd-cats": [
+          "mf-demo-cnt-rcmmnd-cats"
+        ],
+        "mf-demo-one-bx-shell-app": [
+          "mf-demo-one-bx-shell-app"
+        ]
+      }
+    }
+  }
+}
