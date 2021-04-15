@@ -35,6 +35,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "mf-demo-content-req-app",
+      "public": "packages/content-req-app/dist/content-req-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }

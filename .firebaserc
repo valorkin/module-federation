@@ -16,6 +16,9 @@
         ],
         "mf-demo-content-item-app": [
           "mf-demo-content-item-app"
+        ],
+        "mf-demo-content-req-app": [
+          "mf-demo-content-req-app"
         ]
       }
     }
