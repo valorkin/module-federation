@@ -22,6 +22,9 @@
         ],
         "mf-demo-iframe-source-website": [
           "mf-demo-iframe-source-website"
+        ],
+        "mf-demo-ngrx-app": [
+          "mf-demo-ngrx-app"
         ]
       }
     }
