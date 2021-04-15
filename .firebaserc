@@ -25,6 +25,9 @@
         ],
         "mf-demo-ngrx-app": [
           "mf-demo-ngrx-app"
+        ],
+        "mf-demo-webcomp-auth-app": [
+          "mf-demo-webcomp-auth-app"
         ]
       }
     }

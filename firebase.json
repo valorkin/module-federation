@@ -62,6 +62,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "mf-demo-webcomp-auth-app",
+      "public": "packages/webcomp-auth-app/dist/auth-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }
