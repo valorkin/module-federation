@@ -13,6 +13,9 @@
         ],
         "mf-demo-one-bx-shell-app": [
           "mf-demo-one-bx-shell-app"
+        ],
+        "mf-demo-content-item-app": [
+          "mf-demo-content-item-app"
         ]
       }
     }

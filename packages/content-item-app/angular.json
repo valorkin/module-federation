@@ -11,7 +11,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/content-item-app",
             "index": "src/index.html",
@@ -19,6 +19,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "deployUrl": "http://localhost:4202/",
+            "extraWebpackConfig": "webpack.extra.js",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -36,11 +38,12 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "deployUrl": "https://mf-demo-content-item-app.web.app/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
@@ -59,9 +62,11 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "content-item-app:build"
+            "browserTarget": "content-item-app:build",
+            "extraWebpackConfig": "webpack.extra.js",
+            "port": 4202
           },
           "configurations": {
             "production": {

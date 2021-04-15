@@ -22,8 +22,8 @@ module.exports = {
       library: { type: 'var', name: name },
       filename: 'remoteEntry.js',
       exposes: {
-        './CatalogItem': './packages/content-item-app/src/app/item-page/item-page.module.ts',
-        './YourFavorites': './packages/content-item-app/src/app/your-favorites/your-favorites.module.ts',
+        './CatalogItem': './src/app/item-page/item-page.module.ts',
+        './YourFavorites': './src/app/your-favorites/your-favorites.module.ts',
       },
       shared: [
         sharedDep('@angular/core'),

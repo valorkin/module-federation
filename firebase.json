@@ -26,6 +26,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "mf-demo-content-item-app",
+      "public": "packages/content-item-app/dist/content-item-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }
