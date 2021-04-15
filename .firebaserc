@@ -19,6 +19,9 @@
         ],
         "mf-demo-content-req-app": [
           "mf-demo-content-req-app"
+        ],
+        "mf-demo-iframe-source-website": [
+          "mf-demo-iframe-source-website"
         ]
       }
     }

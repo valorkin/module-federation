@@ -44,6 +44,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "mf-demo-iframe-source-website",
+      "public": "packages/iframe-source-website/dist/iframe-source-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }
