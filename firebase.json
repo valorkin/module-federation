@@ -71,6 +71,15 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "mf-demo-nx-app",
+      "public": "packages/nx-app/dist/nx-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
   ]
 }

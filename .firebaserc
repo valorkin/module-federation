@@ -28,6 +28,9 @@
         ],
         "mf-demo-webcomp-auth-app": [
           "mf-demo-webcomp-auth-app"
+        ],
+        "mf-demo-nx-app": [
+          "mf-demo-nx-app"
         ]
       }
     }

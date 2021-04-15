@@ -22,7 +22,7 @@ module.exports = {
       library: { type: 'var', name: name },
       filename: 'remoteEntry.js',
       exposes: {
-        './YourFavorites': './packages/nx-app/apps/nx-app/src/app/your-favorites/your-favorites.module.ts',
+        './YourFavorites': './apps/nx-app/src/app/your-favorites/your-favorites.module.ts',
       },
       shared: [
         sharedDep('@angular/core'),
