@@ -59,7 +59,14 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
-      ]
+      ],
+      "headers": [{
+        "source" : "**",
+        "headers" : [{
+          "key" : "Access-Control-Allow-Origin",
+          "value" : "*"
+        }]
+      }]
     },
     {
       "target": "mf-demo-ngrx-app",
