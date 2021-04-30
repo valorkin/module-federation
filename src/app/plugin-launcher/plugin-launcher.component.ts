@@ -43,12 +43,10 @@ import { PluginManagerService } from './api/plugins/plugin-manager.service';
 })
 export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
   /** plugin name */
-  @Input()
-  name: string;
+  @Input('name') name: string;
 
   /** module name */
-  @Input()
-  module: string;
+  @Input('module') module: string;
 
   /** Iframe URI */
   @Input('iframeuri') iframeUri: string;
@@ -235,6 +233,7 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
   }
 
   private dispatchError(error: string | Error) {
+    console.error('ModuleFederatio', error);
     const message = typeof error === 'string'
       ? new Error(error)
       : error;

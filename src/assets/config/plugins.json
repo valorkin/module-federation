@@ -11,5 +11,107 @@
         "html": "index.html"
       }
     ]
+  },
+  {
+    "name": "contentReqApp",
+    "version": "1.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-content-req-app.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "PrListComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./PrList"
+      }
+    ]
+  },
+  {
+    "name": "contentItemApp",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-content-item-app.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "YourFavoritesModule",
+        "component": "YourFavoritesComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./YourFavorites"
+      },
+      {
+        "name": "ItemPageModule",
+        "component": "ItemPageComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./CatalogItem",
+        "route": "item-detail"
+      }
+    ]
+  },
+  {
+    "name": "contentRecommendedCategories",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-cnt-rcmmnd-cats.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "RecommendedCategoriesComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./RecommendedCategories"
+      }
+    ]
+  },
+  {
+    "name": "ngrxApp",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-ngrx-app.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "CounterModule",
+        "component": "CounterComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./Counter",
+        "route": "calc"
+      }
+    ]
+  },
+  {
+    "name": "nxApp",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-nx-app.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "YourFavoritesModule",
+        "component": "YourFavoritesComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./YourFavorites"
+      }
+    ]
+  },
+  {
+    "name": "authApp",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-webcomp-auth-app.web.app/remoteEntry.js",
+    "modules": [
+      {
+        "name": "elementName",
+        "type": "custom-element",
+        "exposedModule": "./Login"
+      }
+    ]
+  },
+  {
+    "name": "iframe-source-website",
+    "version": "0.0.1",
+    "provider": "Ariba",
+    "uri": "https://mf-demo-iframe-source-website.web.app",
+    "modules": [
+      {
+        "name": "landing",
+        "type": "iframe",
+        "html": "/index.html"
+      }
+    ]
   }
 ]

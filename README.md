@@ -10,7 +10,7 @@ should deploy to https://ng-el-injector.web.app
 
 ## usage
 ```html
-<script src="https://ng-el-injector.web.app/ngel-injector.min.js" defer>
+<script src="https://ng-el-injector.web.app/ngel-injector.min.js" defer></script>
 
 ```
 

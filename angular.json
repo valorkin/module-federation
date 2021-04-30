@@ -15,7 +15,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/ng-elements",
             "index": "src/index.html",
@@ -23,6 +23,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "preserveSymlinks": true,
+            "extraWebpackConfig": "webpack.extra.js",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -44,7 +46,7 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
@@ -63,9 +65,10 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "ng-elements:build"
+            "browserTarget": "ng-elements:build",
+            "extraWebpackConfig": "webpack.extra.js"
           },
           "configurations": {
             "production": {
