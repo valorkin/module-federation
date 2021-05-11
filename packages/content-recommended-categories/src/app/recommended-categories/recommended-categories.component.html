@@ -1,5 +1,37 @@
 <fd-layout-panel-body>
-  <h4>Recomended Categories</h4>
+  <h4>Background Image URLs example</h4>
+  <hr/>
+
+  <div class="background-image-example"></div>
+
+</fd-layout-panel-body>
+
+<fd-layout-panel-body>
+  <h4>Static URLs example</h4>
+  <hr/>
+
+  <img src="/assets/nature-w320.jpg"/>
+
+  <figure>
+    <audio controls
+           src="assets/t-rex-roar.mp3">
+      Your browser does not support the
+      <code>audio</code> element.
+    </audio>
+</figure>
+
+</fd-layout-panel-body>
+
+<fd-layout-panel-body>
+  <h4>Dynamic URLs example</h4>
+  <hr/>
+
+  <img [src]="dynamicImgSrc | fdsUrlOverrider: baseUrl"/>
+
+</fd-layout-panel-body>
+
+<fd-layout-panel-body>
+  <h4>Absolute URLs example</h4>
   <hr/>
 
   <div class="carousel-container">
@@ -14,5 +46,4 @@
       width="250px">
 
   </div>
-
 </fd-layout-panel-body>

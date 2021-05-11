@@ -1,0 +1,38 @@
+{
+  "projects": {
+    "default": "module-federation"
+  },
+  "targets": {
+    "module-federation": {
+      "hosting": {
+        "mf-demo-cflp-app": [
+          "mf-demo-cflp-app"
+        ],
+        "mf-demo-cnt-rcmmnd-cats": [
+          "mf-demo-cnt-rcmmnd-cats"
+        ],
+        "mf-demo-one-bx-shell-app": [
+          "mf-demo-one-bx-shell-app"
+        ],
+        "mf-demo-content-item-app": [
+          "mf-demo-content-item-app"
+        ],
+        "mf-demo-content-req-app": [
+          "mf-demo-content-req-app"
+        ],
+        "mf-demo-iframe-source-website": [
+          "mf-demo-iframe-source-website"
+        ],
+        "mf-demo-ngrx-app": [
+          "mf-demo-ngrx-app"
+        ],
+        "mf-demo-webcomp-auth-app": [
+          "mf-demo-webcomp-auth-app"
+        ],
+        "mf-demo-nx-app": [
+          "mf-demo-nx-app"
+        ]
+      }
+    }
+  }
+}

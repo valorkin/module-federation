@@ -13,7 +13,7 @@
       "prefix": "nx-app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/nx-app",
             "index": "apps/nx-app/src/index.html",
@@ -21,6 +21,8 @@
             "polyfills": "apps/nx-app/src/polyfills.ts",
             "tsConfig": "apps/nx-app/tsconfig.app.json",
             "aot": true,
+            "deployUrl": "http://localhost:4204/",
+            "extraWebpackConfig": "webpack.extra.js",
             "assets": ["apps/nx-app/src/favicon.ico", "apps/nx-app/src/assets"],
             "styles": ["apps/nx-app/src/styles.scss"],
             "scripts": []
@@ -33,12 +35,12 @@
                   "with": "apps/nx-app/src/environments/environment.prod.ts"
                 }
               ],
+              "deployUrl": "https://mf-demo-nx-app.web.app/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
@@ -57,9 +59,11 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "nx-app:build"
+            "browserTarget": "nx-app:build",
+            "extraWebpackConfig": "webpack.extra.js",
+            "port": 4204
           },
           "configurations": {
             "production": {

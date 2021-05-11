@@ -1,0 +1,99 @@
+{
+  "hosting": [
+    {
+      "target": "mf-demo-cflp-app",
+      "public": "packages/cflp-app/dist/cflp-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-cnt-rcmmnd-cats",
+      "public": "packages/content-recommended-categories/dist/content-recommended-categories",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-one-bx-shell-app",
+      "public": "packages/one-bx-shell-app/dist/one-bx-shell-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [{
+        "source" : "**",
+        "headers" : [{
+          "key" : "Access-Control-Allow-Origin",
+          "value" : "*"
+        }]
+      }]
+    },
+    {
+      "target": "mf-demo-content-item-app",
+      "public": "packages/content-item-app/dist/content-item-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-content-req-app",
+      "public": "packages/content-req-app/dist/content-req-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-iframe-source-website",
+      "public": "packages/iframe-source-website/dist/iframe-source-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [{
+        "source" : "**",
+        "headers" : [{
+          "key" : "Access-Control-Allow-Origin",
+          "value" : "*"
+        }]
+      }]
+    },
+    {
+      "target": "mf-demo-ngrx-app",
+      "public": "packages/ngrx-app/dist/ngrx-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-webcomp-auth-app",
+      "public": "packages/webcomp-auth-app/dist/auth-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "mf-demo-nx-app",
+      "public": "packages/nx-app/dist/nx-app",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}

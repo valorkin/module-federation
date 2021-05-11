@@ -4,13 +4,18 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV === 'production';
+const publicPath = isProduction
+  ?  'https://mf-demo-webcomp-auth-app.web.app/'
+  : 'http://localhost:4206/'
+
 const mfe6Config = {
   projectName: 'auth-app',
   name: 'authApp',
   main: 'main',
   port: 4206,
-  publicPath: 'http://localhost:4206/',
-  projectRoot: '../packages/webcomp-auth-app',
+  publicPath,
+  projectRoot: './',
   plugins: [
     new CleanWebpackPlugin()
   ],
@@ -18,7 +23,7 @@ const mfe6Config = {
     "rxjs"
   ],
   exposes: {
-    './Login': '../packages/webcomp-auth-app/component',
+    './Login': './component',
   }
 };
 
@@ -29,7 +34,7 @@ function _webComponentConfigTemplate(projectConfig) {
     entry: `${projectRoot}/${main}`,
     mode: "development",
     devServer: {
-      contentBase: path.normalize(path.join(__dirname, '../dist', projectName)),
+      contentBase: path.normalize(path.join(__dirname, 'dist', projectName)),
       port
     },
     module: {
@@ -48,7 +53,7 @@ function _webComponentConfigTemplate(projectConfig) {
     output: {
       publicPath,
       uniqueName: name,
-      path: path.normalize(path.normalize(path.join(__dirname, '../dist', projectName))),
+      path: path.normalize(path.normalize(path.join(__dirname, 'dist', projectName))),
       filename: '[name].js'
     },
     resolve: {

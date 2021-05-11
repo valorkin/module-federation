@@ -24,7 +24,7 @@ export class ItemSubdetailsComponent {
   declarations: [ItemDetailsComponent],
   imports: [RouterModule.forChild([
     {
-      path: '',
+      path: 'item-details',
       component: ItemDetailsComponent,
       children: [
         {

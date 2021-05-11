@@ -3,7 +3,7 @@
     "name": "contentReqApp",
     "version": "1.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4201/remoteEntry.js",
+    "uri": "https://mf-demo-content-req-app.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "PrListComponent",
@@ -16,7 +16,7 @@
     "name": "contentItemApp",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4202/remoteEntry.js",
+    "uri": "https://mf-demo-content-item-app.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "YourFavoritesModule",
@@ -37,7 +37,7 @@
     "name": "contentRecommendedCategories",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4203/remoteEntry.js",
+    "uri": "https://mf-demo-cnt-rcmmnd-cats.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "RecommendedCategoriesComponent",
@@ -50,7 +50,7 @@
     "name": "ngrxApp",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4205/remoteEntry.js",
+    "uri": "https://mf-demo-ngrx-app.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "CounterModule",
@@ -65,7 +65,7 @@
     "name": "nxApp",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4204/remoteEntry.js",
+    "uri": "https://mf-demo-nx-app.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "YourFavoritesModule",
@@ -79,7 +79,7 @@
     "name": "authApp",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:4206/remoteEntry.js",
+    "uri": "https://mf-demo-webcomp-auth-app.web.app/remoteEntry.js",
     "modules": [
       {
         "name": "elementName",
@@ -92,7 +92,7 @@
     "name": "iframe-source-website",
     "version": "0.0.1",
     "provider": "Ariba",
-    "uri": "http://localhost:5400",
+    "uri": "https://mf-demo-iframe-source-website.web.app",
     "modules": [
       {
         "name": "landing",

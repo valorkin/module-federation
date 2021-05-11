@@ -11,7 +11,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/one-bx-shell-app",
             "index": "src/index.html",
@@ -19,6 +19,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "deployUrl": "http://localhost:4200/",
+            "extraWebpackConfig": "webpack.extra.js",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -38,12 +40,12 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "deployUrl": "https://mf-demo-one-bx-shell-app.firebaseapp.com/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
@@ -62,9 +64,11 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
-            "browserTarget": "one-bx-shell-app:build"
+            "browserTarget": "one-bx-shell-app:build",
+            "extraWebpackConfig": "webpack.extra.js",
+            "port": 4200
           },
           "configurations": {
             "production": {

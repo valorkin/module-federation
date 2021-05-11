@@ -22,7 +22,7 @@ module.exports = {
       library: { type: 'var', name: name },
       filename: 'remoteEntry.js',
       exposes: {
-        './Counter': './packages/ngrx-app/src/app/counter/counter.module.ts'
+        './Counter': './src/app/counter/counter.module.ts'
       },
       shared: [
         sharedDep('@angular/core'),
