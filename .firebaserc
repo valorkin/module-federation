@@ -31,6 +31,9 @@
         ],
         "mf-demo-nx-app": [
           "mf-demo-nx-app"
+        ],
+        "ngel-injector": [
+          "ng-el-injector"
         ]
       }
     }

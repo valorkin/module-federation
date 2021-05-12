@@ -94,6 +94,21 @@
         "**/.*",
         "**/node_modules/**"
       ]
+    },
+    {
+      "target": "ngel-injector",
+      "public": "libs/ng-elements-mf-launcher/dist/ng-elements",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ]
 }
