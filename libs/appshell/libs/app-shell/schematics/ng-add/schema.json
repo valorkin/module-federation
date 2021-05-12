@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "fundamental-ngx-ng-add",
+  "title": "Fundamental Library for Angular ng-add schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "path": {
+      "type": "string",
+      "description": "Root path to the selected project  - a place where template files will be copied"
+    },
+    "moduleName": {
+      "type": "string",
+      "description": "Name of the module"
+    },
+    "standalone": {
+      "type": "boolean",
+      "default": false,
+      "description": "Are running this within CFLP (iFrame) or on its own, where we need a shellbar. ",
+      "x-prompt": "Do you need Shellbar?"
+    },
+    "addModuleAnimation": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether Angular browser animations should be set up.",
+      "x-prompt": "Add BrowserAnimationsModule?"
+    },
+    "hasModuleFederation": {
+      "type": "boolean",
+      "default": true,
+      "description": "If we are using module federation, then main.ts is not bootstrap file. It should have already existing MF setup ",
+      "x-prompt": "Are you using Module Federation?"
+    },
+    "addAppShellModule": {
+      "type": "boolean",
+      "default": true,
+      "description": "Tells developer if we want to add import for the AppShellModule.",
+      "x-prompt": "Add AppShellModule?"
+    }
+  }
+}
