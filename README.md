@@ -1,59 +1,60 @@
+
 # Overview
 
-This project demonstrates how `module federation` works in Angular based environment and its
-one of the main source of truth with examples for internal Ariba SAP project, where we are going to use this 
-unique way of connecting applications. 
+>Note: This Project is currently under active development, so if you are planning to use it in any way, remember to regularly check this documentation.
 
+This project demonstrates how [Module Federation](https://app.gitbook.com/@fundamental-ngx/s/microfrontends/module-federation-getting-started/readme-main) works in Angular based environment. It serves as one of the main sources of truth with examples for internal Ariba SAP project.
 
-## Steps to run this
+Currently we federate 3 different types of Micro Front-end remote applications:
 
-#### Prerequisites
+- Angular Components & Modules
+- Web Components (Custom Elements)
+- iFrame
 
-Make sure you have `yarn` available on your system
-```html
-install `yarn`
-```
-  
+## Tech Stack
 
-### Quick start
-
-The fastest way how to get started is to run this below command which will build and launches 
-everything 
-
-```bash
-yarn install && yarn start
-```
+- TypeScript
+- CSS
+- HTML
+- JavaScript
+- Nx
+- NgRx
+- Angular
 
 ## Project Structure
 
-Project is divided up into 2 parts:
- - mf-builder
-    - _This folder might change in the future and is used for the custom elements_ mainly now
- - packages 
-    - Contains `Angular` applications
-    
-    
+Project consists of 9 independent apps. You can find them in `packages` directory.
+
 There are two main entry points to the applications:
 
-- Access https://localhost:4200
+1. `packages/one-bx-shell-app` - wrapper-app around all micro-frontend applications served by different micro services.
 
-This is the `packages/one-bx-shell-app` app which showcase main host app aggregating all 
-micro-frontend application served by different microservices (`teams responsible to build 1BX App`) 
+- Accessible via https://localhost:4200 once built.
 
+2. `packages/cflp-app/` - this entry point simulates CFLP App environment where we have a Shellbar on the host page and iFrame pointing to the https://localhost:4200
 
+- Accessible via https://localhost:5000 once built
 
-- Access https://localhost:5000
+Each application contains `webpack.extra.js` that extends existing Angular CLI builder with ability to hook up custom Webpack plugin. In `webpack.extra.js`  we define specifics for the _Module federated_ app using `ModuleFederationPlugin` plugin.
 
-This entry point simulates CFLP App environment where we have a Shellbar on the host page and iFrame pointing
-to the https://localhost:4200
+- To learn more about `ModuleFederationPlugin` please see [docs](https://webpack.js.org/concepts/module-federation/)
+- To learn more about Module Federation and experiment with setting it up, follow to our [GitBook Module Federation Getting Started Documentation.](https://app.gitbook.com/@fundamental-ngx/s/microfrontends/module-federation-getting-started/readme-main)
+  
+## Deployment
 
-Each application contains `webpack.extra.js` that extends existing Angular's CLI builder with ability to 
-plug-in custom Webpack plugin and in here we define specifics for the _Module federated_ app using 
-`ModuleFederationPlugin` plugin.
+To deploy this project locally, we will need to build each application separately, and then access `one-bx-shell-app` to see the federated application containing other independent applications.
 
- - To learn more about `ModuleFederationPlugin` please see [docs](https://webpack.js.org/concepts/module-federation/)
- 
- 
+### Building Applications
+
+To build each application, you need to:
+
+1. Open `packages/{desired-app}` directory, where {desired-app} is the name of an application you want to build.
+2. `yarn install` to install necessary dependencies
+3. `npm start`
+4. Once all apps are built and running, access https://localhost:4200 to see Module Federation in action.
+  
+## Applications
+
 ### one-bx-shell-app
 
 Host application that uses `@fundamenta-ngx/app-shell` components & API in order to dynamically load these applications:
@@ -65,11 +66,11 @@ Remote app exposing `PR List` card shown on the main landing page.
 
 ### content-item-app
 
-Remote app exposing `Your Favorite` card shown on the main landing page + `Item Detail Page`. Here we also 
-demonstrate how **Routing** works:
- - Using Routing tag (see _ItemDetailPage_)
- - Using loadChildren dynamic imports to have sub-routing (see `ItemDetailsModule`)
- 
+Remote app exposing `Your Favorite` card shown on the main landing page + `Item Detail Page`. Here we also demonstrate how **Routing** works:
+
+- Using Routing tag (see _ItemDetailPage_)
+- Using loadChildren dynamic imports to have sub-routing (see `ItemDetailsModule`)
+
 ### nx-app
 
 Remote App show Module Federation with nrwl NX structure `/libs and apps/` .
@@ -78,25 +79,10 @@ Remote App show Module Federation with nrwl NX structure `/libs and apps/` .
 
 Remote website used as an iFrame source for `Quick Links` landing page card.
 
-  _Remember currently we can federate 3 different types of microfrontend remote application:_
-     
-    - Angular Components & Modules
-    - Web Components (Custom Elements)
-    - iFrame 
-
-
-
 ### ngrx-app
 
-Remote angular app using NGRx State management directly on the exposed component and sharing its state
-with its child components
-
+Remote angular app using NGRx State management directly on the exposed component and sharing its state with its child components
 
 ### content-recommended-categories
 
-Remote App exposing Recomended Categories shown on the dashboard.
-
-
-
-
-
+Remote App exposing Recommended Categories shown on the dashboard.
