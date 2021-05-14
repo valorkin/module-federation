@@ -14,12 +14,11 @@ Currently we federate 3 different types of Micro Front-end remote applications:
 ## Tech Stack
 
 - TypeScript
-- CSS
-- HTML
-- JavaScript
 - Nx
-- NgRx
 - Angular
+- Angular CLI
+- ngx-build-plus
+- Webpack/ModuleFederationPlugin
 
 ## Project Structure
 
@@ -35,7 +34,7 @@ There are two main entry points to the applications:
 
 - Accessible via https://localhost:5000 once built
 
-Each application contains `webpack.extra.js` that extends existing Angular CLI builder with ability to hook up custom Webpack plugin. In `webpack.extra.js`  we define specifics for the _Module federated_ app using `ModuleFederationPlugin` plugin.
+Each application contains `webpack.extra.js` which is used to configure Webpack `ModuleFederationPlugin` to expose components and attach remote urls.
 
 - To learn more about `ModuleFederationPlugin` please see [docs](https://webpack.js.org/concepts/module-federation/)
 - To learn more about Module Federation and experiment with setting it up, follow to our [GitBook Module Federation Getting Started Documentation.](https://app.gitbook.com/@fundamental-ngx/s/microfrontends/module-federation-getting-started/readme-main)
