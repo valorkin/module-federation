@@ -1,0 +1,102 @@
+{
+  "version": 2,
+  "projects": {
+    "ng-elements": {
+      "root": "libs/ng-elements-mf-launcher",
+      "type": "library"
+    },
+    "cflp-app": {
+      "root": "packages/cflp-app",
+      "type": "library"
+    },
+    "content-item-app": {
+      "root": "packages/content-item-app",
+      "type": "library"
+    },
+    "content-recommended-categories": {
+      "root": "packages/content-recommended-categories",
+      "type": "library"
+    },
+    "content-req-app": {
+      "root": "packages/content-req-app",
+      "type": "library"
+    },
+    "iframe-source-app": {
+      "root": "packages/iframe-source-website",
+      "type": "library"
+    },
+    "ngrx-app": {
+      "root": "packages/ngrx-app",
+      "type": "library"
+    },
+    "nx-app": {
+      "root": "packages/nx-app",
+      "type": "library"
+    },
+    "one-bx-shell-app": {
+      "root": "packages/one-bx-shell-app",
+      "type": "library"
+    },
+    "webcomp-auth-app": {
+      "root": "packages/webcomp-auth-app",
+      "type": "library"
+    },
+    "app-shell": {
+      "projectType": "library",
+      "root": "libs/app-shell",
+      "sourceRoot": "libs/app-shell/src",
+      "prefix": "mf-root",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/app-shell/tsconfig.lib.json",
+            "project": "libs/app-shell/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/app-shell/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/app-shell/src/**/*.ts",
+              "libs/app-shell/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/app-shell"
+          ],
+          "options": {
+            "jestConfig": "libs/app-shell/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:library": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "css"
+    }
+  }
+}

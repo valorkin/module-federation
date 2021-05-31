@@ -1,0 +1,58 @@
+{
+  "npmScope":"mf-root",
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies":"*"
+    },
+    "nx.json":"*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
+        "strictlyOrderedTargets": ["build", "package", "prepare"]
+        }
+      }
+  },
+  "projects": {
+    "ng-elements": {
+      "implicitDependencies": []
+    },
+    "cflp-app": {
+      "implicitDependencies": []
+    },
+    "content-item-app": {
+      "implicitDependencies": []
+    },
+    "content-recommended-categories": {
+      "implicitDependencies": []
+    },
+    "content-req-app": {
+      "implicitDependencies": []
+    },
+    "iframe-source-app":{
+      "implicitDependencies": []
+    },
+    "ngrx-app":{
+      "implicitDependencies": []
+    },
+    "nx-app":{
+      "implicitDependencies": []
+    },
+    "one-bx-shell-app": {
+      "implicitDependencies": []
+    },
+    "webcomp-auth-app": {
+      "implicitDependencies": []
+    },
+    "app-shell": {
+      "tags": []
+    }
+  },
+  "affected":{
+    "defaultBase": "master"
+  }
+}
