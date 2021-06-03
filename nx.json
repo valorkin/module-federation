@@ -18,9 +18,6 @@
       }
   },
   "projects": {
-    "ng-elements": {
-      "implicitDependencies": []
-    },
     "cflp-app": {
       "implicitDependencies": []
     },

@@ -42,7 +42,7 @@ import { overrideElementUrls } from '../../api/urls/url-dom-utils';
             #iframe
             class="responsive-wrapper"
             [src]="_safeIframeUri"
-            [style.minHeight]="iframeAttrs.height"
+            [style.minHeight]="iframeAttrs?.height"
             fdsIframeError
             (fdsError)="onLoadIframeError()"
             (error)="onLoadIframeError()">
@@ -107,8 +107,12 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     }
 
     ngAfterViewChecked(): void {
-        if (this._safeIframeUri) {
-            this.updateAttrs(this.iframeAttrs);
+        if (this._safeIframeUri && this.iframeAttrs) {
+            try {
+              this.updateAttrs(JSON.parse(this.iframeAttrs as unknown as string));
+            } finally {
+
+            }
         }
     }
 
@@ -123,6 +127,18 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
             return;
         }
 
+        const isIframeByPluginType = pluginModule.type === 'iframe';
+        const isNotIframeType = !isIframeByPluginType && !this.iframeUri;
+
+        if (isNotIframeType) {
+          this._safeIframeUri = null;
+        }
+
+        if (isIframeByPluginType) {
+          // if module type is an iframe we should not load one as a remote module
+          return this.renderIframe(descriptor, pluginModule as IframePageDescriptor);
+        }
+
         const remoteModule = await this.loadRemoteModule(descriptor, pluginModule)
             .catch((error) => this.dispatchError(error));
 
@@ -133,15 +149,6 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         this.baseUrl = getBaseUrl(this.descriptor.uri);
 
         const moduleOrCustomElementName = remoteModule[pluginModule.name];
-        const isNotIframeType = pluginModule.type !== 'iframe' && !this.iframeUri;
-
-        if (isNotIframeType) {
-            this._safeIframeUri = null;
-        }
-
-        if (pluginModule.type === 'iframe') {
-            return this.renderIframe(descriptor, pluginModule);
-        }
 
         if (pluginModule.type === 'custom-element') {
             return this.renderCustomElement(moduleOrCustomElementName);

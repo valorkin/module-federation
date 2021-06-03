@@ -1,10 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "ng-elements": {
-      "root": "libs/ng-elements-mf-launcher",
-      "type": "library"
-    },
     "cflp-app": {
       "root": "packages/cflp-app",
       "type": "library"
