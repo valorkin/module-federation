@@ -1,12 +1,15 @@
 {
-  "name": "@fundamental-ngx/app-shell",
+  "name": "@valorkin/ngx-mf-injector",
   "version": "0.2.38",
   "schematics": "./schematics/collection.json",
   "description": "Fundamentals App Shell for microfrontend.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/fundamental-ngx"
+    "url": "git+https://github.com/valorkin/module-federation.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "engine": {
     "node": ">= 10"
