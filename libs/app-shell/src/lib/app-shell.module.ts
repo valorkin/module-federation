@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MessagingModule } from './api/events/messaging.module';
 import { PluginLauncherModule } from './components/plugin-launcher/plugin-launcher.module';
+import { CustomElementsPluginLauncherModule } from './components/plugin-launcher/custom-elements-plugin-launcher.module';
 import {
     HttpClient,
     HttpClientModule
@@ -42,14 +43,16 @@ export type Constructor<T> = new (...args: any[]) => T
         CommonModule,
         HttpClientModule,
         MessagingModule,
-        PluginLauncherModule
+        PluginLauncherModule,
+        CustomElementsPluginLauncherModule,
     ],
     declarations: [
         UrlOverriderPipe,
     ],
     exports: [
         PluginLauncherModule,
-        UrlOverriderPipe
+        CustomElementsPluginLauncherModule,
+        UrlOverriderPipe,
     ]
 })
 export class AppShellModule {
