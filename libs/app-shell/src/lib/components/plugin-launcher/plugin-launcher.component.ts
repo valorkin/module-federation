@@ -50,13 +50,21 @@ import { overrideElementUrls } from '../../api/urls/url-dom-utils';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
-    /** plugin name */
+    // Remote Container Configuration name
     @Input()
-    name: string;
+    configurationName: string;
 
-    /** module name */
+    // Remote Container Configuration Component name
     @Input()
-    module: string;
+    component: string;
+
+    // Configuration Object
+    @Input()
+    configuration: any;
+
+    // URI of Remote Container Definition
+    @Input()
+    configurationUrl: string;
 
     /** Iframe URI */
     @Input()
@@ -97,13 +105,13 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
             this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(this.iframeUri);
         }
 
-        if ('name' in changes) {
+        /*if ('name' in changes) {
             const { descriptor } = this.lookupService.lookup(new Map([['name', this.name]]));
             if (!this.descriptor || this.descriptor.name !== descriptor.name) {
                 this.descriptor = descriptor;
                 this.renderPlugin(this.descriptor);
             }
-        }
+        }*/
     }
 
     ngAfterViewChecked(): void {

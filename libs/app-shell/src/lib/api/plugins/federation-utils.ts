@@ -27,7 +27,7 @@ function loadRemoteEntry(remoteEntry: string): Promise<void> {
     }
 
     // if we haven't a module promise we should create one
-    moduleMap[remoteEntry] = new Promise<any>((resolve, reject) => {
+    moduleMap[remoteEntry] = new Promise<void>((resolve, reject) => {
         const script = document.createElement('script');
         script.src = remoteEntry;
 
