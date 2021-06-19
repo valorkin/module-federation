@@ -1,6 +1,9 @@
-import { RemoteContainerConfiguration } from "./configuration.interface"
+import { RemoteContainerConfiguration, RemoteContainerConfigurationModule } from "./interface"
 
-export const addRemoteContainerConfiguration = (containerConfiguration: RemoteContainerConfiguration) => {
+/**
+ * Adds a specific RemoteContainerConfiguration to RCCs list
+ */
+export const addRemoteContainerConfiguration = (containerConfiguration: RemoteContainerConfiguration): void => {
   const found = getRemoteContainerConfigurationByName(containerConfiguration.name);
 
   if (!found) {
@@ -8,13 +11,19 @@ export const addRemoteContainerConfiguration = (containerConfiguration: RemoteCo
   }
 }
 
-export const getRemoteContainerConfigurationByName = (configurationName: string) => {
+/**
+ * Returns a specific RemoteContainerConfigurationModule from RCCs list by a configuration name
+ */
+export const getRemoteContainerConfigurationByName = (configurationName: string): RemoteContainerConfiguration => {
   return window._mfRCCs.find((containerConfiguration) => {
     return containerConfiguration.name.trim() === configurationName.trim();
   });
 }
 
-export const getRemoteContainerConfigurationModuleByName = (configurationName: string, module: string) => {
+/**
+ * Returns a specific RemoteContainerConfigurationModule from RCCs list by a configuration name and module name
+ */
+export const getRemoteContainerConfigurationModuleByName = (configurationName: string, moduleName: string): RemoteContainerConfigurationModule => {
   const remoteContainerConfiguration = getRemoteContainerConfigurationByName(configurationName);
 
   if (!remoteContainerConfiguration || !Array.isArray(remoteContainerConfiguration.modules)) {
@@ -22,6 +31,6 @@ export const getRemoteContainerConfigurationModuleByName = (configurationName: s
   }
 
   return remoteContainerConfiguration.modules.find((remoteContainerConfigurationModule) => {
-    return remoteContainerConfigurationModule.name.trim() === module;
+    return remoteContainerConfigurationModule.name.trim() === moduleName.trim();
   });
 }

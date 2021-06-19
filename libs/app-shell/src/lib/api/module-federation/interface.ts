@@ -6,6 +6,12 @@ export interface ConfigurationObject {
   version?: string
 }
 
+export interface ConfigurationObjectResolve {
+  module: any;
+  configuration: RemoteContainerConfiguration;
+  configurationModule: RemoteContainerConfigurationModule
+}
+
 export interface RemoteContainerConfiguration {
   uri: string, // URI of remote entry.js
   name?: string,
@@ -52,7 +58,7 @@ export interface CustomElementRemoteContainerConfigurationModule {
   componentName: string;
 }
 
-export interface  ModuleFederationСontainer {
+export interface ModuleFederationСontainer {
   init(shareScope: string): void;
   get(module: string): () => any;
 }

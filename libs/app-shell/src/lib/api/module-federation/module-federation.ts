@@ -1,30 +1,43 @@
-import { RemoteContainerConfiguration } from "./configuration.interface";
+import { RemoteContainerConfiguration, ConfigurationObjectResolve } from "./interface";
 import {
   addRemoteContainerConfiguration,
-  getRemoteContainerConfigurationModuleByName,
+  getRemoteContainerConfigurationByName,
+  getRemoteContainerConfigurationModuleByName
 } from "./container-configuration";
-
 import { getConfigurationObjectByName, resolveConfigurationObject} from './configuration-object';
 
 /**
  *
  */
-export const loadModuleFederatedApp = async (configurationObjectName: string, remoteModule: string): Promise<any> => {
+export const loadModuleFederatedApp = async (configurationObjectName: string, moduleName: string): Promise<ConfigurationObjectResolve> => {
   const configurationObject = getConfigurationObjectByName(configurationObjectName);
 
   if (!configurationObject) {
     return Promise.reject(
-      `ModuleFederatedAppPreLoadingError: There's no Configuration Object with ${configurationObjectName} name`
+      new Error(
+        `ModuleFederatedAppPreLoadingError: There's no Configuration Object with ${configurationObjectName} name`
+      )
     );
   }
 
-  return await resolveConfigurationObject(configurationObject, remoteModule)
+  const resolvedConfiguration = await resolveConfigurationObject(configurationObject, moduleName)
     .then((resolvedContainer) => {
       return {
-        container: resolvedContainer[configurationObjectName],
-        containerConfiguration: getRemoteContainerConfigurationModuleByName(configurationObjectName, remoteModule)
+        module: resolvedContainer,
+        configuration: getRemoteContainerConfigurationByName(configurationObjectName),
+        configurationModule: getRemoteContainerConfigurationModuleByName(configurationObjectName, moduleName)
       }
-    });
+    }) as ConfigurationObjectResolve;
+
+  if (!resolvedConfiguration) {
+    return Promise.reject(
+      new Error(
+        `ModuleFederatedAppPostLoadingError: An error occurred while loading or resolving Configuration Object with ${configurationObjectName} name`
+      )
+    );
+  }
+
+  return resolvedConfiguration;
 }
 
 /**
@@ -35,7 +48,9 @@ export const loadRemoteContainerConfigurationsFromJsonFile = async (request: Req
 
   if (!response.ok) {
     return Promise.reject(
-     `RemoteContainerConfigurationsFromJsonFileLoadingError: An error occurred while loading json file`
+      new Error(
+        `RemoteContainerConfigurationsFromJsonFileLoadingError: An error occurred while loading ${request.url} file`
+      )
     );
   }
 
@@ -45,13 +60,17 @@ export const loadRemoteContainerConfigurationsFromJsonFile = async (request: Req
     remoteContainerConfigurations = await response.json();
   } catch {
     return Promise.reject(
-      `RemoteContainerConfigurationsFromJsonFileParsingError: An error occurred while parsing json file`
+      new Error(
+        `RemoteContainerConfigurationsFromJsonFileParsingError: An error occurred while parsing ${request.url} file`
+      )
     );
   }
 
   if (!Array.isArray(remoteContainerConfigurations) || remoteContainerConfigurations.length < 1) {
     return Promise.reject(
-      `RemoteContainerConfigurationsFromJsonFileReadingError: File contains a wrong value`
+      new Error(
+        `RemoteContainerConfigurationsFromJsonFileReadingError: File ${request.url} contains an invalid value`
+      )
     );
   }
 
@@ -63,6 +82,4 @@ export const loadRemoteContainerConfigurationsFromJsonFile = async (request: Req
       status: null
     });
   });
-
-  return Promise.resolve();
 }

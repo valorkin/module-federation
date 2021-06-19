@@ -18,18 +18,19 @@ import {
     NgZone
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { loadRemoteModule } from '../../api/plugins/federation-utils';
-import {
-    AngularIvyComponentDescriptor,
-    DescriptorsModule,
-    IframePageDescriptor,
-    PluginDescriptor
-} from '../../api/plugins/lookup/plugin-descriptor.model';
-import { LookupService } from '../../api/plugins/lookup/lookup.service';
-import { PluginManagerService } from '../../api/plugins/plugin-manager.service';
 import { getBaseUrl } from '../../api/urls/url-utils';
 import { REMOTE_BASE_URL } from '../../tokens';
 import { overrideElementUrls } from '../../api/urls/url-dom-utils';
+import {
+    InjectorTypes,
+    ConfigurationObjectResolve,
+    IframeRemoteContainerConfigurationModule,
+    NgRemoteContainerConfigurationModule,
+    RemoteContainerConfiguration,
+    RemoteContainerConfigurationModule,
+    loadModuleFederatedApp,
+    loadRemoteContainerConfigurationsFromJsonFile
+} from '../../api/module-federation';
 
 @Component({
     selector: 'fds-plugin-launcher',
@@ -54,9 +55,9 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     @Input()
     configurationName: string;
 
-    // Remote Container Configuration Component name
+    // Remote Container Configuration Module name
     @Input()
-    component: string;
+    module: string;
 
     // Configuration Object
     @Input()
@@ -64,7 +65,7 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
 
     // URI of Remote Container Definition
     @Input()
-    configurationUrl: string;
+    configurationUri: Request;
 
     /** Iframe URI */
     @Input()
@@ -86,8 +87,6 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
 
     _safeIframeUri: SafeResourceUrl;
 
-    private descriptor: Partial<PluginDescriptor>;
-
     constructor(
         private readonly _elementRef: ElementRef,
         private readonly _cd: ChangeDetectorRef,
@@ -95,23 +94,28 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         private readonly injector: Injector,
         private readonly ngZone: NgZone,
         private readonly sanitizer: DomSanitizer,
-        private readonly compiler: Compiler,
-        private readonly pluginManagerService: PluginManagerService,
-        private readonly lookupService: LookupService) {
-    }
+        private readonly compiler: Compiler
+    ) {}
 
-    async ngOnChanges(changes: SimpleChanges): Promise<void> {
-        if ('iframeUri' in changes) {
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.iframeUri) {
             this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(this.iframeUri);
+            return;
         }
 
-        /*if ('name' in changes) {
-            const { descriptor } = this.lookupService.lookup(new Map([['name', this.name]]));
-            if (!this.descriptor || this.descriptor.name !== descriptor.name) {
-                this.descriptor = descriptor;
-                this.renderPlugin(this.descriptor);
+        if (changes.configurationUri) {
+            if (this.configurationName && this.module) {
+                return this.onLoadRemoteContainerConfigurationsByUri();
             }
-        }*/
+        }
+
+        if (changes.configurationName || changes.module) {
+            return this.onLoadRemoteContainerConfiguration();
+        }
+
+        if (changes.configuration) {
+            this.onLoadConfigurationObject();
+        }
     }
 
     ngAfterViewChecked(): void {
@@ -124,59 +128,75 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         }
     }
 
-    async renderPlugin(descriptor: Partial<PluginDescriptor>): Promise<void> {
-        if (!descriptor) {
-            return;
-        }
-
-        const pluginModule = this.findPluginModule(descriptor) as DescriptorsModule;
-
-        if (!pluginModule) {
-            return;
-        }
-
-        const isIframeByPluginType = pluginModule.type === 'iframe';
-        const isNotIframeType = !isIframeByPluginType && !this.iframeUri;
-
-        if (isNotIframeType) {
-          this._safeIframeUri = null;
-        }
-
-        if (isIframeByPluginType) {
-          // if module type is an iframe we should not load one as a remote module
-          return this.renderIframe(descriptor, pluginModule as IframePageDescriptor);
-        }
-
-        const remoteModule = await this.loadRemoteModule(descriptor, pluginModule)
-            .catch((error) => this.dispatchError(error));
-
-        if (!remoteModule) {
-            return;
-        }
-
-        this.baseUrl = getBaseUrl(this.descriptor.uri);
-
-        const moduleOrCustomElementName = remoteModule[pluginModule.name];
-
-        if (pluginModule.type === 'custom-element') {
-            return this.renderCustomElement(moduleOrCustomElementName);
-        }
-
-        if (pluginModule.type === 'angular-ivy-component') {
-            this.renderComponent(moduleOrCustomElementName, pluginModule, remoteModule);
-        }
-
-        this.pluginManagerService.register(descriptor);
+    /**
+     *
+     */
+    onLoadRemoteContainerConfigurationsByUri() {
+        loadRemoteContainerConfigurationsFromJsonFile(this.configurationUri)
+            .then(() => {
+                this.onLoadRemoteContainerConfiguration();
+            })
+            .catch((error) => {
+                this.dispatchError(error);
+            })
     }
 
-    async loadRemoteModule(descriptor: Partial<PluginDescriptor>, pluginModule: DescriptorsModule): Promise<DescriptorsModule> {
-        return await loadRemoteModule<DescriptorsModule>(descriptor, pluginModule);
+    /**
+     *
+     */
+    onLoadRemoteContainerConfiguration() {
+        loadModuleFederatedApp(this.configurationName, this.module)
+            .then((resolvedConfiguration) => {
+                this.render(resolvedConfiguration);
+            })
+            .catch((error) => {
+                this.dispatchError(error);
+            });
     }
+
+    /**
+     * Not implemented
+     */
+    onLoadConfigurationObject() {}
+
 
     onLoadIframeError() {
         this.dispatchError(
             `PluginLauncherIframeLoadingError: Can't fetch resource from ${this.iframeUri}`
         );
+    }
+
+    render(resolvedConfiguration: ConfigurationObjectResolve): void {
+        const {configuration, configurationModule, module} = resolvedConfiguration;
+        const injectorType = configurationModule.type;
+
+        if (this.detectIframe(injectorType)) {
+            // if module type is an iframe we should not load one as a remote module
+            return this.renderIframe(configuration, configurationModule as IframeRemoteContainerConfigurationModule);
+        }
+
+        this.baseUrl = getBaseUrl(configuration.uri);
+
+        const moduleFactory = module[configurationModule.name];
+
+        if (injectorType === InjectorTypes.NgCustomElement) {
+            return this.renderCustomElement(moduleFactory);
+        }
+
+        if (injectorType === InjectorTypes.NgComponent) {
+            this.renderComponent(moduleFactory, configurationModule as NgRemoteContainerConfigurationModule, module);
+        }
+    }
+
+    private detectIframe(injectorType: string): boolean {
+        const isNotIframeType = injectorType !== InjectorTypes.Iframe && !this.iframeUri;
+
+        if (isNotIframeType) {
+          this._safeIframeUri = null;
+          return false;
+        }
+
+        return true;
     }
 
     private updateAttrs(newValue: Record<string, string | number>, oldValue?: Record<string, string>): void {
@@ -197,21 +217,8 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         }
     }
 
-    private findPluginModule(descriptor: Partial<PluginDescriptor>): void | DescriptorsModule {
-        const pluginModule = descriptor.modules.find(module => module.name === this.module);
-
-        // module plugin descriptor not found
-        if (!pluginModule) {
-            return this.dispatchError(
-                `PluginLauncherDescriptorNotFoundError: Can't find plugin descriptor module with name ${this.module}`
-            );
-        }
-
-        return pluginModule;
-    }
-
-    private renderIframe(descriptor: Partial<PluginDescriptor>, pluginModule: IframePageDescriptor): void {
-        const url = descriptor.uri + pluginModule.html;
+    private renderIframe(configuration: Partial<RemoteContainerConfiguration>, configurationModule: IframeRemoteContainerConfigurationModule): void {
+        const url = `${configuration.uri}${configurationModule.html}`;
         this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 
@@ -231,9 +238,9 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
         this.overrideElementUrls();
     }
 
-    private async renderComponent(module: any, pluginModule: AngularIvyComponentDescriptor, remoteModule: DescriptorsModule): Promise<void> {
-        const pluginModuleName = pluginModule.name;
-        let pluginComponentName = pluginModule.component;
+    private async renderComponent(module: any, configurationModule: NgRemoteContainerConfigurationModule, remoteModule: RemoteContainerConfigurationModule): Promise<void> {
+        const pluginModuleName = configurationModule.name;
+        let pluginComponentName = configurationModule.component;
 
         // if provided module name and component name we bootstrap both
         if (pluginModuleName && pluginComponentName) {
