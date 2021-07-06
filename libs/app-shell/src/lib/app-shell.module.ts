@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessagingModule } from './api/events/messaging.module';
 import { PluginLauncherModule } from './components/plugin-launcher/plugin-launcher.module';
 import { CustomElementsPluginLauncherModule } from './components/plugin-launcher/custom-elements-plugin-launcher.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,7 +9,6 @@ import { UrlOverriderPipe } from './api/urls/url-overrider.pipe';
     imports: [
         CommonModule,
         HttpClientModule,
-        MessagingModule,
         PluginLauncherModule,
         CustomElementsPluginLauncherModule,
     ],
