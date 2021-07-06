@@ -1,4 +1,4 @@
-import {
+/*import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -12,7 +12,7 @@ import { LookupService } from '../../api/plugins/lookup/lookup.service';
 
 @Component({
     template: `
-        <fds-plugin-launcher [name]="_plugin"
+        <fds-plugin-launcher [configurationName]="_plugin"
                              [module]="_module"
                              (error)="dispatchError($event)">
         </fds-plugin-launcher>
@@ -64,3 +64,4 @@ export class PluginPageLauncherComponent implements OnInit {
         return query;
     }
 }
+*/

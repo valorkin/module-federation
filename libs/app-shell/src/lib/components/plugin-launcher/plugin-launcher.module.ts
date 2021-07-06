@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PluginLauncherComponent } from './plugin-launcher.component';
-import { PluginPageLauncherComponent } from './plugin-page-launcher.component';
+// import { PluginPageLauncherComponent } from './plugin-page-launcher.component';
 import { IframeErrorDirective } from './iframe-error.directive';
 
 @NgModule({
@@ -11,12 +11,12 @@ import { IframeErrorDirective } from './iframe-error.directive';
     ],
     declarations: [
         PluginLauncherComponent,
-        PluginPageLauncherComponent,
+        // PluginPageLauncherComponent,
         IframeErrorDirective
     ],
     exports: [
         PluginLauncherComponent,
-        PluginPageLauncherComponent
+        // PluginPageLauncherComponent
     ]
 })
 export class PluginLauncherModule {
