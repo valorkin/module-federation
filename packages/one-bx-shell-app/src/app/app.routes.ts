@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { loadRemoteModule, PluginPageLauncherComponent } from '@fundamental-ngx/app-shell';
+// import { loadRemoteModule, PluginPageLauncherComponent } from '@fundamental-ngx/app-shell';
 import { LandingComponent } from './components';
 import { IframeLandingComponent } from './components';
 
@@ -12,7 +12,7 @@ export const APP_ROUTES: Routes = [
     path: 'iframe',
     component: IframeLandingComponent
   },
-  {
+  /*{
     path: 'item-details',
     // @ts-ignore
     loadChildren:
@@ -26,9 +26,9 @@ export const APP_ROUTES: Routes = [
           console.log(m);
           return m.ItemDetailsModule;
         })
-  },
-  {
+  },*/
+ /*{
     path: ':remote-route',
     component: PluginPageLauncherComponent
-  }
+  }*/
 ];

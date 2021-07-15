@@ -24,6 +24,7 @@
     "@fundamental-ngx/core": "^0.23.0",
     "@pscoped/ngx-pub-sub": "3.0.0",
     "@sap-theming/theming-base-content": "11.1.20",
+    "@valorkin/ngx-mf-injector": "0.2.38",
     "ngx-build-plus": "^11.0.0",
     "concurrently": "^5.2.0",
     "framebus": "^4.0.4",

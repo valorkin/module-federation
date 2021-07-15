@@ -34,7 +34,7 @@ module.exports = {
         sharedDep('@angular/router'),
         sharedDep('@angular/forms'),
         sharedDep('@fundamental-ngx/core'),
-        sharedDep('@fundamental-ngx/app-shell'),
+        sharedDep('@valorkin/ngx-mf-injector'),
         sharedDep('@ngrx/store'),
         sharedDep('@ngrx/effects')
       ]

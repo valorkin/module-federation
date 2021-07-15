@@ -15,24 +15,17 @@ import {
   ShellbarModule
 } from '@fundamental-ngx/core';
 
-import { AppComponent } from './app.component';
-import { APP_ROUTES } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  AppShellModule,
-  IS_APPSHELL_STANDALONE
-} from '@fundamental-ngx/app-shell';
-import { ShellBarService } from './api/shell-bar.service';
-
+import { AppShellModule } from '@valorkin/ngx-mf-injector'
 import { HttpClientModule } from '@angular/common/http';
+
 import {
   IframeLandingComponent,
-  LandingComponent,
-  AppShellHeaderComponent,
-  AppShellContentComponent,
-  AppShellFooterComponent,
-  AppShellPageComponent
+  LandingComponent
 } from './components';
+
+import { AppComponent } from './app.component';
+import { APP_ROUTES } from './app.routes';
 
 @NgModule({
   imports: [
@@ -50,30 +43,15 @@ import {
     MenuModule,
     ShellbarModule,
     BrowserAnimationsModule,
-    AppShellModule.forRoot('assets/config/plugins.json')
+    AppShellModule,
   ],
   declarations: [
     AppComponent,
     IframeLandingComponent,
-    LandingComponent,
-    AppShellHeaderComponent,
-    AppShellContentComponent,
-    AppShellFooterComponent,
-    AppShellPageComponent,
-  ],
-  providers: [
-    {
-      provide: ShellBarService,
-      useFactory: shellBarSrv,
-      deps: [IS_APPSHELL_STANDALONE]
-    }
+    LandingComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-}
-
-export function shellBarSrv(isStandalone: boolean): ShellBarService | null {
-  return isStandalone ? new ShellBarService() : null;
 }
 

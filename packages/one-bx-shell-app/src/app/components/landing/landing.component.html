@@ -1,42 +1,84 @@
 <fd-layout-grid [col]="6">
-  <fd-layout-panel [columnSpan]="4" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <fds-plugin-launcher name="contentReqApp" module="PrListComponent"></fds-plugin-launcher>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
-  <fd-layout-panel [columnSpan]="2" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <fds-plugin-launcher iframeUri="https://mf-demo-iframe-source-website.web.app"
-                          [iframeAttrs]="{frameborder:0, width: '100%', height: '210px'}"
-      ></fds-plugin-launcher>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
+  <!-- Loading RCCs from json file -->
+  <ng-container *ngIf="containers">
+    <fd-layout-panel [columnSpan]="4"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher [containers]="containers"
+                             container="contentReqApp"
+                             module="PrListComponent"
+                             (error)="onError($event)">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
 
-  <fd-layout-panel [columnSpan]="5" fdLayoutGridSpan>
-    <fds-plugin-launcher name="contentRecommendedCategories" module="RecommendedCategoriesComponent"></fds-plugin-launcher>
-  </fd-layout-panel>
+    <fd-layout-panel [columnSpan]="4"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher container="contentReqApp"
+                             module="PrListComponent"
+                             (error)="onError($event)">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
 
-  <fd-layout-panel [columnSpan]="1" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <fds-plugin-launcher name="contentItemApp" module="YourFavoritesModule"></fds-plugin-launcher>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
+    <fd-layout-panel [columnSpan]="4"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher container="contentReqApp"
+                             module="PrListComponent"
+                             (error)="onError($event)">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
 
-  <fd-layout-panel [columnSpan]="1" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <fds-plugin-launcher name="nxApp" module="YourFavoritesModule"></fds-plugin-launcher>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
+    <fd-layout-panel [columnSpan]="2"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher iframeUri="https://mf-demo-iframe-source-website.web.app">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
 
-  <fd-layout-panel [columnSpan]="2" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <a routerLink="/calc">Navigate to calculation component</a>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
+    <fd-layout-panel [columnSpan]="5"
+                     fdLayoutGridSpan>
+      <fds-plugin-launcher container="contentRecommendedCategories"
+                           module="RecommendedCategoriesComponent">
+      </fds-plugin-launcher>
+    </fd-layout-panel>
 
-  <fd-layout-panel [columnSpan]="3" fdLayoutGridSpan>
-    <fd-layout-panel-body>
-      <fds-plugin-launcher name="authApp" module="elementName"></fds-plugin-launcher>
-    </fd-layout-panel-body>
-  </fd-layout-panel>
+    <fd-layout-panel [columnSpan]="1"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher container="contentItemApp"
+                             module="YourFavoritesModule">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
+
+    <fd-layout-panel [columnSpan]="1"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher container="nxApp"
+                             module="YourFavoritesModule">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
+
+    <fd-layout-panel [columnSpan]="2"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <a routerLink="/calc">Navigate to calculation component</a>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
+
+    <fd-layout-panel [columnSpan]="3"
+                     fdLayoutGridSpan>
+      <fd-layout-panel-body>
+        <fds-plugin-launcher container="authApp"
+                             module="elementcontainer">
+        </fds-plugin-launcher>
+      </fd-layout-panel-body>
+    </fd-layout-panel>
+  </ng-container>
 </fd-layout-grid>
