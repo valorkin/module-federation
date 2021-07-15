@@ -1,4 +1,10 @@
-import { ModuleFederationСontainer, ConfigurationObject } from './interface';
+import {
+  ModuleFederationСontainer,
+  ConfigurationObject,
+  NgRemoteContainerConfigurationModule,
+  RemoteContainerConfigurationModule
+} from './interface';
+
 import { loadRemoteEntryJs } from './remote-entry';
 
 declare const __webpack_init_sharing__: (shareScope: string) => Promise<void>;
@@ -10,7 +16,7 @@ declare const __webpack_share_scopes__: { default: string };
 const rejectWithResolvingError = (name: string, moduleName: string) => {
   return Promise.reject(
     new Error(
-      `ModuleExposedResolveError: Can't resolve module ${name} from exposed module ${moduleName}`
+      `RemoteModuleResolvingError: Can't resolve ${moduleName} module`
     )
   );
 }
@@ -18,7 +24,7 @@ const rejectWithResolvingError = (name: string, moduleName: string) => {
 /**
  * Resolves a remote module by using Webpack Module Federation API
  */
-const resolveRemoteModule = async <T>(name: string, moduleName: string): Promise<T> => {
+const resolveRemoteModule = async <T>(name: string, module: string): Promise<T> => {
   // Initializes the share scope. This fills it with known provided modules from this build and all remotes
   await __webpack_init_sharing__('default');
 
@@ -28,7 +34,7 @@ const resolveRemoteModule = async <T>(name: string, moduleName: string): Promise
   const isContainerDefined = Object.prototype.toString.call(container) === '[object Object]';
 
   if (!isContainerDefined) {
-    return rejectWithResolvingError(name, moduleName);
+    return rejectWithResolvingError(name, module);
   }
 
   // Initialize the container, it may provide shared modules
@@ -37,14 +43,14 @@ const resolveRemoteModule = async <T>(name: string, moduleName: string): Promise
   let factory;
 
   try {
-    factory = await container.get(moduleName);
+    factory = await container.get(module);
   } catch {
-    return rejectWithResolvingError(name, moduleName);
+    return rejectWithResolvingError(name, module);
   }
 
   // if var factory is not a function we have a trouble with a provided module
   if (typeof factory !== 'function') {
-    return rejectWithResolvingError(name, moduleName);
+    return rejectWithResolvingError(name, module);
   }
 
   return factory() as T;
@@ -53,7 +59,7 @@ const resolveRemoteModule = async <T>(name: string, moduleName: string): Promise
 /**
  * Loads the remote entry file and resolves a remote module
  */
-export const createRemoteModuleAsync = async <T = any>(configurationObject: ConfigurationObject, moduleName: string) => {
+export const createRemoteModuleAsync = async <T = any>(configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule) => {
   await loadRemoteEntryJs(configurationObject.uri);
-  return await resolveRemoteModule<T>(configurationObject.name, moduleName);
+  return await resolveRemoteModule<T>(configurationObject.name, (module as NgRemoteContainerConfigurationModule).exposedModule);
 }

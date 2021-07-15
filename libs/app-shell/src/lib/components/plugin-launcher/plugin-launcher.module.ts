@@ -7,7 +7,6 @@ import { IframeErrorDirective } from './iframe-error.directive';
 @NgModule({
     imports: [
         CommonModule
-
     ],
     declarations: [
         PluginLauncherComponent,

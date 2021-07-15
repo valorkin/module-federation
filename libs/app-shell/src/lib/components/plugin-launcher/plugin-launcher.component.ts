@@ -23,13 +23,13 @@ import { REMOTE_BASE_URL } from '../../tokens';
 import { overrideElementUrls } from '../../api/urls/url-dom-utils';
 import {
     InjectorTypes,
+    RemoteContainerConfiguration,
     ConfigurationObjectResolve,
     IframeRemoteContainerConfigurationModule,
     NgRemoteContainerConfigurationModule,
-    RemoteContainerConfiguration,
     RemoteContainerConfigurationModule,
     loadModuleFederatedApp,
-    loadRemoteContainerConfigurationsFromJsonFile
+    addModuleFederatedApps
 } from '../../api/module-federation';
 
 @Component({
@@ -53,19 +53,15 @@ import {
 export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     // Remote Container Configuration name
     @Input()
-    configurationName: string;
+    container: string;
 
     // Remote Container Configuration Module name
     @Input()
     module: string;
 
-    // Configuration Object
+    // Remote Container Configurations
     @Input()
-    configuration: any;
-
-    // URI of Remote Container Definition
-    @Input()
-    configurationUri: Request;
+    containers: RemoteContainerConfiguration[];
 
     /** Iframe URI */
     @Input()
@@ -103,18 +99,14 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
             return;
         }
 
-        if (changes.configurationUri) {
-            if (this.configurationName && this.module) {
-                return this.onLoadRemoteContainerConfigurationsByUri();
+        if (changes.containers) {
+            if (Array.isArray(this.containers)) {
+              this.onAddRemoteContainerConfigurations();
             }
         }
 
-        if (changes.configurationName || changes.module) {
-            return this.onLoadRemoteContainerConfiguration();
-        }
-
-        if (changes.configuration) {
-            this.onLoadConfigurationObject();
+        if (changes.container || changes.module) {
+            this.onLoadRemoteContainerConfiguration();
         }
     }
 
@@ -131,21 +123,8 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     /**
      *
      */
-    onLoadRemoteContainerConfigurationsByUri() {
-        loadRemoteContainerConfigurationsFromJsonFile(this.configurationUri)
-            .then(() => {
-                this.onLoadRemoteContainerConfiguration();
-            })
-            .catch((error) => {
-                this.dispatchError(error);
-            })
-    }
-
-    /**
-     *
-     */
     onLoadRemoteContainerConfiguration() {
-        loadModuleFederatedApp(this.configurationName, this.module)
+        loadModuleFederatedApp(this.container, this.module)
             .then((resolvedConfiguration) => {
                 this.render(resolvedConfiguration);
             })
@@ -155,9 +134,11 @@ export class PluginLauncherComponent implements OnChanges, AfterViewChecked {
     }
 
     /**
-     * Not implemented
+     *
      */
-    onLoadConfigurationObject() {}
+    onAddRemoteContainerConfigurations() {
+        addModuleFederatedApps(this.containers);
+    }
 
 
     onLoadIframeError() {

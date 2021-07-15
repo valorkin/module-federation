@@ -1,4 +1,4 @@
-import { ConfigurationObject } from "./interface";
+import { ConfigurationObject, RemoteContainerConfigurationModule } from "./interface";
 import { createRemoteModuleAsync } from "./remote-module";
 
 /**
@@ -30,7 +30,30 @@ export const getConfigurationObjectByName = (name: string): ConfigurationObject 
 /**
  *
  */
-export const resolveConfigurationObject = (configurationObject: ConfigurationObject, moduleName: string): Promise<any> => {
+ export const updateConfigurationObjectByUri = (configurationObject: ConfigurationObject): boolean => {
+  const foundIndex = getConfigurationObjectIndexByUri(configurationObject.uri);
+
+  if (foundIndex > -1) {
+    const oldConfigurationObject = window.mfCOs[foundIndex];
+
+    window.mfCOs[foundIndex] = {
+      ...oldConfigurationObject,
+      ...{
+        name: configurationObject.name,
+        version: configurationObject.version
+      }
+    };
+
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ *
+ */
+export const resolveConfigurationObject = (configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule): Promise<any> => {
   let foundConfigurationObjectIndex = getConfigurationObjectIndexByUri(configurationObject.uri);
 
   const foundConfigurationObject = window.mfCOs[foundConfigurationObjectIndex];
@@ -43,7 +66,7 @@ export const resolveConfigurationObject = (configurationObject: ConfigurationObj
   if (!(foundConfigurationObject.status instanceof Promise)) {
     const configurationObjectWithStatus = {
       ...configurationObject,
-      status: createRemoteModuleAsync(configurationObject, moduleName)
+      status: createRemoteModuleAsync(configurationObject, module)
     };
     window.mfCOs[foundConfigurationObjectIndex] = configurationObjectWithStatus;
     return configurationObjectWithStatus.status;
