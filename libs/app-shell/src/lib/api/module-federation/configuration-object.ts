@@ -28,7 +28,7 @@ export const getConfigurationObjectByName = (name: string): ConfigurationObject 
 }
 
 /**
- *
+ * Updates Configuration Object and returns `true` if it's updated
  */
  export const updateConfigurationObjectByUri = (configurationObject: ConfigurationObject): boolean => {
   const foundIndex = getConfigurationObjectIndexByUri(configurationObject.uri);
@@ -51,7 +51,8 @@ export const getConfigurationObjectByName = (name: string): ConfigurationObject 
 }
 
 /**
- *
+ * Adds Configuration Object with the status that resolves a remote container
+ * or returns Configuration Object status if it was added before
  */
 export const resolveConfigurationObject = (configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule): Promise<any> => {
   let foundConfigurationObjectIndex = getConfigurationObjectIndexByUri(configurationObject.uri);

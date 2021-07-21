@@ -3,34 +3,34 @@ import { RemoteContainerConfiguration, RemoteContainerConfigurationModule } from
 /**
  * Adds a specific RemoteContainerConfiguration to RCCs list
  */
-export const addRemoteContainerConfiguration = (containerConfiguration: RemoteContainerConfiguration): void => {
-  const found = getRemoteContainerConfigurationByName(containerConfiguration.name);
+export const addRemoteContainerConfiguration = (container: RemoteContainerConfiguration): void => {
+  const found = getRemoteContainerConfigurationByName(container.name);
 
   if (!found) {
-    window._mfRCCs.push(containerConfiguration);
+    window._mfRCCs.push(container);
   }
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by a configuration name
+ * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container name
  */
-export const getRemoteContainerConfigurationByName = (configurationName: string): RemoteContainerConfiguration => {
-  return window._mfRCCs.find((containerConfiguration) => {
-    return containerConfiguration.name.trim() === configurationName.trim();
+export const getRemoteContainerConfigurationByName = (containerName: string): RemoteContainerConfiguration => {
+  return window._mfRCCs.find((container) => {
+    return container.name.trim() === containerName.trim();
   });
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by a configuration name and module name
+ * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container name and module name
  */
-export const getRemoteContainerConfigurationModuleByName = (configurationName: string, moduleName: string): RemoteContainerConfigurationModule => {
-  const remoteContainerConfiguration = getRemoteContainerConfigurationByName(configurationName);
+export const getRemoteContainerConfigurationModuleByName = (containerName: string, moduleName: string): RemoteContainerConfigurationModule => {
+  const container = getRemoteContainerConfigurationByName(containerName);
 
-  if (!remoteContainerConfiguration || !Array.isArray(remoteContainerConfiguration.modules)) {
+  if (!container || !Array.isArray(container.modules)) {
     return null;
   }
 
-  return remoteContainerConfiguration.modules.find((remoteContainerConfigurationModule) => {
-    return remoteContainerConfigurationModule.name.trim() === moduleName.trim();
+  return container.modules.find((containerModule) => {
+    return containerModule.name.trim() === moduleName.trim();
   });
 }
