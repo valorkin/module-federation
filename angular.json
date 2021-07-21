@@ -1,0 +1,210 @@
+{
+    "version": 1,
+    "projects": {
+        "sap-ui-ngx": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "apps/sap-ui-ngx",
+            "sourceRoot": "apps/sap-ui-ngx/src",
+            "prefix": "sap-ui-ngx",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/apps/sap-ui-ngx",
+                        "index": "apps/sap-ui-ngx/src/index.html",
+                        "main": "apps/sap-ui-ngx/src/main.ts",
+                        "polyfills": "apps/sap-ui-ngx/src/polyfills.ts",
+                        "tsConfig": "apps/sap-ui-ngx/tsconfig.app.json",
+                        "aot": true,
+                        "assets": ["apps/sap-ui-ngx/src/favicon.ico", "apps/sap-ui-ngx/src/assets"],
+                        "styles": ["apps/sap-ui-ngx/src/styles.scss"],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/sap-ui-ngx/src/environments/environment.ts",
+                                    "with": "apps/sap-ui-ngx/src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "sap-ui-ngx:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "sap-ui-ngx:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "sap-ui-ngx:build"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "apps/sap-ui-ngx/tsconfig.app.json",
+                            "apps/sap-ui-ngx/tsconfig.spec.json",
+                            "apps/sap-ui-ngx/tsconfig.editor.json"
+                        ],
+                        "exclude": ["**/node_modules/**", "!apps/sap-ui-ngx/**/*"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "apps/sap-ui-ngx/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        },
+        "sap-ui-ngx-e2e": {
+            "root": "apps/sap-ui-ngx-e2e",
+            "sourceRoot": "apps/sap-ui-ngx-e2e/src",
+            "projectType": "application",
+            "architect": {
+                "e2e": {
+                    "builder": "@nrwl/cypress:cypress",
+                    "options": {
+                        "cypressConfig": "apps/sap-ui-ngx-e2e/cypress.json",
+                        "tsConfig": "apps/sap-ui-ngx-e2e/tsconfig.e2e.json",
+                        "devServerTarget": "sap-ui-ngx:serve"
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "sap-ui-ngx:serve:production"
+                        }
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": ["apps/sap-ui-ngx-e2e/tsconfig.e2e.json"],
+                        "exclude": ["**/node_modules/**", "!apps/sap-ui-ngx-e2e/**/*"]
+                    }
+                }
+            }
+        },
+        "store": {
+            "projectType": "library",
+            "root": "libs/store",
+            "sourceRoot": "libs/store/src",
+            "prefix": "sap-ui-ngx",
+            "architect": {
+                "build": {
+                    "builder": "@nrwl/angular:package",
+                    "options": {
+                        "tsConfig": "libs/store/tsconfig.lib.json",
+                        "project": "libs/store/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "libs/store/tsconfig.lib.prod.json"
+                        }
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": ["libs/store/tsconfig.lib.json", "libs/store/tsconfig.spec.json"],
+                        "exclude": ["**/node_modules/**", "!libs/store/**/*"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/store/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            }
+        }
+    },
+    "cli": {
+        "defaultCollection": "@nrwl/angular"
+    },
+    "schematics": {
+        "@nrwl/workspace": {
+            "library": {
+                "linter": "tslint"
+            }
+        },
+        "@nrwl/cypress": {
+            "cypress-project": {
+                "linter": "tslint"
+            }
+        },
+        "@nrwl/node": {
+            "application": {
+                "linter": "tslint"
+            },
+            "library": {
+                "linter": "tslint"
+            }
+        },
+        "@nrwl/nest": {
+            "application": {
+                "linter": "tslint"
+            },
+            "library": {
+                "linter": "tslint"
+            }
+        },
+        "@nrwl/express": {
+            "application": {
+                "linter": "tslint"
+            },
+            "library": {
+                "linter": "tslint"
+            }
+        },
+        "@nrwl/angular:application": {
+            "unitTestRunner": "jest",
+            "e2eTestRunner": "cypress"
+        },
+        "@nrwl/angular:library": {
+            "unitTestRunner": "jest"
+        }
+    },
+    "defaultProject": "sap-ui-ngx"
+}

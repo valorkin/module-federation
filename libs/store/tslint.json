@@ -1,0 +1,10 @@
+{
+    "extends": "../../tslint.json",
+    "rules": {
+        "directive-selector": [true, "attribute", "sapUiNgx", "camelCase"],
+        "component-selector": [true, "element", "sap-ui-ngx", "kebab-case"]
+    },
+    "linterOptions": {
+        "exclude": ["!**/*"]
+    }
+}
