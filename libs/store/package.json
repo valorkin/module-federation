@@ -1,11 +1,19 @@
 {
-    "name": "@sap-ui-ngx/store",
-    "version": "0.0.1",
-    "peerDependencies": {
-        "@angular/common": "^10.1.6",
-        "@angular/core": "^10.1.6"
-    },
-    "dependencies": {
-        "tslib": "^2.0.0"
-    }
+  "name": "@ngx-ui-tools/store",
+  "version": "VERSION_PLACEHOLDER",
+  "description": "NGX UI Tools Store managing state management in the application",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SAP/ngx-ui-tools.git"
+  },
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/SAP/ngx-ui-tools/issues"
+  },
+  "homepage": "https://github.com/SAP/ngx-ui-tools#readme",
+  "peerDependencies": {
+    "@angular/common": "ANGULAR_VER_PLACEHOLDER",
+    "@angular/core": "ANGULAR_VER_PLACEHOLDER"
+  }
 }

@@ -19,7 +19,7 @@ As a contributor, here are the guidelines we would like you to follow:
 
 ## Issues and Bugs
 
-If you find a bug or some other issue with any part of the library, please [submit an issue](https://github.com/SAP/sap-ui-ngx/issues). Before doing so, please make sure that:
+If you find a bug or some other issue with any part of the library, please [submit an issue](https://github.com/SAP/ngx-ui-tools/issues). Before doing so, please make sure that:
 
 -   The issue is not a duplicate issue.
 -   The issue has not been fixed in a newer release of the library.
@@ -27,7 +27,7 @@ If you find a bug or some other issue with any part of the library, please [subm
 -   Your explanation is clear and complete.
 -   You provide example code and/or screenshots (recommended).
 
-If you meet the above criteria, you can submit issues with our [GitHub issue tracker](https://github.com/SAP/sap-ui-ngx/issues/new). Please use [labels](#usage-of-labels) to categorize your issue.
+If you meet the above criteria, you can submit issues with our [GitHub issue tracker](https://github.com/SAP/ngx-ui-tools/issues/new). Please use [labels](#usage-of-labels) to categorize your issue.
 
 ## Feature Requests
 
@@ -66,7 +66,7 @@ You are welcome to contribute code to SAP UI Library for Angular in order to fix
 There are two important things to consider:
 
 1.  You must be aware of the Apache License (which describes contributions) and **accept the Developer Certificate of Origin**. This is common practice in major Open Source projects. To make this process as simple as possible, we are using *[CLA assistant](https://cla-assistant.io/)* for individual contributions. CLA assistant is an open source tool that integrates with GitHub very well and enables a one-click experience for accepting the CLA. For company contributors, special rules apply. See the respective section below for details.
-2.  You must follow **code style, quality, and product standards requirements**. You can find more information [HERE](https://github.com/SAP/sap-ui-ngx/wiki/Code-Contribution-Guideline).
+2.  You must follow **code style, quality, and product standards requirements**. You can find more information [HERE](https://github.com/SAP/ngx-ui-tools/wiki/Code-Contribution-Guideline).
 
 ### Contributor License Agreement
 
@@ -234,11 +234,11 @@ Unfortunately, we are not able to investigate / fix bugs without a minimal repro
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-1. Search [GitHub](https://github.com/SAP/sap-ui-ngx/pulls) for an open or closed PR
+1. Search [GitHub](https://github.com/SAP/ngx-ui-tools/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
 1. Be sure that an issue describes the problem you're fixing, or documents the design for the feature you'd like to add.
   Discussing the design up front helps to ensure that we're ready to accept your work.
-1. Fork the sap-ui-ngx repo.
+1. Fork the ngx-ui-tools repo.
 1. Make your changes in a new git branch:
 
      ```shell
@@ -318,11 +318,11 @@ from the main (upstream) repository:
     
 
 * All features or bug fixes **must be tested** by one or more specs (unit-tests).
-* All public API methods **must be documented**. [Documentation Guideline](https://github.com/SAP/sap-ui-ngx/wiki/Documenting-Code)
+* All public API methods **must be documented**. [Documentation Guideline](https://github.com/SAP/ngx-ui-tools/wiki/Documenting-Code)
 * We follow [Google's JavaScript Style Guide][js-style-guide], but wrap all code at
   **100 characters**. An automated formatter is available, see
   [DEVELOPER.md](docs/DEVELOPER.md#clang-format).
-* Rules are also mentioned in our [Code Contribution Guideline](https://github.com/SAP/sap-ui-ngx/wiki/Code-Contribution-Guideline)
+* Rules are also mentioned in our [Code Contribution Guideline](https://github.com/SAP/ngx-ui-tools/wiki/Code-Contribution-Guideline)
 
 
 ## <a name="cla"></a> Signing the CLA

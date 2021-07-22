@@ -16,7 +16,8 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@sap-ui-ngx/store": ["libs/store/src/index.ts"]
+            "@ngx-ui-tools/store": ["libs/store/src/index.ts"],
+            "@ngx-ui-tools/module-federation": ["libs/module-federation/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
