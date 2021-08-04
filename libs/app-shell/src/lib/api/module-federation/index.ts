@@ -1,4 +1,4 @@
-import { ConfigurationObject, RemoteContainerConfiguration } from "./interface";
+import { ConfigurationObject, RemoteContainerConfiguration } from './interface';
 
 declare global {
   interface Window {

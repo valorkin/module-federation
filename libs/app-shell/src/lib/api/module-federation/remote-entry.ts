@@ -2,7 +2,7 @@
  * Loads and appends a remote entry Javascript file to a html page
  * Javascript file contains ModuleFederationСontainer to be resolved by Webpack Module Federation
  */
-export const loadRemoteEntryJs = (uri: string): Promise<void> => {
+export function loadRemoteEntryJs(uri: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
     script.src = uri;

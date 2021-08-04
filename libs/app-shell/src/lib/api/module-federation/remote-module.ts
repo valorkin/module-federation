@@ -13,7 +13,7 @@ declare const __webpack_share_scopes__: { default: string };
 /**
  * Rejects with the error object
  */
-const rejectWithResolvingError = (name: string, moduleName: string) => {
+function rejectWithResolvingError(name: string, moduleName: string) {
   return Promise.reject(
     new Error(
       `RemoteModuleResolvingError: Can't resolve ${moduleName} module`
@@ -24,7 +24,7 @@ const rejectWithResolvingError = (name: string, moduleName: string) => {
 /**
  * Resolves a remote module by using Webpack Module Federation API
  */
-const resolveRemoteModule = async <T>(name: string, module: string): Promise<T> => {
+async function resolveRemoteModule<T>(name: string, module: string): Promise<T> {
   // Initializes the share scope. This fills it with known provided modules from this build and all remotes
   await __webpack_init_sharing__('default');
 
@@ -59,7 +59,7 @@ const resolveRemoteModule = async <T>(name: string, module: string): Promise<T> 
 /**
  * Loads the remote entry file and resolves a remote module
  */
-export const createRemoteModuleAsync = async <T = any>(configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule) => {
+export async function createRemoteModuleAsync<T = any>(configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule) {
   await loadRemoteEntryJs(configurationObject.uri);
   return await resolveRemoteModule<T>(configurationObject.name, (module as NgRemoteContainerConfigurationModule).exposedModule);
 }

@@ -1,28 +1,32 @@
-import { ConfigurationObject, RemoteContainerConfigurationModule } from "./interface";
-import { createRemoteModuleAsync } from "./remote-module";
+import { ConfigurationObject, RemoteContainerConfigurationModule } from './interface';
+import { createRemoteModuleAsync } from './remote-module';
 
 /**
  *
  */
-export const getConfigurationObjectIndexByUri = (uri: string): number => {
+export function getConfigurationObjectIndexByUri(uri: string): number {
+  const trimmedUri = uri.trim();
+
   return window.mfCOs.findIndex((co) => {
-    return co.uri.trim() === uri.trim();
+    return co.uri === trimmedUri;
   });
 }
 
 /**
  *
  */
-export const getConfigurationObjectIndexByName = (name: string): number => {
+export function getConfigurationObjectIndexByName(name: string): number {
+  const trimmedName = name.trim();
+
   return window.mfCOs.findIndex((co) => {
-    return co.name.trim() === name.trim();
+    return co.name === trimmedName;
   });
 }
 
 /**
  *
  */
-export const getConfigurationObjectByName = (name: string): ConfigurationObject => {
+export function getConfigurationObjectByName(name: string): ConfigurationObject {
   const index = getConfigurationObjectIndexByName(name);
   return window.mfCOs[index];
 }
@@ -30,31 +34,29 @@ export const getConfigurationObjectByName = (name: string): ConfigurationObject 
 /**
  * Updates Configuration Object and returns `true` if it's updated
  */
- export const updateConfigurationObjectByUri = (configurationObject: ConfigurationObject): boolean => {
+ export function updateConfigurationObjectByUri(configurationObject: ConfigurationObject): boolean {
   const foundIndex = getConfigurationObjectIndexByUri(configurationObject.uri);
 
-  if (foundIndex > -1) {
-    const oldConfigurationObject = window.mfCOs[foundIndex];
-
-    window.mfCOs[foundIndex] = {
-      ...oldConfigurationObject,
-      ...{
-        name: configurationObject.name,
-        version: configurationObject.version
-      }
-    };
-
-    return true;
+  if (foundIndex < 0) {
+    return false;
   }
 
-  return false;
+  const oldConfigurationObject = window.mfCOs[foundIndex];
+
+  window.mfCOs[foundIndex] = {
+    ...oldConfigurationObject,
+    name: configurationObject.name,
+    version: configurationObject.version
+  };
+
+  return true;
 }
 
 /**
  * Adds Configuration Object with the status that resolves a remote container
  * or returns Configuration Object status if it was added before
  */
-export const resolveConfigurationObject = (configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule): Promise<any> => {
+export function resolveConfigurationObject(configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule): Promise<any> {
   let foundConfigurationObjectIndex = getConfigurationObjectIndexByUri(configurationObject.uri);
 
   const foundConfigurationObject = window.mfCOs[foundConfigurationObjectIndex];

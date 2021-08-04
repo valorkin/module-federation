@@ -1,9 +1,10 @@
-import { RemoteContainerConfiguration, RemoteContainerConfigurationModule } from "./interface"
+import { RemoteContainerConfiguration, RemoteContainerConfigurationModule } from './interface';
 
 /**
  * Adds a specific RemoteContainerConfiguration to RCCs list
  */
-export const addRemoteContainerConfiguration = (container: RemoteContainerConfiguration): void => {
+export function addRemoteContainerConfiguration(container: RemoteContainerConfiguration): void {
+  // TODO: Should look up for a container by its name and version
   const found = getRemoteContainerConfigurationByName(container.name);
 
   if (!found) {
@@ -14,23 +15,27 @@ export const addRemoteContainerConfiguration = (container: RemoteContainerConfig
 /**
  * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container name
  */
-export const getRemoteContainerConfigurationByName = (containerName: string): RemoteContainerConfiguration => {
+export function getRemoteContainerConfigurationByName(name: string): RemoteContainerConfiguration {
+  const trimmedName = name.trim();
+
   return window._mfRCCs.find((container) => {
-    return container.name.trim() === containerName.trim();
+    return container.name === trimmedName;
   });
 }
 
 /**
  * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container name and module name
  */
-export const getRemoteContainerConfigurationModuleByName = (containerName: string, moduleName: string): RemoteContainerConfigurationModule => {
+export function getRemoteContainerConfigurationModuleByName(containerName: string, moduleName: string): RemoteContainerConfigurationModule {
   const container = getRemoteContainerConfigurationByName(containerName);
 
   if (!container || !Array.isArray(container.modules)) {
     return null;
   }
 
+  const trimmedModuleName = moduleName.trim();
+
   return container.modules.find((containerModule) => {
-    return containerModule.name.trim() === moduleName.trim();
+    return containerModule.name.trim() === trimmedModuleName;
   });
 }

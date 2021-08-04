@@ -1,10 +1,10 @@
-import { RemoteContainerConfiguration, ConfigurationObjectResolve } from "./interface";
+import { RemoteContainerConfiguration, ConfigurationObjectResolve } from './interface';
 
 import {
   addRemoteContainerConfiguration,
   getRemoteContainerConfigurationByName,
   getRemoteContainerConfigurationModuleByName
-} from "./container-configuration";
+} from './container-configuration';
 
 import {
   getConfigurationObjectByName,
@@ -12,10 +12,12 @@ import {
   updateConfigurationObjectByUri
 } from './configuration-object';
 
+import { trimObjectStringProperties } from './util';
+
 /**
  * Resolves a remote module by its container and module name
  */
-export const loadModuleFederatedApp = async (containerName: string, moduleName: string): Promise<ConfigurationObjectResolve> => {
+export async function loadModuleFederatedApp(containerName: string, moduleName: string): Promise<ConfigurationObjectResolve> {
   const configurationObject = getConfigurationObjectByName(containerName);
 
   if (!configurationObject) {
@@ -59,20 +61,22 @@ export const loadModuleFederatedApp = async (containerName: string, moduleName: 
 /**
  * Adds Remote Container Configurations and Configuration Objects to be resolved in a future
  */
-export const addModuleFederatedApps = (containers: RemoteContainerConfiguration[]) => {
+export function addModuleFederatedApps(containers: RemoteContainerConfiguration[]) {
   if (!Array.isArray(containers) || containers.length < 1) {
     return;
   }
 
   containers.forEach((container) => {
-    addRemoteContainerConfiguration(container);
+    const containerWithTrimmedProps = trimObjectStringProperties(container);
 
-    if (!updateConfigurationObjectByUri(container)) {
+    addRemoteContainerConfiguration(containerWithTrimmedProps);
+
+    if (!updateConfigurationObjectByUri(containerWithTrimmedProps)) {
       window.mfCOs.push({
-        uri: container.uri,
-        name: container.name,
+        uri: containerWithTrimmedProps.uri,
+        name: containerWithTrimmedProps.name,
         status: null,
-        version: container.version
+        version: containerWithTrimmedProps.version
       });
     }
   });
