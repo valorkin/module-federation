@@ -1,8 +1,8 @@
 {
-  "name": "@valorkin/ngx-mf-injector",
+  "name": "@valorkin/mf-core",
   "version": "0.2.38",
   "schematics": "./schematics/collection.json",
-  "description": "Fundamentals App Shell for microfrontend.",
+  "description": "Module Federation core lib for Microfrontend.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

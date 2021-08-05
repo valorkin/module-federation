@@ -37,21 +37,21 @@
       "root": "packages/webcomp-auth-app",
       "type": "library"
     },
-    "app-shell": {
+    "mf-core": {
       "projectType": "library",
-      "root": "libs/app-shell",
-      "sourceRoot": "libs/app-shell/src",
+      "root": "libs/mf-core",
+      "sourceRoot": "libs/mf-core/src",
       "prefix": "mf-root",
       "targets": {
         "build": {
           "executor": "@nrwl/angular:package",
           "options": {
-            "tsConfig": "libs/app-shell/tsconfig.lib.json",
-            "project": "libs/app-shell/ng-package.json"
+            "tsConfig": "libs/mf-core/tsconfig.lib.json",
+            "project": "libs/mf-core/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/app-shell/tsconfig.lib.prod.json"
+              "tsConfig": "libs/mf-core/tsconfig.lib.prod.json"
             }
           }
         },
@@ -59,18 +59,18 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/app-shell/src/**/*.ts",
-              "libs/app-shell/src/**/*.html"
+              "libs/mf-core/src/**/*.ts",
+              "libs/mf-core/src/**/*.html"
             ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
           "outputs": [
-            "coverage/libs/app-shell"
+            "coverage/libs/mf-core"
           ],
           "options": {
-            "jestConfig": "libs/app-shell/jest.config.js",
+            "jestConfig": "libs/mf-core/jest.config.js",
             "passWithNoTests": true
           }
         }

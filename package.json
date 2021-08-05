@@ -12,7 +12,7 @@
     "ng": "ng",
     "ngcc": "ngcc",
     "build": "ng build",
-    "build-app-shell:prod": "nx run app-shell:build:production",
+    "build-mf-core:prod": "nx run mf-core:build:production",
     "//01": "commands to serve all the apps in parallel",
     "c-serve-01-shell": "npm start --prefix ./packages/one-bx-shell-app",
     "c-serve-02": "npm start --prefix ./packages/content-req-app",
