@@ -21,11 +21,14 @@
     ],
     "esModuleInterop": true,
     "paths": {
-      "@valorkin/ngx-mf-injector": [
-        "libs/app-shell/src/index.ts"
+      "@valorkin/mf-core": [
+        "libs/mf-core/src/index.ts"
       ],
       "@mf-root/mf-rpc": [
         "libs/mf-rpc/src/index.ts"
+      ],
+      "@valorkin/ngx-mf-injector": [
+        "libs/ngx-mf-injector/src/index.ts"
       ]
     }
   }

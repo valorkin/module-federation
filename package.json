@@ -13,6 +13,7 @@
     "ngcc": "ngcc",
     "build-mf-core": "nx run mf-core:build:production",
     "build-mf-rpc": "nx run mf-rpc:build:production",
+    "build-ngx-mf-injector": "nx run ngx-mf-injector:build:production",
     "//01": "commands to serve all the apps in parallel",
     "c-serve-01-shell": "npm start --prefix ./packages/one-bx-shell-app",
     "c-serve-02": "npm start --prefix ./packages/content-req-app",

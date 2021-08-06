@@ -114,6 +114,45 @@
           }
         }
       }
+    },
+    "ngx-mf-injector": {
+      "projectType": "library",
+      "root": "libs/ngx-mf-injector",
+      "sourceRoot": "libs/ngx-mf-injector/src",
+      "prefix": "mf-root",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/ngx-mf-injector/tsconfig.lib.json",
+            "project": "libs/ngx-mf-injector/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/ngx-mf-injector/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/ngx-mf-injector/src/**/*.ts",
+              "libs/ngx-mf-injector/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/ngx-mf-injector"
+          ],
+          "options": {
+            "jestConfig": "libs/ngx-mf-injector/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

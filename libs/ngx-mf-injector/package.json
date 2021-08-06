@@ -1,0 +1,24 @@
+{
+  "name": "@valorkin/ngx-mf-injector",
+  "version": "0.0.1",
+  "description": "Module Federation Angular Container Injector for Microfrontend.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valorkin/module-federation.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engine": {
+    "node": ">= 10"
+  },
+  "peerDependencies": {
+    "@angular/common": "ANGULAR_VER_PLACEHOLDER",
+    "@angular/core": "ANGULAR_VER_PLACEHOLDER",
+    "@angular/elements": "ANGULAR_VER_PLACEHOLDER"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
