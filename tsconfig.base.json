@@ -23,6 +23,9 @@
     "paths": {
       "@valorkin/ngx-mf-injector": [
         "libs/app-shell/src/index.ts"
+      ],
+      "@mf-root/mf-rpc": [
+        "libs/mf-rpc/src/index.ts"
       ]
     }
   }

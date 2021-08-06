@@ -1,21 +1,31 @@
 {
-  "npmScope":"mf-root",
+  "npmScope": "mf-root",
   "implicitDependencies": {
     "workspace.json": "*",
     "package.json": {
       "dependencies": "*",
-      "devDependencies":"*"
+      "devDependencies": "*"
     },
-    "nx.json":"*"
+    "nx.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
-        "strictlyOrderedTargets": ["build", "package", "prepare"]
-        }
+        "cacheableOperations": [
+          "build",
+          "test",
+          "lint",
+          "package",
+          "prepare"
+        ],
+        "strictlyOrderedTargets": [
+          "build",
+          "package",
+          "prepare"
+        ]
       }
+    }
   },
   "projects": {
     "cflp-app": {
@@ -30,13 +40,13 @@
     "content-req-app": {
       "implicitDependencies": []
     },
-    "iframe-source-app":{
+    "iframe-source-app": {
       "implicitDependencies": []
     },
-    "ngrx-app":{
+    "ngrx-app": {
       "implicitDependencies": []
     },
-    "nx-app":{
+    "nx-app": {
       "implicitDependencies": []
     },
     "one-bx-shell-app": {
@@ -47,9 +57,12 @@
     },
     "mf-core": {
       "tags": []
+    },
+    "mf-rpc": {
+      "tags": []
     }
   },
-  "affected":{
+  "affected": {
     "defaultBase": "master"
   }
 }

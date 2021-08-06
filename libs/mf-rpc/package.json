@@ -1,0 +1,20 @@
+{
+  "name": "@mf-root/mf-rpc",
+  "version": "0.0.1",
+  "description": "Remote Procedure Calls provider lib for Microfrontend.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valorkin/module-federation.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engine": {
+    "node": ">= 10"
+  },
+  "dependencies": {
+    "framebus": "^4.0.4",
+    "worker-rpc": "^0.2.0"
+  }
+}
