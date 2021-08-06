@@ -21,4 +21,4 @@ import { UrlOverriderPipe } from './api/urls/url-overrider.pipe';
         UrlOverriderPipe,
     ]
 })
-export class AppShellModule {}
+export class ModuleFederationCoreModule {}

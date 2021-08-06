@@ -1,4 +1,4 @@
-export function trimObjectStringProperties(object: any): any {
+export function trimObjectStringValues(object: any): any {
   const newObject = {...object};
 
   Object
@@ -7,7 +7,7 @@ export function trimObjectStringProperties(object: any): any {
       const value = newObject[key];
 
       if (typeof value === 'string') {
-        newObject[key] =  value.trim();
+        newObject[key] = value.trim();
       }
     });
 

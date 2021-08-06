@@ -12,7 +12,7 @@ import {
   updateConfigurationObjectByUri
 } from './configuration-object';
 
-import { trimObjectStringProperties } from './util';
+import { trimObjectStringValues } from './util';
 
 /**
  * Resolves a remote module by its container and module name
@@ -67,16 +67,16 @@ export function addModuleFederatedApps(containers: RemoteContainerConfiguration[
   }
 
   containers.forEach((container) => {
-    const containerWithTrimmedProps = trimObjectStringProperties(container);
+    const containerWithTrimmedValues = trimObjectStringValues(container);
 
-    addRemoteContainerConfiguration(containerWithTrimmedProps);
+    addRemoteContainerConfiguration(containerWithTrimmedValues);
 
-    if (!updateConfigurationObjectByUri(containerWithTrimmedProps)) {
+    if (!updateConfigurationObjectByUri(containerWithTrimmedValues)) {
       window.mfCOs.push({
-        uri: containerWithTrimmedProps.uri,
-        name: containerWithTrimmedProps.name,
+        uri: containerWithTrimmedValues.uri,
+        name: containerWithTrimmedValues.name,
         status: null,
-        version: containerWithTrimmedProps.version
+        version: containerWithTrimmedValues.version
       });
     }
   });
