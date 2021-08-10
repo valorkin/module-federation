@@ -24,7 +24,7 @@
       "@valorkin/mf-core": [
         "libs/mf-core/src/index.ts"
       ],
-      "@mf-root/mf-rpc": [
+      "@valorkin/mf-rpc": [
         "libs/mf-rpc/src/index.ts"
       ],
       "@valorkin/ngx-mf-injector": [

@@ -1,5 +1,5 @@
 {
-  "name": "@mf-root/mf-rpc",
+  "name": "@valorkin/mf-rpc",
   "version": "0.0.1",
   "description": "Remote Procedure Calls provider lib for Microfrontend.",
   "license": "Apache-2.0",
