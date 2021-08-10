@@ -1,3 +1,2 @@
 
-            export * from './lib/ngx-mf-injector.module';
-            
+            export * from './lib/sds';

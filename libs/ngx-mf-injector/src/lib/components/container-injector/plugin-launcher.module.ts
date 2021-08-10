@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PluginLauncherComponent } from './plugin-launcher.component';
 // import { PluginPageLauncherComponent } from './plugin-page-launcher.component';
-import { IframeErrorDirective } from './iframe-error.directive';
+import { IframeErrorDirective } from '../../directives/iframe-error/iframe-error.directive';
 
 @NgModule({
     imports: [

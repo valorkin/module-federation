@@ -1,23 +1,14 @@
 module.exports = {
-  displayName: 'app-shell',
+  displayName: 'mf-core',
   preset: '../../jest.preset.js',
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
-      tsConfig: '<rootDir>/tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.(html|svg)$',
-      astTransformers: {
-        before: [
-          'jest-preset-angular/build/InlineFilesTransformer',
-          'jest-preset-angular/build/StripStylesTransformer'
-        ]
-      },
+      tsconfig: '<rootDir>/tsconfig.spec.json',
     }
   },
-  coverageDirectory: '../../coverage/libs/app-shell',
-  snapshotSerializers: [
-    'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
-    'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+  transform: {
+    '^.+\\.[tj]sx?$':  'ts-jest'
+  },
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  coverageDirectory: '../../coverage/libs/mf-core'
 };

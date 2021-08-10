@@ -11,7 +11,7 @@
     "lerna": "lerna",
     "ng": "ng",
     "ngcc": "ngcc",
-    "build-mf-core": "nx run mf-core:build:production",
+    "build-mf-core": "nx run mf-core:build",
     "build-mf-rpc": "nx run mf-rpc:build:production",
     "build-ngx-mf-injector": "nx run ngx-mf-injector:build:production",
     "//01": "commands to serve all the apps in parallel",

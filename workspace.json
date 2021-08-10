@@ -38,29 +38,29 @@
       "type": "library"
     },
     "mf-core": {
-      "projectType": "library",
       "root": "libs/mf-core",
       "sourceRoot": "libs/mf-core/src",
-      "prefix": "mf-root",
+      "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/angular:package",
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
+            "outputPath": "dist/libs/mf-core",
+            "main": "libs/mf-core/src/index.ts",
             "tsConfig": "libs/mf-core/tsconfig.lib.json",
-            "project": "libs/mf-core/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "libs/mf-core/tsconfig.lib.prod.json"
-            }
+            "assets": [
+              "libs/mf-core/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/mf-core/src/**/*.ts",
-              "libs/mf-core/src/**/*.html"
+              "libs/mf-core/**/*.ts"
             ]
           }
         },
