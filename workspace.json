@@ -43,14 +43,12 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "executor": "@nrwl/node:package",
           "options": {
             "outputPath": "dist/libs/mf-core",
             "main": "libs/mf-core/src/index.ts",
             "tsConfig": "libs/mf-core/tsconfig.lib.json",
+            "packageJson": "libs/mf-core/package.json",
             "assets": [
               "libs/mf-core/*.md"
             ]
@@ -115,21 +113,21 @@
         }
       }
     },
-    "ngx-mf-injector": {
+    "mf-angular": {
       "projectType": "library",
-      "root": "libs/ngx-mf-injector",
-      "sourceRoot": "libs/ngx-mf-injector/src",
+      "root": "libs/mf-angular",
+      "sourceRoot": "libs/mf-angular/src",
       "prefix": "mf-root",
       "targets": {
         "build": {
           "executor": "@nrwl/angular:package",
           "options": {
-            "tsConfig": "libs/ngx-mf-injector/tsconfig.lib.json",
-            "project": "libs/ngx-mf-injector/ng-package.json"
+            "tsConfig": "libs/mf-angular/tsconfig.lib.json",
+            "project": "libs/mf-angular/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "libs/ngx-mf-injector/tsconfig.lib.prod.json"
+              "tsConfig": "libs/mf-angular/tsconfig.lib.prod.json"
             }
           }
         },
@@ -137,18 +135,18 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/ngx-mf-injector/src/**/*.ts",
-              "libs/ngx-mf-injector/src/**/*.html"
+              "libs/mf-angular/src/**/*.ts",
+              "libs/mf-angular/src/**/*.html"
             ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
           "outputs": [
-            "coverage/libs/ngx-mf-injector"
+            "coverage/libs/mf-angular"
           ],
           "options": {
-            "jestConfig": "libs/ngx-mf-injector/jest.config.js",
+            "jestConfig": "libs/mf-angular/jest.config.js",
             "passWithNoTests": true
           }
         }

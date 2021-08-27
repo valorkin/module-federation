@@ -16,7 +16,7 @@
       ],
       "parserOptions": {
         "project": [
-          "libs/ngx-mf-injector/tsconfig.*?.json"
+          "libs/mf-angular/tsconfig.*?.json"
         ]
       },
       "rules": {

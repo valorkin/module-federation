@@ -61,7 +61,7 @@
     "mf-rpc": {
       "tags": []
     },
-    "ngx-mf-injector": {
+    "mf-angular": {
       "tags": []
     }
   },

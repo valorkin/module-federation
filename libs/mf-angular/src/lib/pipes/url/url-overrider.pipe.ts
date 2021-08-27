@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isAbsoluteUrl, resolveUrl } from '@valorkin/mf-core';
+import { isAbsoluteUrl, resolveUrl } from '@mf/core';
 
 /**
  * Pipe is responsible for overriding dynamically created urls
@@ -27,7 +27,7 @@ import { isAbsoluteUrl, resolveUrl } from '@valorkin/mf-core';
     }
  */
 @Pipe({
-    name: 'fdsUrlOverrider'
+    name: 'ngxMfUrlOverrider'
 })
 export class UrlOverriderPipe implements PipeTransform {
   public transform(url: string, baseUrl: string): string {
