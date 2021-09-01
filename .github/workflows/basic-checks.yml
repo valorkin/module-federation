@@ -24,8 +24,8 @@ jobs:
         run: yarn
 
       # Runs a set of commands using the runners shell
-      - name: build
-        run: npm run build
+      # - name: build
+      # run: npm run build
 
-      - name: test
-        run: echo "run serve -> run e2e -> kill them all"
+      # - name: test
+      # run: echo "run serve -> run e2e -> kill them all"
