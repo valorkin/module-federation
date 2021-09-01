@@ -27,14 +27,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/valorkin/sap-ng-mf.git"
+    "url": "git+https://github.com/valorkin/module-federation.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/valorkin/sap-ng-mf/issues"
+    "url": "https://github.com/valorkin/module-federation/issues"
   },
-  "homepage": "https://github.com/valorkin/sap-ng-mf#readme",
+  "homepage": "https://github.com/valorkin/module-federation#readme",
   "dependencies": {
     "@angular/animations": "~11.2.9",
     "@angular/cdk": "^9.2.4",
