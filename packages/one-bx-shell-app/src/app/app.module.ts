@@ -16,7 +16,7 @@ import {
 } from '@fundamental-ngx/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppShellModule } from '@valorkin/ngx-mf-injector'
+import { NgxContainerInjectorModule } from '@mf/angular'
 import { HttpClientModule } from '@angular/common/http';
 
 import {
@@ -43,7 +43,7 @@ import { APP_ROUTES } from './app.routes';
     MenuModule,
     ShellbarModule,
     BrowserAnimationsModule,
-    AppShellModule,
+    NgxContainerInjectorModule,
   ],
   declarations: [
     AppComponent,

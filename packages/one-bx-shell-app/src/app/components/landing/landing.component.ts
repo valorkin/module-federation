@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RemoteContainerConfiguration } from '@valorkin/ngx-mf-injector/lib/api/module-federation';
+import { RemoteContainerConfiguration } from '@mf/core';
 
 @Component({
   selector: 'app-landing',
