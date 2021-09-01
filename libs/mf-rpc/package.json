@@ -1,14 +1,11 @@
 {
-  "name": "@valorkin/mf-rpc",
-  "version": "0.0.1",
-  "description": "Remote Procedure Calls provider lib for Microfrontend.",
-  "license": "Apache-2.0",
+  "name": "@mf/rpc",
+  "version": "1.0.0",
+  "description": "Remote Procedure Calls provider lib for Microfrontends",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/valorkin/module-federation.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "engine": {
     "node": ">= 10"

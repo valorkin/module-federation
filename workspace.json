@@ -80,14 +80,12 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "executor": "@nrwl/node:package",
           "options": {
             "outputPath": "dist/libs/mf-rpc",
             "main": "libs/mf-rpc/src/index.ts",
             "tsConfig": "libs/mf-rpc/tsconfig.lib.json",
+            "packageJson": "libs/mf-rpc/package.json",
             "assets": [
               "libs/mf-rpc/*.md"
             ]

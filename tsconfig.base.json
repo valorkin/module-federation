@@ -20,13 +20,6 @@
       "dom"
     ],
     "esModuleInterop": true,
-    "paths": {
-      "@mf/rpc": [
-        "libs/mf-rpc/src/index.ts"
-      ],
-      "@mf/angular": [
-        "libs/mf-angular/src/index.ts"
-      ]
-    }
+    "paths": {}
   }
 }
