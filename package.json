@@ -7,11 +7,13 @@
   "scripts": {
     "start": "concurrently \"npm:c-serve-*\"",
     "start:prod": "concurrently \"npm:c-serve-*\" -- --prod",
-    "postinstall": "lerna bootstrap && ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "postinstall": "npm run ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "lerna": "lerna",
     "ng": "ng",
-    "build": "ng build",
-    "build-app-shell:prod": "nx run app-shell:build:production",
+    "ngcc": "ngcc",
+    "build-mf-core": "nx run mf-core:build",
+    "build-mf-rpc": "nx run mf-rpc:build",
+    "build-mf-angular": "nx run mf-angular:build:production",
     "//01": "commands to serve all the apps in parallel",
     "c-serve-01-shell": "npm start --prefix ./packages/one-bx-shell-app",
     "c-serve-02": "npm start --prefix ./packages/content-req-app",
@@ -25,14 +27,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/valorkin/sap-ng-mf.git"
+    "url": "git+https://github.com/valorkin/module-federation.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/valorkin/sap-ng-mf/issues"
+    "url": "https://github.com/valorkin/module-federation/issues"
   },
-  "homepage": "https://github.com/valorkin/sap-ng-mf#readme",
+  "homepage": "https://github.com/valorkin/module-federation#readme",
   "dependencies": {
     "@angular/animations": "~11.2.9",
     "@angular/cdk": "^9.2.4",
@@ -46,6 +48,7 @@
     "@angular/router": "~11.2.9",
     "@fundamental-ngx/app-shell": "^0.2.38",
     "@fundamental-ngx/core": "0.28.1",
+    "@mf/core": "^1.0.0",
     "@pscoped/ngx-pub-sub": "^3.0.0",
     "ngx-build-plus": "^11.0.0",
     "rxjs": "~6.5.4",
@@ -65,6 +68,7 @@
     "@nrwl/eslint-plugin-nx": "12.3.4",
     "@nrwl/jest": "11.2.9",
     "@nrwl/linter": "12.3.4",
+    "@nrwl/node": "11.2.9",
     "@nrwl/tao": "latest",
     "@nrwl/workspace": "latest",
     "@types/jasmine": "~3.6.0",

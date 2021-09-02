@@ -20,10 +20,6 @@
       "dom"
     ],
     "esModuleInterop": true,
-    "paths": {
-      "@valorkin/ngx-mf-injector": [
-        "libs/app-shell/src/index.ts"
-      ]
-    }
+    "paths": {}
   }
 }

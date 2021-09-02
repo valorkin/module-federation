@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
     ShellbarMenuItem,
@@ -11,10 +11,7 @@ export interface ThemeMenu {
   name: string;
 }
 
-/**
- * Service is used by application layer in order to communicate  with the shell bar. The goal is
- * to have a Shell-bar reactive so we can easily push new items.
- */
+
 @Injectable({ providedIn: 'root' })
 export class ShellBarService {
     readonly _productMenu$: BehaviorSubject<ShellbarMenuItem[]>;
@@ -59,3 +56,4 @@ export class ShellBarService {
         this._subTitle$.next(text);
     }
 }
+*/

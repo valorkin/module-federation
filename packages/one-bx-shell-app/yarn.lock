@@ -164,6 +164,13 @@
   optionalDependencies:
     parse5 "^5.0.0"
 
+"@angular/cdk@^9.2.4":
+  version "9.2.4"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-9.2.4.tgz#8413958bd275e4c34be3b96f56444671dd30ba93"
+  integrity sha512-iw2+qHMXHYVC6K/fttHeNHIieSKiTEodVutZoOEcBu9rmRTGbLB26V/CRsfIRmA1RBk+uFYWc6UQZnMC3RdnJQ==
+  optionalDependencies:
+    parse5 "^5.0.0"
+
 "@angular/cli@^11.2.8":
   version "11.2.8"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-11.2.8.tgz#8514a569ab0f73d10598ce4fc63675b7a70c067d"
@@ -1182,6 +1189,22 @@
     loader-utils "^2.0.0"
     merge-source-map "^1.1.0"
     schema-utils "^2.7.0"
+
+"@mf/angular@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@mf/angular/-/angular-1.0.0.tgz#ccc1363fbdd847f5897c67bac7ee9b99dd1c058a"
+  integrity sha512-ZOYsm+kqjmXzrQwLjC7juAbtM8AmDWPHALQWQAf/bjDDE447l10DGW38EqAERwoCX8my0shIrP/vkEyskvirXA==
+  dependencies:
+    "@angular/cdk" "^9.2.4"
+    "@mf/core" "^1.0.0"
+    tslib "^2.0.0"
+
+"@mf/core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@mf/core/-/core-1.0.0.tgz#dda25815127ff8e7e4c3b87ec01713d24712d782"
+  integrity sha512-HbRW83jJUifpHcIXQa4RYasf1m2813yxAtFv8GZ9oxtiCY0PTDRfhhat3PAK/phD6hAkS45RdmgaeTqixohTmw==
+  dependencies:
+    tslib "^2.0.0"
 
 "@ngtools/webpack@11.2.8":
   version "11.2.8"

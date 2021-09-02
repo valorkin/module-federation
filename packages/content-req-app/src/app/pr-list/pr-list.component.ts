@@ -1,6 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Message, MessagingService, TextMessage, TOPIC_THEME_CHANGE, TopicSubscriber} from '@fundamental-ngx/app-shell';
-
 
 @Component({
   selector: 'app-pr-list',
@@ -8,10 +6,9 @@ import {Message, MessagingService, TextMessage, TOPIC_THEME_CHANGE, TopicSubscri
 })
 export class PrListComponent implements OnInit, OnDestroy {
   tableRows: any[];
-  subscriber: TopicSubscriber<Message>;
   cbValue = true;
 
-  constructor(private messaging: MessagingService) {
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -45,17 +42,11 @@ export class PrListComponent implements OnInit, OnDestroy {
         column5: '$10,500.00 USD'
       }
     ];
-
-    this.subscriber = this.messaging.subscribe(TOPIC_THEME_CHANGE, ((m) => {
-      console.log('@@@ PR-LIST: Theme changed to => ', m);
-    }));
   }
 
   ngOnDestroy(): void {
-    this.subscriber.unSubscribe();
   }
 
   onItemClicked($event: MouseEvent, id: string): void {
-    this.messaging.publish('app:event', new TextMessage('Hello from Pr List: ' + id))
   }
 }

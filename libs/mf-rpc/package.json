@@ -1,0 +1,17 @@
+{
+  "name": "@mf/rpc",
+  "version": "1.0.0",
+  "description": "Remote Procedure Calls provider lib for Microfrontends",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valorkin/module-federation.git"
+  },
+  "engine": {
+    "node": ">= 10"
+  },
+  "dependencies": {
+    "framebus": "^4.0.4",
+    "worker-rpc": "^0.2.0"
+  }
+}

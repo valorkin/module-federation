@@ -1,0 +1,24 @@
+{
+  "builders": {
+    "browser": {
+      "implementation": "./src/browser",
+      "schema": "./src/browser/schema.json",
+      "description": "Extends and builds the build target from a local project"
+    },
+    "dev-server": {
+      "implementation": "./src/dev-server",
+      "schema": "./src/dev-server/schema.json",
+      "description": "Extends and serves the serve target from a local project"
+    },
+    "karma": {
+      "implementation": "./src/karma",
+      "schema": "./src/karma/schema.json",
+      "description": "Extends and runs the test target from a local project"
+    },
+    "extract-i18n": {
+      "implementation": "./src/extract-i18n",
+      "schema": "./src/extract-i18n/schema.json",
+      "description": "Extends and extracts the I18n target from a local project"
+    }
+  }
+}
