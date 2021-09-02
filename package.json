@@ -29,8 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/valorkin/module-federation.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/valorkin/module-federation/issues"
   },
