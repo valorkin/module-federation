@@ -6,7 +6,7 @@ const outputDir = path.resolve(__dirname, '../../dist/mf-chrome-extension');
 module.exports = {
   entry: {
     popup: './src/popup.ts',
-    content: './src/content.ts',
+    content: './src/content.ts'
   },
   module: {
     rules: [

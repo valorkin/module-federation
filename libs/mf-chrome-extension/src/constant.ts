@@ -8,6 +8,5 @@ export const configurationObjectJsonTemplate = {
 export const configurationObjectRequiredKeys = ['uri', 'name'];
 
 export enum MFChromeExtensionActions {
-  AddFormConfigurationObject = 'mf-ext-add-form-configuration-object',
-  AddFormConfigurationObjectSuccess = 'mf-ext-add-configuration-object-success'
+  AddFormConfigurationObject = 'mf-ext-add-form-configuration-object'
 }

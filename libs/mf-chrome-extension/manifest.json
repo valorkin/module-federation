@@ -4,7 +4,9 @@
   "version": "1.0",
   "description": "Switch any MF configs",
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage",
+    "scripting"
   ],
   "content_scripts": [
     {
