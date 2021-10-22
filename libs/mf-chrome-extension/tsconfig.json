@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [
+      "chrome",
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+  },
+  "files": [
+    "./src/content.ts"
+  ]
+}

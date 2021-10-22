@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Module Federation Configurations Switcher",
+  "version": "1.0",
+  "description": "Switch any MF configs",
+  "permissions": [
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_icon": "assets/images/mf-logo.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "assets/images/mf-logo.png",
+    "32": "assets/images/mf-logo.png",
+    "48": "assets/images/mf-logo.png",
+    "128": "assets/images/mf-logo.png"
+  }
+}

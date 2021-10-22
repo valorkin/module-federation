@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MF Switcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      .mf-chrome-ext-form {
+        display: flex;
+        flex-direction: column;
+        width: 420px;
+        padding: 10px;
+      }
+
+      .mf-chrome-ext-form__text {
+        padding: 10px;
+        margin-bottom: 10px;
+        resize: none;
+      }
+
+      .mf-chrome-ext-form__actions {
+        align-self: end;
+      }
+
+      .mf-chrome-ext-form__clear {
+        background: transparent;
+        border: 1px solid gray;
+        cursor: pointer;
+        color: darkgrey;
+      }
+
+      .mf-chrome-ext-form__error-text {
+        display: none;
+        margin-bottom: 10px;
+        padding-left: 10px;
+        font-size: 12px;
+        color: indianred;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mf-chrome-ext-form">
+      <textarea id="mfTextField"
+                class="mf-chrome-ext-form__text"
+                rows="6">
+      </textarea>
+
+      <div id="mfErrorText"
+           class="mf-chrome-ext-form__error-text">
+      </div>
+
+      <div class="mf-chrome-ext-form__actions">
+        <button id="mfClearButton"
+                type="button"
+                class="mf-chrome-ext-form__clear">
+          Clear
+        </button>
+        <button id="mfSubmitButton"
+                type="button"
+                class="mf-chrome-ext-form__submit">
+          Add configuration
+        </button>
+      </div>
+      <script src="popup.js"></script>
+  </body>
+</html>
