@@ -1,12 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Module Federation Configurations Switcher",
+  "name": "Module Federation Containers Switcher",
   "version": "1.0",
-  "description": "Switch any MF configs",
+  "description": "Switch remote containers by using Module Federation",
   "permissions": [
-    "tabs",
-    "storage",
-    "scripting"
+    "tabs"
   ],
   "content_scripts": [
     {

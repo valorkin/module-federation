@@ -33,7 +33,7 @@ formElements.text.addEventListener('keyup', () => {
 /**
  *
  */
- formElements.clearButton.addEventListener('click', () => {
+formElements.clearButton.addEventListener('click', () => {
   refreshForm(configurationObjectJsonTemplate);
 });
 

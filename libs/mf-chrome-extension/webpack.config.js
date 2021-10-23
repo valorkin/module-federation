@@ -1,7 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const outputDir = path.resolve(__dirname, '../../dist/mf-chrome-extension');
+const outputDir = path.resolve(__dirname, '../../dist/libs/mf-chrome-extension');
 
 module.exports = {
   entry: {
@@ -14,23 +14,6 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      },
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: `${outputDir}/[name].css`
-            }
-          },
-          'style-loader',
-          'css-loader',
-          {
-						loader: 'sass-loader'
-					},
-        ]
       }
     ],
   },
