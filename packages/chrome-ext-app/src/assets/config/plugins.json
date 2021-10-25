@@ -1,0 +1,15 @@
+[
+  {
+    "name": "contentRecommendedCategories",
+    "version": "0.0.2",
+    "provider": "Ariba",
+    "uri": "http://localhost:4207/remoteEntry.js",
+    "modules": [
+      {
+        "name": "RecommendedCategoriesComponent",
+        "type": "angular-ivy-component",
+        "exposedModule": "./RecommendedCategories"
+      }
+    ]
+  }
+]
