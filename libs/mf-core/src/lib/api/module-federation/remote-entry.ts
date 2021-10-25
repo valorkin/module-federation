@@ -17,6 +17,7 @@ export function loadRemoteEntryJs(uri: string): Promise<void> {
 
     script.onload = () => {
       resolve();
+      script.remove();
     };
 
     document.body.append(script);

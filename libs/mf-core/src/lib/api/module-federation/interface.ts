@@ -1,8 +1,9 @@
 export interface ConfigurationObject {
   uri: string, // URI of remote entry.js
-  status?: Promise<any>,
-  remoteContainerDefinitionUri?: string,
+  uuid?: string;
   name?: string,
+  status?: Promise<any>,
+  definitionUri?: string,
   version?: string
 }
 
@@ -13,7 +14,8 @@ export interface ConfigurationObjectResolve {
 }
 
 export interface RemoteContainerConfiguration {
-  uri: string, // URI of remote entry.js
+  uri: string,   // URI of remote entry.js
+  uuid?: string;
   name?: string,
   version?: string,
   provider?: string;

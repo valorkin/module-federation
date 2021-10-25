@@ -3,6 +3,10 @@
   "compilerOptions": {
     "types": [
       "jasmine"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
     ]
   },
   "include": [

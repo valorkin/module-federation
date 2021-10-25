@@ -14,8 +14,8 @@
     "types": [],
     "lib": [
       "dom",
-      "es2015"
-    ]
+      "es2017"
+    ],
   },
   "exclude": [
     "src/test-setup.ts",

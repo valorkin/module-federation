@@ -2,8 +2,9 @@ import { RemoteContainerConfiguration, ConfigurationObjectResolve } from './inte
 
 import {
   addRemoteContainerConfiguration,
-  getRemoteContainerConfigurationByName,
-  getRemoteContainerConfigurationModuleByName
+  getRemoteContainerConfigurationByUuid,
+  getRemoteContainerConfigurationModuleByUuid,
+  loadRemoteContainerConfigurationsFile
 } from './container-configuration';
 
 import {
@@ -12,28 +13,47 @@ import {
   updateConfigurationObjectByUri
 } from './configuration-object';
 
-import { trimObjectStringValues } from './util';
+import { trimObjectStringValues, uuidv4 } from './util';
 
 /**
  * Resolves a remote module by its container and module name
  */
 export async function loadModuleFederatedApp(containerName: string, moduleName: string): Promise<ConfigurationObjectResolve> {
-  const configurationObject = getConfigurationObjectByName(containerName);
+  let configurationObject = getConfigurationObjectByName(containerName);
+  let containerUuid = configurationObject.uuid;
 
   if (!configurationObject) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedAppCONotFoundError: There's no Configuration Object with name ${containerName}`
+        `ModuleFederatedAppCONotFoundError: There's no Configuration Object with name ${containerName} and uuid: ${containerUuid}`
       )
     );
   }
 
-  const containerModule = getRemoteContainerConfigurationModuleByName(containerName, moduleName);
+  const definitionUri = configurationObject.definitionUri;
+
+  if (!containerUuid && definitionUri) {
+    const containers = await loadRemoteContainerConfigurationsFile(definitionUri);
+
+    if (!containers) {
+      return Promise.reject(
+        new Error(
+          `ModuleFederatedRCCFileLoadingError: An error occurred while loading Remote Container Configurations from ${definitionUri} for ${containerName} and uuid: ${containerUuid}`
+        )
+      );
+    }
+
+    addModuleFederatedApps(containers);
+    configurationObject = getConfigurationObjectByName(containerName);
+    containerUuid = configurationObject.uuid;
+  }
+
+  const containerModule = getRemoteContainerConfigurationModuleByUuid(containerUuid, moduleName);
 
   if (!containerModule) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedRCCNotFoundError: There's no Remote Container Configuration with name ${containerName}`
+        `ModuleFederatedRCCNotFoundError: There's no Remote Container Configuration with name ${containerName} and uuid: ${containerUuid}`
       )
     );
   }
@@ -42,7 +62,7 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
     .then((resolvedContainer) => {
       return {
         module: resolvedContainer,
-        configuration: getRemoteContainerConfigurationByName(containerName),
+        configuration: getRemoteContainerConfigurationByUuid(containerUuid),
         configurationModule: containerModule
       }
     }) as ConfigurationObjectResolve;
@@ -50,7 +70,7 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
   if (!resolvedConfiguration) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedAppLoadingError: An error occurred while loading or resolving Configuration Object with name ${containerName}`
+        `ModuleFederatedAppLoadingError: An error occurred while loading or resolving Configuration Object with name ${containerName} and uuid: ${containerUuid}`
       )
     );
   }
@@ -67,12 +87,17 @@ export function addModuleFederatedApps(containers: RemoteContainerConfiguration[
   }
 
   containers.forEach((container) => {
-    const containerWithTrimmedValues = trimObjectStringValues(container);
+    const uuid = uuidv4();
+    const containerWithTrimmedValues = {
+      ...trimObjectStringValues(container),
+      uuid
+    };
 
     addRemoteContainerConfiguration(containerWithTrimmedValues);
 
     if (!updateConfigurationObjectByUri(containerWithTrimmedValues)) {
       window.mfCOs.push({
+        uuid,
         uri: containerWithTrimmedValues.uri,
         name: containerWithTrimmedValues.name,
         status: null,
