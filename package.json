@@ -25,7 +25,8 @@
     "c-serve-06": "npm start --prefix ./packages/ngrx-app",
     "c-serve-07": "npm start --prefix ./packages/webcomp-auth-app/",
     "c-serve-08": "cd ./packages/iframe-source-website/ && ng serve --no-watch --no-progress",
-    "c-serve-09": "cd ./packages/cflp-app/ && ng serve --no-watch --no-progress"
+    "c-serve-09": "cd ./packages/cflp-app/ && ng serve --no-watch --no-progress",
+    "c-serve-10": "cd ./packages/chrome-ext-app/ && ng serve --no-watch --no-progress"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 <fd-layout-grid [col]="6">
   <!-- Loading RCCs from json file -->
-  <ng-container *ngIf="containers">
+  <ng-container *ngIf="containers && isLoaded">
     <fd-layout-panel [columnSpan]="4"
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
@@ -43,7 +43,8 @@
     <fd-layout-panel [columnSpan]="5"
                      fdLayoutGridSpan>
       <ngx-mf-injector container="contentRecommendedCategories"
-                       module="RecommendedCategoriesComponent">
+                       module="RecommendedCategoriesComponent"
+                       (error)="onError($event)">
       </ngx-mf-injector>
     </fd-layout-panel>
 

@@ -24,7 +24,7 @@ module.exports = {
       remotes: {
         contentReqApp: 'contentReqApp@http://localhost:4201/remoteEntry.js',
         contentItemApp: 'contentItemApp@http://localhost:4202/remoteEntry.js',
-        contentRecommendedCategories: 'contentRecommendedCategories@https://mf-demo-cnt-rcmmnd-cats.web.app/remoteEntry.js',
+        contentRecommendedCategories: 'contentRecommendedCategories@http://localhost:4203/remoteEntry.js',
         nxApp: 'nxApp@http://localhost:4204/remoteEntry.js',
         ngrxApp: 'ngrxApp@http://localhost:4205/remoteEntry.js'
       },

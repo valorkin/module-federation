@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RemoteContainerConfiguration } from '@mf/core';
+import { ConfigurationObject, RemoteContainerConfiguration } from '@mf/core';
 
 @Component({
   selector: 'app-landing',
@@ -13,7 +13,14 @@ export class LandingComponent implements OnInit {
 
   containers: RemoteContainerConfiguration[];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private http: HttpClient
+  ) {
+    window.addEventListener('mf-ext-add-form-configuration-object', (event: CustomEvent) => {
+      this.onAddConfigurationObject(event.detail);
+    }, false);
+  }
 
   ngOnInit() {
     this.onLoadRemoteContainerConfigurationsFromJsonFile();
@@ -21,6 +28,18 @@ export class LandingComponent implements OnInit {
 
   onError(error: Error) {
     console.log(error);
+  }
+
+  onAddConfigurationObject(json: ConfigurationObject) {
+    window.mfCOs = window.mfCOs || [];
+    window.mfCOs.push(json);
+
+    this.isLoaded = false;
+    this.changeDetectorRef.detectChanges();
+
+    window.setTimeout(() => {
+      this.isLoaded = true;
+    });
   }
 
   onLoadRemoteContainerConfigurationsFromJsonFile = async () => {
