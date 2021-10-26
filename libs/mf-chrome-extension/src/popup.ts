@@ -7,10 +7,12 @@ import {
   enableSubmitButton,
   refreshForm,
   showError,
-  hideError,
+  showSuccess,
+  hideMessage,
 } from './form';
 
 import { parseForm } from './form-validation';
+import { testForm } from './test-validation';
 
 refreshForm(configurationObjectJsonTemplate);
 
@@ -26,7 +28,7 @@ formElements.text.addEventListener('keyup', () => {
     return;
   }
 
-  hideError();
+  hideMessage();
   enableSubmitButton();
 });
 
@@ -49,6 +51,29 @@ formElements.submitButton.addEventListener('click', () => {
 
   refreshForm(configurationObjectJsonTemplate);
   sendMessage(json);
+});
+
+/**
+ *
+ */
+formElements.testButton.addEventListener('click', () => {
+  const json = parseForm(formElements.text.value);
+
+  if (json instanceof Error) {
+    return;
+  }
+
+  disableSubmitButton();
+
+  testForm(json)
+    .then((message) => {
+      enableSubmitButton();
+      showSuccess(message);
+    })
+    .catch((validation) => {
+      enableSubmitButton();
+      showError(validation);
+    });
 });
 
 /**
