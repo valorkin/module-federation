@@ -12,4 +12,5 @@ window._mfRCCs = window._mfRCCs || [];
 
 export * from './interface';
 export * from './type';
+export * from './util';
 export * from './module-federation';

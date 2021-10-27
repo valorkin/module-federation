@@ -22,6 +22,21 @@ function rejectWithResolvingError(name: string, moduleName: string) {
 }
 
 /**
+ * Removes webpack previous module resolution
+ */
+function unresolveRemoteModule(name: string) {
+  window[name] = null;
+  window[`webpackChunk${name}`] = null;
+}
+
+/**
+ * Checks if a remote module is resolved
+ */
+function hasRemoteModuleBeenResolved(container: ModuleFederationСontainer): boolean {
+  return Object.prototype.toString.call(container) === '[object Object]';
+}
+
+/**
  * Resolves a remote module by using Webpack Module Federation API
  */
 async function resolveRemoteModule<T>(name: string, module: string): Promise<T> {
@@ -66,19 +81,4 @@ export async function createRemoteModuleAsync<T = any>(configurationObject: Conf
 
   await loadRemoteEntryJs(configurationObject.uri);
   return await resolveRemoteModule<T>(name, (module as NgRemoteContainerConfigurationModule).exposedModule);
-}
-
-/**
- * Removes webpack previous module resolution
- */
-export function unresolveRemoteModule(name: string) {
-  window[name] = null;
-  window[`webpackChunk${name}`] = null;
-}
-
-/**
- * Checks if a remote module is resolved
- */
-export function hasRemoteModuleBeenResolved(container: ModuleFederationСontainer): boolean {
-  return Object.prototype.toString.call(container) === '[object Object]';
 }

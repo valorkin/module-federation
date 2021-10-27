@@ -1,27 +1,10 @@
-import { ConfigurationObject } from "@mf/core";
-
-/**
- *
- */
-async function fetchByUri(uri: string): Promise<Response> {
-  try {
-    const response = await fetch(uri);
-
-    if (!response.ok) {
-      throw response;
-    }
-
-    return response;
-  } catch (e) {
-    return Promise.reject(e);
-  }
-}
+import { ConfigurationObject, RemoteContainerConfiguration, fetchByUri } from "@mf/core";
 
 /**
  *
  */
 export async function testForm(json: ConfigurationObject): Promise<string> {
-  let scriptText;
+  let scriptText: string;
 
   try {
     scriptText = await fetchByUri(json.uri)
@@ -36,7 +19,7 @@ export async function testForm(json: ConfigurationObject): Promise<string> {
     );
   }
 
-  // check `var containerName;`
+  // check global var declaration `var containerName;`
   const isContainerValid = new RegExp(`var ${json.name};`, 'i')
     .test(scriptText);
 
@@ -52,7 +35,7 @@ export async function testForm(json: ConfigurationObject): Promise<string> {
   const isDefinitionUriValid = typeof definitionUri === 'string' && definitionUri.trim() !== '';
 
   if (isDefinitionUriValid) {
-    let containers;
+    let containers: RemoteContainerConfiguration[];
 
     try {
       containers = await fetchByUri(definitionUri)

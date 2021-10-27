@@ -20,25 +20,27 @@ import { trimObjectStringValues, uuidv4 } from './util';
  */
 export async function loadModuleFederatedApp(containerName: string, moduleName: string): Promise<ConfigurationObjectResolve> {
   let configurationObject = getConfigurationObjectByName(containerName);
-  let containerUuid = configurationObject.uuid;
 
   if (!configurationObject) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedAppCONotFoundError: There's no Configuration Object with name ${containerName} and uuid: ${containerUuid}`
+        `ModuleFederatedAppCONotFoundError: There's no Configuration Object with name ${containerName}`
       )
     );
   }
 
   const definitionUri = configurationObject.definitionUri;
+  let containerUuid = configurationObject.uuid;
 
   if (!containerUuid && definitionUri) {
-    const containers = await loadRemoteContainerConfigurationsFile(definitionUri);
+    let containers: RemoteContainerConfiguration[];
 
-    if (!containers) {
+    try {
+      containers = await loadRemoteContainerConfigurationsFile(definitionUri);
+    } catch (e) {
       return Promise.reject(
         new Error(
-          `ModuleFederatedRCCFileLoadingError: An error occurred while loading Remote Container Configurations from ${definitionUri} for ${containerName} and uuid: ${containerUuid}`
+          `ModuleFederatedRCCFileLoadingError: An error occurred while loading Remote Container Configurations from ${definitionUri} for ${containerName}`
         )
       );
     }

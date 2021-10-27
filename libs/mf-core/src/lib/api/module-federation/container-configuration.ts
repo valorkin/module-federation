@@ -1,8 +1,8 @@
 import { RemoteContainerConfiguration, RemoteContainerConfigurationModule } from './interface';
-import { findIndexFromEnd, } from './util';
+import { findIndexFromEnd, fetchByUri } from './util';
 
 /**
- * Adds a specific RemoteContainerConfiguration to RCCs list
+ * Adds a specific Remote Container Configuration to RCCs list
  */
 export function addRemoteContainerConfiguration(container: RemoteContainerConfiguration): void {
   const index = getRemoteContainerConfigurationIndexByUri(container.uri);
@@ -24,44 +24,33 @@ export function addRemoteContainerConfiguration(container: RemoteContainerConfig
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container name
+ * Returns a specific Remote Container Configuration Module from RCCs list by uuid
  */
-export function getRemoteContainerConfigurationByName(name: string): RemoteContainerConfiguration {
-  const trimmedName = name.trim();
-
-  return window._mfRCCs.find((container) => {
-    return container.name === trimmedName;
-  });
-}
-
-/**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by uuid
- */
- export function getRemoteContainerConfigurationIndexByUuid(uuid: string): number {
+export function getRemoteContainerConfigurationIndexByUuid(uuid: string): number {
   return findIndexFromEnd(window._mfRCCs, (container) => {
     return container.uuid === uuid;
   });
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by uuid
+ * Returns a specific Remote Container Configuration Module from RCCs list by uuid
  */
- export function getRemoteContainerConfigurationByUuid(uuid: string): RemoteContainerConfiguration {
+export function getRemoteContainerConfigurationByUuid(uuid: string): RemoteContainerConfiguration {
   const index = getRemoteContainerConfigurationIndexByUuid(uuid);
   return window._mfRCCs[index];
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by uri
+ * Returns a specific Remote Container Configuration Module from RCCs list by uri
  */
- export function getRemoteContainerConfigurationIndexByUri(uri: string): number {
+export function getRemoteContainerConfigurationIndexByUri(uri: string): number {
   return findIndexFromEnd(window._mfRCCs, (container) => {
     return container.uri === uri;
   });
 }
 
 /**
- * Returns a specific RemoteContainerConfigurationModule from RCCs list by a container uuid and module name
+ * Returns a specific Remote Container Configuration Module from RCCs list by a container uuid and module name
  */
 export function getRemoteContainerConfigurationModuleByUuid(uuid: string, moduleName: string): RemoteContainerConfigurationModule {
   const container = getRemoteContainerConfigurationByUuid(uuid);
@@ -80,15 +69,9 @@ export function getRemoteContainerConfigurationModuleByUuid(uuid: string, module
 /**
  * Loads remote RCCs list from uri
  */
-export async function loadRemoteContainerConfigurationsFile(uri: string): Promise<RemoteContainerConfiguration[]> {
-  return await window.fetch(uri)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error();
-      }
-
-      return response.json();
-    });
+export function loadRemoteContainerConfigurationsFile(uri: string): Promise<RemoteContainerConfiguration[]> {
+  return fetchByUri(uri)
+    .then((response) => response.json());
 }
 
 /**
