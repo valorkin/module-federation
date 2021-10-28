@@ -1,4 +1,6 @@
+const path = require('path');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const { PluginsJsonGeneratorPlugin } = require('@nowant/ng-build-expander/src/webpack');
 
 const sharedDep = (name) => {
   return {
@@ -24,7 +26,7 @@ module.exports = {
         './RecommendedCategories': './src/app/recommended-categories/recommended-categories.component.ts',
       },
       remotes: {
-        contentRecommendedCategories: 'chrome-ext-app@http://localhost:4206/remoteEntry.js'
+        chromeExtApp: 'contentRecommendedCategories@http://localhost:4207/remoteEntry.js'
       },
       shared: [
         sharedDep('@angular/core'),
@@ -33,6 +35,11 @@ module.exports = {
         sharedDep('@fundamental-ngx/core'),
         sharedDep('@fundamental-ngx/app-shell')
       ],
+    }),
+    new PluginsJsonGeneratorPlugin({
+      remotesDir: path.resolve(__dirname, '../'),
+      filename: 'plugins.json',
+      outputDir: path.resolve(__dirname, './src/assets/config')
     })
   ]
 };

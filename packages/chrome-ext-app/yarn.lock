@@ -1224,10 +1224,10 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@nowant/ng-build-expander@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@nowant/ng-build-expander/-/ng-build-expander-0.0.11.tgz#c8a773e3b8875cb9790006f0d260f0487d622805"
-  integrity sha512-H4c3K5ws6xjpwkslKGp31OM+/lFWR4sDoPAiRJjKOyjfr5+MF2fuE9nWQiaQCNK++bMGal7Au6149HSltrSUIg==
+"@nowant/ng-build-expander@0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@nowant/ng-build-expander/-/ng-build-expander-0.0.13.tgz#b9dd301bd6dc4ec962f9d9b366118930fadff125"
+  integrity sha512-Nd5veklJEE7do0t/fydWULVIG3nmhOfiGiPNw0CUNwjNLR4LKMRgZZmi/Bh9myjrPbmeSFEMHT9gw5PAgr0PFA==
   dependencies:
     "@angular/compiler" "~11.0.9"
     ngx-build-plus "^11.0.0"

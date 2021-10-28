@@ -1,6 +1,6 @@
 {
   "name": "chrome-ext-app",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,7 +22,7 @@
     "@angular/router": "~11.2.9",
     "@fundamental-ngx/app-shell": "^0.2.38",
     "@fundamental-ngx/core": "0.28.1",
-    "@nowant/ng-build-expander": "0.0.11",
+    "@nowant/ng-build-expander": "0.0.13",
     "@pscoped/ngx-pub-sub": "^3.0.0",
     "ngx-build-plus": "^11.0.0",
     "rxjs": "~6.5.4",
