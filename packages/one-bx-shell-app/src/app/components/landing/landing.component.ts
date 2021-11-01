@@ -1,6 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ConfigurationObject, RemoteContainerConfiguration } from '@mf/core';
+import {
+  ConfigurationObject,
+  RemoteContainerConfiguration,
+  addModuleFederatedAppsAsync
+} from '@mf/core';
 
 @Component({
   selector: 'app-landing',
@@ -20,6 +24,18 @@ export class LandingComponent implements OnInit {
     window.addEventListener('mf-ext-add-form-configuration-object', (event: CustomEvent) => {
       this.onAddConfigurationObject(event.detail);
     }, false);
+
+    window.mfCore.hooks.containers.aborted = () => {
+      console.log('aborted');
+    }
+
+    window.mfCore.hooks.containers.loaded = () => {
+      console.log('loaded');
+    }
+
+    window.mfCore.hooks.configurations.updated = () => {
+      console.log('updated');
+    }
   }
 
   ngOnInit() {
@@ -31,15 +47,14 @@ export class LandingComponent implements OnInit {
   }
 
   onAddConfigurationObject(json: ConfigurationObject) {
-    window.mfCOs = window.mfCOs || [];
-    window.mfCOs.push(json);
-
     this.isLoaded = false;
     this.changeDetectorRef.detectChanges();
 
-    window.setTimeout(() => {
-      this.isLoaded = true;
-    });
+    addModuleFederatedAppsAsync(json)
+      .finally(() => {
+        this.isLoaded = true;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   onLoadRemoteContainerConfigurationsFromJsonFile = async () => {

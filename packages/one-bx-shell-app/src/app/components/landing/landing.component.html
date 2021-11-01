@@ -15,8 +15,8 @@
     <fd-layout-panel [columnSpan]="4"
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
-        <ngx-mf-injector container="contentReqApp"
-                         module="PrListComponent"
+        <ngx-mf-injector container="contentItemApp"
+                         module="YourFavoritesModule"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -25,8 +25,8 @@
     <fd-layout-panel [columnSpan]="4"
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
-        <ngx-mf-injector container="contentReqApp"
-                         module="PrListComponent"
+        <ngx-mf-injector container="contentItemApp"
+                         module="ItemPageModule"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -52,7 +52,8 @@
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
         <ngx-mf-injector container="contentItemApp"
-                         module="YourFavoritesModule">
+                         module="YourFavoritesModule"
+                         (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
     </fd-layout-panel>
@@ -61,7 +62,8 @@
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
         <ngx-mf-injector container="nxApp"
-                         module="YourFavoritesModule">
+                         module="YourFavoritesModule"
+                         (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
     </fd-layout-panel>
@@ -77,7 +79,8 @@
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
         <ngx-mf-injector container="authApp"
-                         module="elementcontainer">
+                         module="elementName"
+                         (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
     </fd-layout-panel>

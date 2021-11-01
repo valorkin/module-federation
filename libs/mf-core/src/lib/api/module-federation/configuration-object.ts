@@ -46,8 +46,7 @@ export function updateConfigurationObjectByUri(configurationObject: Configuratio
 
   window.mfCOs[index] = {
     ...oldConfigurationObject,
-    uuid: oldConfigurationObject.uuid || configurationObject.uuid,
-    name: configurationObject.name,
+    uuid: configurationObject.uuid,
     version: configurationObject.version
   };
 

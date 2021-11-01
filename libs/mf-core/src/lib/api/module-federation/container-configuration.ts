@@ -67,14 +67,6 @@ export function getRemoteContainerConfigurationModuleByUuid(uuid: string, module
 }
 
 /**
- * Loads remote RCCs list from uri
- */
-export function loadRemoteContainerConfigurationsFile(uri: string): Promise<RemoteContainerConfiguration[]> {
-  return fetchByUri(uri)
-    .then((response) => response.json());
-}
-
-/**
  * Checks any difference between two RCCs
  */
 export function detectRemoteContainerConfigurationsDiff(rcc1: RemoteContainerConfiguration, rcc2: RemoteContainerConfiguration): boolean {
