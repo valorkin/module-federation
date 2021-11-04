@@ -2,6 +2,7 @@ export interface ConfigurationObject {
   uri: string, // URI of remote entry.js
   uuid?: string;
   name?: string,
+  active?: boolean,
   status?: Promise<any>,
   definitionUri?: string,
   version?: string

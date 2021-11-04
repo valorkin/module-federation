@@ -4,7 +4,7 @@ import { findIndexFromEnd } from './util';
 
 /**
  * Returns a specific Configuration Object from COs list by name
- * Is used when we should get a last added CO with a specific name
+ * Is used when we should get a last added CO by a specific name
  */
 export function getConfigurationObjectByName(name: string): ConfigurationObject {
   const trimmedName = name.trim();
@@ -17,6 +17,19 @@ export function getConfigurationObjectByName(name: string): ConfigurationObject 
 }
 
 /**
+ * Returns an active Configuration Object from the COs list by a specific name
+ */
+export function getActiveConfigurationObjectByName(name: string): ConfigurationObject {
+  const trimmedName = name.trim();
+
+  const index = findIndexFromEnd(window.mfCOs, ((co) => {
+    return co.name.trim() === trimmedName && co.active;
+  }));
+
+  return window.mfCOs[index];
+};
+
+/**
  * Returns a specific Configuration Object from COs list by uuid
  * Is used when CO has identifier, so it means that the one probably is assigned to RCC
  */
@@ -24,6 +37,41 @@ export function getConfigurationObjectIndexByUuid(uuid: string): number {
   return findIndexFromEnd(window.mfCOs, ((co) => {
     return co.uuid === uuid;
   }));
+}
+
+/**
+ * Marks a Configuration Object as active or inactive by a provided uuid
+ */
+export function markConfigurationObjectAs(uuid: string, active: boolean) {
+  let index = getConfigurationObjectIndexByUuid(uuid);
+
+  if (index < 0) {
+    return;
+  }
+
+  // any value is forced to be a boolean
+  window.mfCOs[index].active = !!active;
+}
+
+/**
+ * Marks the last active Configuration Object as inactive, this action can be excluded for a provided uuid
+ */
+export function deactivateLastActiveConfigurationObjectByName(name: string, uuid?: string) {
+  const trimmedName = name.trim();
+
+  const index = window.mfCOs.findIndex(((co) => {
+    const shouldExcludeUuid = uuid
+      ? co.uuid !== uuid
+      : true;
+
+    return co.name === trimmedName && co.active && shouldExcludeUuid;
+  }));
+
+  if (index < 0) {
+    return;
+  }
+
+  window.mfCOs[index].active = false;
 }
 
 /**

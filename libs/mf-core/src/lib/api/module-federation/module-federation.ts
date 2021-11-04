@@ -11,8 +11,11 @@ import {
 } from './container-configuration';
 
 import {
+  getActiveConfigurationObjectByName,
   getConfigurationObjectByName,
   getConfigurationObjectIndexByUuid,
+  markConfigurationObjectAs,
+  deactivateLastActiveConfigurationObjectByName,
   resolveConfigurationObject,
   updateConfigurationObjectByUri
 } from './configuration-object';
@@ -27,7 +30,7 @@ async function addRemoteContainerConfigurationsByUri(uri: string): Promise<void>
   try {
     await fetchByUri(uri)
       .then((response) => response.json())
-      .then((containers) => addModuleFederatedApps(containers))
+      .then((containers) => addModuleFederatedApps(containers));
 
     window.mfCore.hooks.containers.loaded();
   } catch (e) {
@@ -45,7 +48,8 @@ async function addRemoteContainerConfigurationsByUri(uri: string): Promise<void>
  * Resolves a remote module by its container and module name
  */
 export async function loadModuleFederatedApp(containerName: string, moduleName: string): Promise<ConfigurationObjectResolve> {
-  let configurationObject = getConfigurationObjectByName(containerName);
+  // get active or last added CO
+  let configurationObject = getActiveConfigurationObjectByName(containerName) || getConfigurationObjectByName(containerName);
 
   if (!configurationObject) {
     return Promise.reject(
@@ -55,27 +59,34 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
     );
   }
 
-  const definitionUri = configurationObject.definitionUri;
-  let containerUuid = configurationObject.uuid;
+  let { uuid, definitionUri, active } = configurationObject;
 
-  // Case when a CO is not resolved and was added synchronously using `window.mfCOs.push()`
-  if (!containerUuid && definitionUri) {
+  // Case when a CO is not resolved and was added synchronously by `window.mfCOs.push()`
+  if (!uuid && definitionUri) {
     try {
       await addRemoteContainerConfigurationsByUri(definitionUri);
     } catch (e) {
       return Promise.reject(e);
     }
 
-    configurationObject = getConfigurationObjectByName(containerName);
-    containerUuid = configurationObject.uuid;
+    configurationObject = getActiveConfigurationObjectByName(containerName) || getConfigurationObjectByName(containerName);
+    uuid = configurationObject.uuid;
+
+    if (active) {
+      deactivateLastActiveConfigurationObjectByName(containerName, uuid);
+    }
   }
 
-  const containerModule = getRemoteContainerConfigurationModuleByUuid(containerUuid, moduleName);
+  if (!active) {
+    markConfigurationObjectAs(uuid, true);
+  }
+
+  const containerModule = getRemoteContainerConfigurationModuleByUuid(uuid, moduleName);
 
   if (!containerModule) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedRCCNotFoundError: There's no Remote Container Configuration with name ${containerName} and uuid: ${containerUuid}`
+        `ModuleFederatedRCCNotFoundError: There's no Remote Container Configuration with name ${containerName} and uuid: ${uuid}`
       )
     );
   }
@@ -84,7 +95,7 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
     .then((resolvedContainer) => {
       return {
         module: resolvedContainer,
-        configuration: getRemoteContainerConfigurationByUuid(containerUuid),
+        configuration: getRemoteContainerConfigurationByUuid(uuid),
         configurationModule: containerModule
       }
     }) as ConfigurationObjectResolve;
@@ -92,7 +103,7 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
   if (!resolvedConfiguration) {
     return Promise.reject(
       new Error(
-        `ModuleFederatedAppLoadingError: An error occurred while loading or resolving Configuration Object with name ${containerName} and uuid: ${containerUuid}`
+        `ModuleFederatedAppLoadingError: An error occurred while loading or resolving Configuration Object with name ${containerName} and uuid: ${uuid}`
       )
     );
   }
@@ -122,6 +133,7 @@ export function addModuleFederatedApps(containers: RemoteContainerConfiguration[
         uuid,
         uri: containerWithTrimmedValues.uri,
         name: containerWithTrimmedValues.name,
+        active: false,
         status: null,
         version: containerWithTrimmedValues.version
       });
@@ -134,18 +146,18 @@ export function addModuleFederatedApps(containers: RemoteContainerConfiguration[
  * Is used when Remote Container Configurations should be loaded before Container Injector's requests
  * Is used for asynchronous cases
  */
- export async function addModuleFederatedAppsAsync(configurationObject: ConfigurationObject): Promise<void> {
-  const { definitionUri } = configurationObject;
+export async function addModuleFederatedAppAsync(configurationObject: ConfigurationObject): Promise<void> {
+  const { name, definitionUri, active } = configurationObject;
+
+  if (active) {
+    deactivateLastActiveConfigurationObjectByName(name);
+  }
 
   window.mfCOs = window.mfCOs || [];
   window.mfCOs.push(configurationObject);
 
-  if (definitionUri) {
-    try {
-      await addRemoteContainerConfigurationsByUri(definitionUri);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+  if (active && definitionUri) {
+    return await addRemoteContainerConfigurationsByUri(definitionUri);
   }
 }
 
@@ -154,9 +166,9 @@ export function addModuleFederatedApps(containers: RemoteContainerConfiguration[
  * Is used when Configuration Object should be updated before Container Injector's requests
  * Is used for asynchronous cases
  */
-export async function updateModuleFederatedAppsAsync(configurationObject: ConfigurationObject): Promise<void> {
-  const { name, uuid, definitionUri } = configurationObject;
-  const index = getConfigurationObjectIndexByUuid(configurationObject.uuid);
+export async function updateModuleFederatedAppAsync(configurationObject: ConfigurationObject): Promise<void> {
+  const { uri, name, uuid, definitionUri, active } = configurationObject;
+  const index = getConfigurationObjectIndexByUuid(uuid);
 
   if (index < 0) {
     return Promise.reject(
@@ -166,16 +178,19 @@ export async function updateModuleFederatedAppsAsync(configurationObject: Config
     );
   }
 
-  window.mfCOs.splice(index, 1);
-  window.mfCOs.push(configurationObject);
+  const { uri: oldUri, definitionUri: oldDefinitionUri } = window.mfCOs[index];
 
-  if (definitionUri) {
-    try {
-      await addRemoteContainerConfigurationsByUri(definitionUri);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+  if (uri !== oldUri || definitionUri !== oldDefinitionUri) {
+    configurationObject.status = null;
   }
 
-  window.mfCore.hooks.configurations.updated();
+  if (active) {
+    deactivateLastActiveConfigurationObjectByName(name);
+  }
+
+  window.mfCOs[index] = configurationObject;
+
+  if (active && definitionUri !== oldDefinitionUri) {
+    return await addRemoteContainerConfigurationsByUri(definitionUri);
+  }
 }
