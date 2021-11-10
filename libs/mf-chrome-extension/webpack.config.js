@@ -6,12 +6,6 @@ const sveltePreprocess = require("svelte-preprocess");
 const outputDir = path.resolve(__dirname, '../../dist/libs/mf-chrome-extension');
 
 module.exports = {
-  /*entry: [
-    // popup: './src/popup.ts',
-    // content: './src/content.ts'
-    './src/styles.scss',
-    './src/main.ts'
-  ],*/
   entry: {
     popup: './src/main.ts',
     content: './src/content.ts',

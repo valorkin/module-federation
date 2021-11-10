@@ -19,4 +19,29 @@
   &:focus {
     border-color: #4f46e5;
   }
+
+  &--invalid {
+    border-color: #ef4444;
+
+    &:focus {
+      border-color: #ef4444;
+    }
+  }
+}
+
+.form-message {
+  display: flex;
+
+  &--error {
+    color: #ef4444;
+  }
+
+  &--success {
+    color: #10b981;
+  }
+
+  .material-icons {
+    padding-right: 5px;
+    font-size: inherit;
+  }
 }

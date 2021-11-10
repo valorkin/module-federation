@@ -3,91 +3,183 @@
   import { ConfigurationObject } from '@mf/core';
 
   import { parseForm } from '../core/validators/form-validator';
+  import { testForm } from '../core/validators/test-validator';
   import { configurationObjectJsonTemplate } from '../core/constant'
 
   export let configuration: ConfigurationObject;
 
+  const dispatch = createEventDispatcher();
+
   let formText = '';
+
+  let messageText: string = null;
 
   let submitButtonDisabled = true;
 
-  let testButtonDisabled = true;
+  let isError = false;
 
   refreshForm(configurationObjectJsonTemplate);
 
+  /**
+   *
+   */
   function refreshForm(value: ConfigurationObject) {
     formText = JSON.stringify(value, undefined, 2);
-    // hideMessage();
+    hideMessage();
     disableSubmitButton();
   }
 
+  /**
+   *
+   */
   function onInputForm() {
-    const json = parseForm(formText);
+    const validation = parseForm(formText);
 
-    if (json instanceof Error) {
+    if (validation instanceof Error) {
+      showError(validation);
+      disableSubmitButton();
       return;
     }
 
-    // hideMessage();
+    hideMessage();
     enableSubmitButton();
   };
 
+  /**
+   *
+   */
   function disableSubmitButton() {
     submitButtonDisabled = true;
-    testButtonDisabled = true;
   }
 
+  /**
+   *
+   */
   function enableSubmitButton() {
     submitButtonDisabled = false;
-    testButtonDisabled = false;
   }
 
+  /**
+   *
+   */
+  function showSuccess(text: string) {
+    isError = false;
+    messageText = text;
+  }
+
+  /**
+   *
+   */
+  function showError(error: Error) {
+    isError = true;
+    messageText = error.message;
+  }
+
+  /**
+   *
+   */
+  function hideMessage() {
+    isError = false;
+    messageText = null;
+  }
+
+  /**
+   *
+   */
   function onClearForm() {
     refreshForm(configurationObjectJsonTemplate);
   }
 
-  function onSubmitForm() {
-    const json = parseForm(formText);
+  /**
+   *
+   */
+  function onTestForm() {
+    const configuration = parseForm(formText);
 
-    if (json instanceof Error) {
+    if (configuration instanceof Error) {
+      return;
+    }
+
+    disableSubmitButton();
+
+    testForm(configuration)
+      .then((message) => {
+        enableSubmitButton();
+        showSuccess(message);
+      })
+      .catch((validation) => {
+        enableSubmitButton();
+        showError(validation);
+      });
+  };
+
+  /**
+   *
+   */
+  function onSubmitForm() {
+    const configuration = parseForm(formText);
+
+    if (configuration instanceof Error) {
       return;
     }
 
     refreshForm(configurationObjectJsonTemplate);
-
-    console.log(json);
+    dispatch('submit', configuration);
   }
 
 </script>
 
 <div class="form">
-  <textarea class="textarea form__text"
+  <textarea class="{isError ? 'textarea textarea--invalid form__text' : 'textarea form__text'}"
             rows="6"
             bind:value={formText}
             on:keyup={onInputForm}></textarea>
 
+  {#if messageText}
+    <div class="form__messages">
+      {#if isError}
+        <span class="form-message form-message--error">
+          <i class="material-icons md-dark">
+            error_outline
+          </i>
+          {messageText}
+        </span>
+      {:else}
+        <span class="form-message form-message--success">
+          <i class="material-icons md-dark">
+            check_circle
+          </i>
+          {messageText}
+        </span>
+      {/if}
+    </div>
+  {/if}
+
   <div class="form__actions">
     <div class="form__actions-left">
       <button type="button"
-              class="button"
-              on:click={null}>
+              class="{submitButtonDisabled ? 'button button--disabled' : 'button button--default'}"
+              disabled={submitButtonDisabled}
+              on:click={onTestForm}>
         <span class="material-icons md-dark">
           bug_report
         </span>
         Test
       </button>
     </div>
+
     <div class="form__actions-right">
       <button type="button"
-              class="button"
+              class="button button--default"
               on:click={onClearForm}>
         <span class="material-icons md-dark">
           clear
         </span>
         Clear
       </button>
+
       <button type="button"
-              class="button button--blue"
+              class="{submitButtonDisabled ? 'button button--disabled' : 'button button--blue'}"
               disabled={submitButtonDisabled}
               on:click={onSubmitForm}>
         <span class="material-icons md-dark">
@@ -107,6 +199,10 @@
       width: 100%;
       margin-bottom: 15px;
       resize: none;
+    }
+
+    &__messages {
+      margin-bottom: 15px;
     }
 
     &__actions {
