@@ -1,5 +1,5 @@
 import { ConfigurationObject } from '@mf/core';
-import { configurationObjectJsonTemplate, MFChromeExtensionActions } from './constant';
+import { configurationObjectJsonTemplate, MFChromeExtensionActions } from './core/constant';
 
 import {
   formElements,
@@ -11,10 +11,16 @@ import {
   hideMessage,
 } from './form';
 
-import { parseForm } from './form-validation';
-import { testForm } from './test-validation';
+import { parseForm } from './core/validators/form-validator';
+import { testForm } from './core/validators/test-validation';
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  console.log(message);
+});
 
 refreshForm(configurationObjectJsonTemplate);
+
+sendMessage(MFChromeExtensionActions.PopupOpened, null);
 
 /**
  * Form listener to check its state
@@ -50,7 +56,7 @@ formElements.submitButton.addEventListener('click', () => {
   }
 
   refreshForm(configurationObjectJsonTemplate);
-  sendMessage(json);
+  sendMessage(MFChromeExtensionActions.AddConfigurationObject, json);
 });
 
 /**
@@ -79,12 +85,12 @@ formElements.testButton.addEventListener('click', () => {
 /**
  * Sends the json object to the content script
  */
-function sendMessage(payload: ConfigurationObject) {
+function sendMessage(action: MFChromeExtensionActions, payload: any) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.tabs.sendMessage(
       tabs[0].id,
       {
-        action: MFChromeExtensionActions.AddFormConfigurationObject,
+        action,
         payload
       }
     );

@@ -1,12 +1,27 @@
 {
   "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "webpack.config.js"],
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
+    "target": "es2018",
     "types": [
       "chrome",
+      "svelte",
+			"svelte/store",
+			"svelte/motion",
+			"svelte/transition",
+			"svelte/animate",
+			"svelte/easing",
+      "svelte/internal"
     ],
     "lib": [
-      "es2017",
+      "es2018",
       "dom"
     ],
-  }
+  },
+  "ts-node": {
+		"compilerOptions": {
+			"module": "commonjs"
+		}
+	}
 }

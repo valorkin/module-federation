@@ -2,7 +2,7 @@ import { ConfigurationObject } from '@mf/core';
 import {
   configurationObjectJsonTemplate,
   configurationObjectRequiredKeys
-} from './constant';
+} from '../constant';
 
 /**
  * Сhecks if the json object matches the CO scheme

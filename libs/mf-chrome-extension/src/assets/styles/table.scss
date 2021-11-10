@@ -1,0 +1,51 @@
+.table {
+  min-width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: rgba(249, 250, 251, 1);
+
+    th {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      font-size: .75rem;
+      line-height: 1rem;
+      font-weight: 300;
+      text-align: left;
+      color: rgba(107, 114, 128, 1);
+    }
+  }
+
+  tbody {
+    border-color: rgba(229, 231, 235, 1);
+    background-color: rgba(255, 255, 255, 1);
+    border-top-width: 1px;
+    border-bottom-width: 0;
+
+    tr {
+      &:hover {
+        td {
+          background-color: #f9fafb;
+        }
+      }
+    }
+
+    td {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(229, 231, 235, 1);
+    }
+  }
+
+  &-header {
+    margin-bottom: 10px;
+  }
+}
