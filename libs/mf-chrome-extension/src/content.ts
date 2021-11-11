@@ -18,6 +18,7 @@ chrome.runtime.onMessage.addListener((payload: any) => {
  * Listens events from the web page's window object and redirects them to the popup script
  */
 window.addEventListener('message', (event) => {
+  console.log(event.data);
   if (actions.includes(event.data.action)) {
     dispatchRuntimeEvent(event.data);
   }
@@ -30,10 +31,7 @@ function dispatchWindowEvent(action: MFChromeExtensionActions, payload: any) {
   const event = new CustomEvent(
     action,
     {
-      detail: {
-        extensionId: chrome.runtime.id,
-        payload
-      }
+      detail: payload
     }
   );
 

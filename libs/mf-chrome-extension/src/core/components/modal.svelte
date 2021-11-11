@@ -40,7 +40,10 @@
 
 		window.addEventListener('keydown', onKeyPress);
 		document.body.style.overflow = 'hidden';
-		document.body.appendChild(topDiv)
+
+    window.setTimeout(() => {
+	  	document.body.appendChild(topDiv)
+    });
 	}
 
 	/**
@@ -85,25 +88,27 @@
 
 </script>
 
-<div id="topModal"
-     class:visible bind:this={topDiv}
-     on:click={() => close()}>
-	<div id='modal'
-       on:click|stopPropagation={() => {}}>
-    <span id="close"
-          class="material-icons md-dark"
-          on:click={() => close()}>
-      close
-    </span>
-		<div id='modal-content'>
-			<slot></slot>
-		</div>
-	</div>
-</div>
+
+{#if visible}
+  <div id="topModal"
+       bind:this={topDiv}
+       on:click={() => close()}>
+    <div id='modal'
+         on:click|stopPropagation={() => {}}>
+      <span id="close"
+            class="material-icons md-dark"
+            on:click={() => close()}>
+        close
+      </span>
+      <div id='modal-content'>
+        <slot></slot>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
 	#topModal {
-		visibility: hidden;
 		z-index: 9999;
 		position: fixed;
 		top: 0;
@@ -123,10 +128,6 @@
     border: 0;
 		filter: drop-shadow(2px 2px 1px #555);
 		padding: 2em;
-	}
-
-	.visible {
-		visibility: visible !important;
 	}
 
 	#close {

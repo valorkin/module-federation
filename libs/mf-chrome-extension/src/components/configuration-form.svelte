@@ -18,7 +18,7 @@
 
   let isError = false;
 
-  refreshForm(configurationObjectJsonTemplate);
+  refreshForm(configuration || configurationObjectJsonTemplate);
 
   /**
    *
@@ -131,7 +131,7 @@
 
 <div class="form">
   <textarea class="{isError ? 'textarea textarea--invalid form__text' : 'textarea form__text'}"
-            rows="6"
+            rows="7"
             bind:value={formText}
             on:keyup={onInputForm}></textarea>
 

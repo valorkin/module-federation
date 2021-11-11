@@ -22,13 +22,19 @@ export class LandingComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private http: HttpClient
   ) {
+    //
+    window.addEventListener('mf-ext-popup-opened', () => {
+      this.dispatchUpdateToChromeExtEvent();
+    }, false);
+
+    //
     window.addEventListener('mf-ext-add-configuration-object', (event: CustomEvent) => {
       this.onAddConfigurationObject(event.detail.payload);
     }, false);
 
-    window.addEventListener('mf-ext-popup-opened', (event: CustomEvent) => {
-      console.log(event.detail.extensionId);
-      this.dispatchUpdateToChromeExtEvent(event.detail.extensionId);
+    //
+    window.addEventListener('mf-ext-update-configuration-object', (event: CustomEvent) => {
+      this.onUpdateConfigurationObject(event.detail);
     }, false);
 
     /*window.mfCore.hooks.containers.aborted = () => {
@@ -57,7 +63,8 @@ export class LandingComponent implements OnInit {
   }
 
   onAddConfigurationObject(configurationObject: ConfigurationObject) {
-    configurationObject.active = true;
+    console.log('add: ', configurationObject);
+    /*configurationObject.active = true;
 
     // Case sync (bad)
     window.mfCOs = window.mfCOs || [];
@@ -70,7 +77,7 @@ export class LandingComponent implements OnInit {
         this.isLoaded = true;
         //this.dispatchUpdateToChromeExtEvent();
       });
-    }
+    }*/
 
     // Case async (good)
     /*if (configurationObject.active) {
@@ -83,7 +90,8 @@ export class LandingComponent implements OnInit {
   }
 
   onUpdateConfigurationObject(configurationObject: ConfigurationObject) {
-    if (configurationObject.active) {
+    console.log('edit: ', configurationObject);
+    /*if (configurationObject.active) {
       this.toggleRenderingModuleFederatedApps(false);
     }
 
@@ -93,7 +101,7 @@ export class LandingComponent implements OnInit {
           this.toggleRenderingModuleFederatedApps(true);
           //this.dispatchUpdateToChromeExtEvent();
         }
-      });
+      });*/
   }
 
   onLoadRemoteContainerConfigurationsFromJsonFile() {
@@ -122,25 +130,9 @@ export class LandingComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  private dispatchUpdateToChromeExtEvent(extensionId: string) {
-    /*const event = new CustomEvent(
-      'mf-ext-update-configuration-object',
-      {
-        detail: window.mfCOs
-      }
-    );
-
-    window.dispatchEvent(event);*/
-
-    /*if(chrome && chrome.runtime && chrome.runtime.sendMessage) {
-      chrome.runtime.sendMessage(
-        extensionId,
-        { payload: window.mfCOs }
-      );
-    }*/
-
+  private dispatchUpdateToChromeExtEvent() {
     window.postMessage({
-      action: 'mf-ext-update-configuration-object',
+      action: 'mf-ext-configuration-objects-updated',
       payload: window.mfCOs
     }, "*");
   }

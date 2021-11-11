@@ -5,6 +5,7 @@
   import Modal, { getModal } from './core/components/modal.svelte'
   import { MFChromeExtensionActions } from './core/constant'
   import { configurations } from './stores/configurations-store';
+  import { configurationSelected } from './stores/configuration-selected';
   import ConfigurationsTable from './components/configurations-table.svelte';
   import ConfigurationModal from './components/configuration-modal.svelte';
 
@@ -15,20 +16,66 @@
   /**
    *
    */
-  function onAddConfiguration() {
-    const modal = getModal();
+  function onAddConfigurationDialog() {
+    configurationSelected.set({
+      selected: null,
+      editable: false
+    });
+
+    openConfigurationDialog();
+  }
+
+  /**
+   *
+   */
+  function onEditConfigurationDialog(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+
+    configurationSelected.set({
+      selected: configuration,
+      editable: true
+    });
+
+    openConfigurationDialog();
+  }
+
+  /**
+   *
+   */
+  function onSubmitConfiguration(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+
+    const { selected, editable } = $configurationSelected;
+
+    closeConfigurationDialog();
+
+    if (editable) {
+      const editedConfiguration = {
+        ...selected,
+        ...configuration
+      };
+
+      sendMessage(MFChromeExtensionActions.UpdateConfigurationObject, editedConfiguration);
+      return;
+    }
+
+    sendMessage(MFChromeExtensionActions.AddConfigurationObject, configuration);
+  }
+
+  /**
+   *
+   */
+  function openConfigurationDialog() {
+    const modal = getModal('configurationModal');
     modal.open();
   }
 
   /**
    *
    */
-  function onEditConfiguration(e: CustomEvent) {
-    const configuration = e.detail as ConfigurationObject;
-    const modal = getModal();
-
-    modal.open();
-    console.log(configuration);
+  function closeConfigurationDialog() {
+    const modal = getModal('configurationModal');
+    modal.close();
   }
 
   /**
@@ -49,13 +96,13 @@
 </script>
 
 <main>
-  <Modal>
-    <ConfigurationModal />
+  <Modal id="configurationModal">
+    <ConfigurationModal on:submit={onSubmitConfiguration}/>
   </Modal>
 
   <ConfigurationsTable {configurations}
-                       on:add={onAddConfiguration}
-                       on:edit={onEditConfiguration}
+                       on:add={onAddConfigurationDialog}
+                       on:edit={onEditConfigurationDialog}
   />
 </main>
 
