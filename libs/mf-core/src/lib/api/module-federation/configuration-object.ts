@@ -3,16 +3,31 @@ import { createRemoteModuleAsync } from './remote-module';
 import { findIndexFromEnd } from './util';
 
 /**
+ *
+ */
+export function getConfigurationObjectIndexByName(name: string): number {
+  const trimmedName = name.trim();
+
+  return findIndexFromEnd(window.mfCOs, ((co) => {
+    return co.name.trim() === trimmedName;
+  }));
+}
+
+/**
+ *
+ */
+ export function getConfigurationObjectIndexByRef(ref: ConfigurationObject): number {
+  return findIndexFromEnd(window.mfCOs, ((co) => {
+    return co === ref;
+  }));
+}
+
+/**
  * Returns a specific Configuration Object from COs list by name
  * Is used when we should get a last added CO by a specific name
  */
 export function getConfigurationObjectByName(name: string): ConfigurationObject {
-  const trimmedName = name.trim();
-
-  const index = findIndexFromEnd(window.mfCOs, ((co) => {
-    return co.name.trim() === trimmedName;
-  }));
-
+  const index = getConfigurationObjectIndexByName(name);
   return window.mfCOs[index];
 }
 
@@ -42,7 +57,7 @@ export function getConfigurationObjectIndexByUuid(uuid: string): number {
 /**
  * Marks a Configuration Object as active or inactive by a provided uuid
  */
-export function markConfigurationObjectAs(uuid: string, active: boolean) {
+export function toggleActiveConfigurationObject(uuid: string, active: boolean) {
   let index = getConfigurationObjectIndexByUuid(uuid);
 
   if (index < 0) {
@@ -54,9 +69,49 @@ export function markConfigurationObjectAs(uuid: string, active: boolean) {
 }
 
 /**
- * Marks the last active Configuration Object as inactive, this action can be excluded for a provided uuid
+ * uuid or Configuration Object instance (reference)
  */
-export function deactivateLastActiveConfigurationObjectByName(name: string, uuid?: string) {
+export function toggleFailedConfigurationObject(ref: string | ConfigurationObject, hasError: boolean) {
+  if (typeof ref === 'string') {
+    const index = getConfigurationObjectIndexByUuid(ref);
+
+    if (index > -1) {
+      window.mfCOs[index].hasError = hasError;
+      return;
+    }
+  }
+
+  const index = getConfigurationObjectIndexByRef(ref as ConfigurationObject);
+
+  if (index > -1) {
+    window.mfCOs[index].hasError = hasError;
+  }
+
+  /*let index = uuid ? getConfigurationObjectIndexByUuid(uuid) : -1;
+
+  if (index > -1) {
+    window.mfCOs[index].hasError = hasError;
+    return;
+  }
+
+  index = getLastActiveConfigurationObjectIndexByName(name);
+
+  if (index > -1) {
+    window.mfCOs[index].hasError = hasError;
+    return;
+  }
+
+  index = getConfigurationObjectIndexByName(name);
+
+  if (index > -1) {
+    window.mfCOs[index].hasError = hasError;
+  }*/
+}
+
+/**
+ *
+ */
+export function getLastActiveConfigurationObjectIndexByName(name: string, uuid?: string): number {
   const trimmedName = name.trim();
 
   const index = window.mfCOs.findIndex(((co) => {
@@ -66,6 +121,16 @@ export function deactivateLastActiveConfigurationObjectByName(name: string, uuid
 
     return co.name === trimmedName && co.active && shouldExcludeUuid;
   }));
+
+  return index;
+}
+
+
+/**
+ * Marks the last active Configuration Object as inactive, this action can be excluded for a provided uuid
+ */
+export function deactivateLastActiveConfigurationObjectByName(name: string, uuid?: string) {
+  const index = getLastActiveConfigurationObjectIndexByName(name, uuid);
 
   if (index < 0) {
     return;

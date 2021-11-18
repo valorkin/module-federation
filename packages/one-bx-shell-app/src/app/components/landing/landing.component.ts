@@ -3,8 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import {
   ConfigurationObject,
   RemoteContainerConfiguration,
+  addModuleFederatedApps,
   addModuleFederatedAppAsync,
-  updateModuleFederatedAppAsync
+  updateModuleFederatedAppAsync,
+  isSynchronized
 } from '@mf/core';
 
 @Component({
@@ -16,7 +18,7 @@ export class LandingComponent implements OnInit {
 
   isLoaded = false;
 
-  containers: RemoteContainerConfiguration[];
+  containers: RemoteContainerConfiguration[] = [];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -29,7 +31,7 @@ export class LandingComponent implements OnInit {
 
     //
     window.addEventListener('mf-ext-add-configuration-object', (event: CustomEvent) => {
-      this.onAddConfigurationObject(event.detail.payload);
+      this.onAddConfigurationObject(event.detail);
     }, false);
 
     //
@@ -55,19 +57,28 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.onLoadRemoteContainerConfigurationsFromJsonFile();
+    if (!isSynchronized()) {
+      return this.onLoadRemoteContainerConfigurationsFromJsonFile();
+    }
+
+    this.isLoaded = true;
   }
 
   onError(error: Error) {
     console.log(error);
+
+    this.dispatchUpdateToChromeExtEvent();
+  }
+
+  onResolve() {
+    this.dispatchUpdateToChromeExtEvent();
   }
 
   onAddConfigurationObject(configurationObject: ConfigurationObject) {
     console.log('add: ', configurationObject);
-    /*configurationObject.active = true;
 
     // Case sync (bad)
-    window.mfCOs = window.mfCOs || [];
+    /*window.mfCOs = window.mfCOs || [];
     window.mfCOs.push(configurationObject);
 
     if (configurationObject.active) {
@@ -75,33 +86,32 @@ export class LandingComponent implements OnInit {
 
       window.setTimeout(() => {
         this.isLoaded = true;
-        //this.dispatchUpdateToChromeExtEvent();
+        this.dispatchUpdateToChromeExtEvent();
       });
     }*/
 
+    this.toggleRenderingModuleFederatedApps(false);
+
     // Case async (good)
-    /*if (configurationObject.active) {
+    //if (configurationObject.active) {
       addModuleFederatedAppAsync(configurationObject)
         .finally(() => {
           this.toggleRenderingModuleFederatedApps(true);
           this.dispatchUpdateToChromeExtEvent();
         });
-    }*/
+    //}
   }
 
   onUpdateConfigurationObject(configurationObject: ConfigurationObject) {
     console.log('edit: ', configurationObject);
-    /*if (configurationObject.active) {
-      this.toggleRenderingModuleFederatedApps(false);
-    }
+
+    this.toggleRenderingModuleFederatedApps(false);
 
     updateModuleFederatedAppAsync(configurationObject)
       .finally(() => {
-        if (configurationObject.active) {
-          this.toggleRenderingModuleFederatedApps(true);
-          //this.dispatchUpdateToChromeExtEvent();
-        }
-      });*/
+        this.toggleRenderingModuleFederatedApps(true);
+        this.dispatchUpdateToChromeExtEvent();
+      });
   }
 
   onLoadRemoteContainerConfigurationsFromJsonFile() {
@@ -113,6 +123,7 @@ export class LandingComponent implements OnInit {
         (containers) => {
           this.isLoaded = true;
           this.containers = containers;
+          addModuleFederatedApps(containers);
         },
         () => {
           this.isLoaded = false;
@@ -133,7 +144,17 @@ export class LandingComponent implements OnInit {
   private dispatchUpdateToChromeExtEvent() {
     window.postMessage({
       action: 'mf-ext-configuration-objects-updated',
-      payload: window.mfCOs
+      payload: window.mfCOs.map((co) => {
+        return {
+          uuid: co.uuid,
+          uri: co.uri,
+          name: co.name,
+          active: co.active,
+          hasError: co.hasError,
+          definitionUri: co.definitionUri,
+          version: co.version
+        }
+      })
     }, "*");
   }
 }

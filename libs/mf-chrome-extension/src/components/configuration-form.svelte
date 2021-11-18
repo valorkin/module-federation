@@ -1,62 +1,60 @@
 <script lang="ts">
- 	import { createEventDispatcher } from 'svelte';
+ 	import { onMount, afterUpdate, createEventDispatcher } from 'svelte';
+  import { form } from 'svelte-forms';
   import { ConfigurationObject } from '@mf/core';
 
-  import { parseForm } from '../core/validators/form-validator';
   import { testForm } from '../core/validators/test-validator';
-  import { configurationObjectJsonTemplate } from '../core/constant'
 
   export let configuration: ConfigurationObject;
 
   const dispatch = createEventDispatcher();
 
-  let formText = '';
-
   let messageText: string = null;
-
-  let submitButtonDisabled = true;
 
   let isError = false;
 
-  refreshForm(configuration || configurationObjectJsonTemplate);
+  let {uri, name, version, definitionUri, active} = configuration || {};
+
+  let configurationForm, activeSelect;
+
+  onMount(() => {
+    configurationForm = form(() => ({
+      uri: {
+        value: uri,
+        validators: ['required']
+      },
+      name: {
+        value: name,
+        validators: ['required']
+      },
+      definitionUri: {
+        value: definitionUri,
+        validators: []
+      }
+    }),
+      {
+          validateOnChange: false
+      }
+    );
+
+    activeSelect = Number(active || false);
+  });
+
+  afterUpdate(() => {
+    configurationForm.validate();
+  });
 
   /**
    *
    */
-  function refreshForm(value: ConfigurationObject) {
-    formText = JSON.stringify(value, undefined, 2);
-    hideMessage();
-    disableSubmitButton();
-  }
-
-  /**
-   *
-   */
-  function onInputForm() {
-    const validation = parseForm(formText);
-
-    if (validation instanceof Error) {
-      showError(validation);
-      disableSubmitButton();
-      return;
+  function getFormValue() {
+    return {
+      uri,
+      name,
+      version,
+      definitionUri,
+      active: Boolean(activeSelect)
     }
-
-    hideMessage();
-    enableSubmitButton();
-  };
-
-  /**
-   *
-   */
-  function disableSubmitButton() {
-    submitButtonDisabled = true;
-  }
-
-  /**
-   *
-   */
-  function enableSubmitButton() {
-    submitButtonDisabled = false;
   }
 
   /**
@@ -87,28 +85,28 @@
    *
    */
   function onClearForm() {
-    refreshForm(configurationObjectJsonTemplate);
+    uri = '';
+    name = '';
+    version = '';
+    definitionUri = '';
+    activeSelect = 0;
+
+    hideMessage();
   }
 
   /**
    *
    */
   function onTestForm() {
-    const configuration = parseForm(formText);
+    const configuration = getFormValue();
 
-    if (configuration instanceof Error) {
-      return;
-    }
-
-    disableSubmitButton();
+    hideMessage();
 
     testForm(configuration)
       .then((message) => {
-        enableSubmitButton();
         showSuccess(message);
       })
       .catch((validation) => {
-        enableSubmitButton();
         showError(validation);
       });
   };
@@ -117,23 +115,94 @@
    *
    */
   function onSubmitForm() {
-    const configuration = parseForm(formText);
+    const configuration = getFormValue();
 
-    if (configuration instanceof Error) {
-      return;
-    }
-
-    refreshForm(configurationObjectJsonTemplate);
+    hideMessage();
     dispatch('submit', configuration);
   }
 
 </script>
 
 <div class="form">
-  <textarea class="{isError ? 'textarea textarea--invalid form__text' : 'textarea form__text'}"
-            rows="7"
-            bind:value={formText}
-            on:keyup={onInputForm}></textarea>
+  <div class="form-group">
+    <label class="form-label"
+           for="uri">
+      * URI
+    </label>
+    <input type="text"
+           id="uri"
+           class="input {$configurationForm?.fields.uri.errors.includes('required') ? 'input--invalid' : ''}"
+           bind:value={uri}>
+
+    {#if $configurationForm?.fields.uri.errors.includes('required') }
+      <div class="form-message form-message--error">
+        <i class="material-icons md-dark">
+          error_outline
+        </i>
+        URI is required
+      </div>
+    {/if}
+  </div>
+
+  <div class="form-group configuration">
+    <div class="form-control configuration__name">
+      <label class="form-label"
+             for="name">
+        * Name
+      </label>
+      <input type="text"
+             id="name"
+             class="input {$configurationForm?.fields.name.errors.includes('required') ? 'input--invalid' : ''}"
+             bind:value={name}>
+
+        {#if $configurationForm?.fields.name.errors.includes('required')}
+          <div class="form-message form-message--error">
+            <i class="material-icons md-dark">
+              error_outline
+            </i>
+            Name is required
+          </div>
+        {/if}
+    </div>
+    <div class="form-control configuration__version">
+      <label class="form-label"
+             for="version">
+        Version
+      </label>
+      <input type="text"
+             id="version"
+             class="input"
+             bind:value={version}>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label"
+           for="definitionUri">
+      Definition URI
+    </label>
+    <input type="text"
+           id="definitionUri"
+           class="input"
+           bind:value={definitionUri}>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label"
+           for="active">
+      Status
+    </label>
+    <select id="active"
+            class="select"
+            bind:value={activeSelect}>
+      <option value={0}>
+        Inactive
+      </option>
+      <option value={1}>
+        Active
+      </option>
+    </select>
+  </div>
 
   {#if messageText}
     <div class="form__messages">
@@ -158,8 +227,8 @@
   <div class="form__actions">
     <div class="form__actions-left">
       <button type="button"
-              class="{submitButtonDisabled ? 'button button--disabled' : 'button button--default'}"
-              disabled={submitButtonDisabled}
+              class="{!$configurationForm?.valid ? 'button button--disabled' : 'button button--default'}"
+              disabled={!$configurationForm?.valid}
               on:click={onTestForm}>
         <span class="material-icons md-dark">
           bug_report
@@ -179,8 +248,8 @@
       </button>
 
       <button type="button"
-              class="{submitButtonDisabled ? 'button button--disabled' : 'button button--blue'}"
-              disabled={submitButtonDisabled}
+              class="{!$configurationForm?.valid ? 'button button--disabled' : 'button button--blue'}"
+              disabled={!$configurationForm?.valid}
               on:click={onSubmitForm}>
         <span class="material-icons md-dark">
           done
@@ -195,14 +264,12 @@
   .form {
     width: 500px;
 
-    &__text {
-      width: 100%;
-      margin-bottom: 15px;
-      resize: none;
-    }
-
     &__messages {
       margin-bottom: 15px;
+    }
+
+    &-message {
+      margin-top: 5px;
     }
 
     &__actions {
@@ -213,5 +280,24 @@
         align-self: flex-start;
       }
     }
+
+    .input {
+      width: 100%;
+    }
   }
+
+  .configuration {
+    display: flex;
+    width: 100%;
+
+    &__name {
+      width: 400px;
+      margin-right: 10px;
+    }
+
+    &__version {
+      width: 90px;
+    }
+  }
+
 </style>

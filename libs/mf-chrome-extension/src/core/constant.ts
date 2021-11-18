@@ -1,7 +1,6 @@
 export const configurationObjectJsonTemplate = {
   uri: "*",
   name: "*",
-  active: false,
   definitionUri: "",
   version: ""
 };

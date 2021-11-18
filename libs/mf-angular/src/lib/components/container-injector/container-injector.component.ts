@@ -75,6 +75,9 @@ export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
   @Output()
   error = new EventEmitter<Error>();
 
+  @Output()
+  resolve = new EventEmitter<void>();
+
   @ViewChild('iframe', { static: false })
   iframeEl: ElementRef;
 
@@ -116,7 +119,7 @@ export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
   ngAfterViewChecked(): void {
     if (this._safeIframeUri && this.iframeAttrs) {
       try {
-              this.updateAttrs(JSON.parse(this.iframeAttrs as unknown as string));
+        this.updateAttrs(JSON.parse(this.iframeAttrs as unknown as string));
       } finally {
 
       }
@@ -203,6 +206,7 @@ export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
   private renderIframe(configuration: Partial<RemoteContainerConfiguration>, configurationModule: IframeRemoteContainerConfigurationModule): void {
     const url = `${configuration.uri}${configurationModule.html}`;
     this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.resolve.emit();
   }
 
   private renderCustomElement(elementName: string): void {
@@ -219,6 +223,7 @@ export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
 
     this._render.appendChild(this._elementRef.nativeElement, element);
     this.overrideElementUrls();
+    this.resolve.emit();
   }
 
   private async renderComponent(module: any, configurationModule: NgRemoteContainerConfigurationModule, remoteModule: RemoteContainerConfigurationModule): Promise<void> {
@@ -250,6 +255,7 @@ export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
     this.injectBaseUrlToComponent();
     this.overrideElementUrls();
     this._cd.detectChanges();
+    this.resolve.emit();
   }
 
   private dispatchError(error: string | Error) {

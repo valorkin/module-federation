@@ -1,12 +1,12 @@
 <fd-layout-grid [col]="6">
   <!-- Loading RCCs from json file -->
-  <ng-container *ngIf="containers && isLoaded">
+  <ng-container *ngIf="isLoaded">
     <fd-layout-panel [columnSpan]="4"
                      fdLayoutGridSpan>
       <fd-layout-panel-body>
-        <ngx-mf-injector [containers]="containers"
-                         container="contentReqApp"
+        <ngx-mf-injector container="contentReqApp"
                          module="PrListComponent"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -17,6 +17,7 @@
       <fd-layout-panel-body>
         <ngx-mf-injector container="contentItemApp"
                          module="YourFavoritesModule"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -27,6 +28,7 @@
       <fd-layout-panel-body>
         <ngx-mf-injector container="contentItemApp"
                          module="ItemPageModule"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -44,6 +46,7 @@
                      fdLayoutGridSpan>
       <ngx-mf-injector container="contentRecommendedCategories"
                        module="RecommendedCategoriesComponent"
+                       (resolve)="onResolve()"
                        (error)="onError($event)">
       </ngx-mf-injector>
     </fd-layout-panel>
@@ -53,6 +56,7 @@
       <fd-layout-panel-body>
         <ngx-mf-injector container="contentItemApp"
                          module="YourFavoritesModule"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -63,6 +67,7 @@
       <fd-layout-panel-body>
         <ngx-mf-injector container="nxApp"
                          module="YourFavoritesModule"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>
@@ -80,6 +85,7 @@
       <fd-layout-panel-body>
         <ngx-mf-injector container="authApp"
                          module="elementName"
+                         (resolve)="onResolve()"
                          (error)="onError($event)">
         </ngx-mf-injector>
       </fd-layout-panel-body>

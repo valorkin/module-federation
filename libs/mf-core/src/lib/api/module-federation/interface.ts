@@ -3,6 +3,7 @@ export interface ConfigurationObject {
   uuid?: string;
   name?: string,
   active?: boolean,
+  hasError?: boolean;
   status?: Promise<any>,
   definitionUri?: string,
   version?: string

@@ -10,7 +10,7 @@ import {
 function validateFormScheme(json: ConfigurationObject): boolean | Error {
   const keys = Object.keys(json);
 
-  if (keys.length > 5 || keys.length < 2) {
+  if (keys.length > 4 || keys.length < 2) {
     return new Error(`FormValidationError: Configuration Object should have 2 or 4 props`);
   }
 
@@ -37,15 +37,7 @@ function validateFormScheme(json: ConfigurationObject): boolean | Error {
  * Сhecks if the json object has valid CO values
  */
 function validateFormValues(json: ConfigurationObject) {
-  if (json.hasOwnProperty('active') && typeof json.active !== 'boolean') {
-    return new Error(`FormValidationError: Value of 'active' should be a boolean`);
-  }
-
   for (let [key, value] of Object.entries(json)) {
-    if (key === 'active') {
-      continue;
-    }
-
     const isString = typeof value === 'string';
 
     if (!isString) {

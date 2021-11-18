@@ -65,6 +65,24 @@
   /**
    *
    */
+   function onToggleActiveConfiguration(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+    sendMessage(MFChromeExtensionActions.UpdateConfigurationObject, configuration);
+  }
+
+  /**
+   *
+   */
+   function onRefreshPage() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.reload(tabs[0].id);
+    });
+  }
+
+
+  /**
+   *
+   */
   function openConfigurationDialog() {
     const modal = getModal('configurationModal');
     modal.open();
@@ -103,11 +121,15 @@
   <ConfigurationsTable {configurations}
                        on:add={onAddConfigurationDialog}
                        on:edit={onEditConfigurationDialog}
+                       on:toggleActive={onToggleActiveConfiguration}
+                       on:refresh={onRefreshPage}
   />
 </main>
 
 <style lang="scss">
   main {
+    min-height: 100%;
     padding: 10px;
+    overflow: hidden;
   }
 </style>

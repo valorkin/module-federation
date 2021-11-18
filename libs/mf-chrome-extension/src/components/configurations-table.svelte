@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
   import { ConfigurationObject } from '@mf/core';
+
+  export let configurations;
 
 	const dispatch = createEventDispatcher();
 
@@ -18,10 +20,93 @@
 		dispatch('edit', configuration);
 	}
 
-	export let configurations;
+  /**
+   *
+   */
+  function onToggleActiveConfiguration(configuration: ConfigurationObject, active: boolean) {
+    const currentActive = !!active;
+
+    if (currentActive === configuration.active) {
+      return;
+    }
+
+    configuration.active = currentActive;
+    dispatch('toggleActive', configuration);
+  }
+
+  /**
+   *
+   */
+  function onRefreshPage() {
+    dispatch('refresh');
+  }
+
 </script>
 
-<div class="table-header">
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th> Name / URI </th>
+        <th> Status </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each $configurations as { uri, name, active, hasError }, i}
+        <tr>
+          <td>
+            <div class="configuration-col">
+              <span class="configuration-col__name text-overflow-ellipsis"
+                    title="{name}">
+                {#if name}
+                  {name}
+                {:else}
+                  ...
+                {/if}
+              </span>
+              <span class="configuration-col__uri text-overflow-ellipsis"
+                    title="{uri}">
+                {#if uri}
+                  {uri}
+                {:else}
+                  ...
+                {/if}
+              </span>
+            </div>
+          </td>
+          <td>
+            {#if hasError}
+              <span class="label label--error">
+                Offline
+              </span>
+            {:else}
+              {#if active}
+                <span class="label label--active"
+                      on:click={() => onToggleActiveConfiguration($configurations[i], false)}>
+                  Active
+                </span>
+              {:else}
+                <span class="label label--inactive"
+                      on:click={() => onToggleActiveConfiguration($configurations[i], true)}>
+                  Inactive
+                </span>
+              {/if}
+            {/if}
+          </td>
+          <td>
+            <a class="configuration-edit"
+              on:click={() => onEditConfiguration($configurations[i])}>
+              Edit
+            </a>
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
+
+<div class="table-actions">
   <button type="button"
           class="button button--blue"
           on:click={onAddConfiguration}>
@@ -30,71 +115,15 @@
     </span>
     Add
   </button>
+  <button type="button"
+          class="button button--default"
+          on:click={onRefreshPage}>
+    <span class="material-icons md-dark">
+      refresh
+    </span>
+    Refresh page
+  </button>
 </div>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th> Name / URI </th>
-      <th> Definition URI </th>
-      <th> Status </th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each $configurations as { uri, name, definitionUri, active }, i}
-      <tr>
-        <td>
-          <div class="configuration-col">
-            <span class="configuration-col__name text-overflow-ellipsis"
-                  title="{name}">
-              {#if name}
-                {name}
-              {:else}
-                ...
-              {/if}
-            </span>
-            <span class="configuration-col__uri text-overflow-ellipsis"
-                  title="{uri}">
-              {#if uri}
-                {uri}
-              {:else}
-                ...
-              {/if}
-            </span>
-          </div>
-        </td>
-        <td>
-          <span class="configuration-definition-uri text-overflow-ellipsis"
-                title="{definitionUri}">
-            {#if definitionUri}
-              {definitionUri}
-            {:else}
-              ...
-            {/if}
-          </span>
-        </td>
-        <td>
-          {#if active}
-            <span class="configuration-status configuration-status--active">
-              Active
-            </span>
-          {:else}
-            <span class="configuration-status configuration-status--inactive">
-              Inactive
-            </span>
-          {/if}
-        </td>
-        <td>
-          <a class="configuration-edit"
-             on:click={() => onEditConfiguration($configurations[i])}>
-            Edit
-          </a>
-        </td>
-      </tr>
-    {/each}
-  </tbody>
-</table>
 
 <style lang="scss">
   .configuration-col {
@@ -102,7 +131,7 @@
     flex-direction: column;
 
     &__name {
-      max-width: 250px;
+      max-width: 500px;
       //font-size: .875rem;
       line-height: 1.25rem;
       font-weight: 500;
@@ -110,48 +139,35 @@
     }
 
     &__uri {
-      max-width: 250px;
+      max-width: 500px;
       //font-size: .875rem;
       line-height: 1.25rem;
       color: rgba(107, 114, 128, 1);
     }
   }
 
-  .configuration-definition-uri {
-    max-width: 250px;
-    color: rgba(107, 114, 128, 1);
+ .label {
+    &--active, &--inactive {
+      cursor: pointer;
+    }
   }
 
-  .configuration-status {
-    display: inline-block;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    line-height: 1.25rem;
-    font-weight: 600;
-    border-radius: 9999px;
-
-    &--active {
-      color: rgba(6, 95, 70, 1);
-      background-color: rgba(209, 250, 229, 1);
+  .table {
+    thead {
+      position: sticky;
+      top: 0;
     }
+  }
 
-    &--inactive {
-      color: rgba(70, 70, 70, 1);
-      background-color: rgba(243, 244, 246, 1)
-    }
+  .table-wrapper {
+    height: calc(100vh - 62px);
+    overflow-y: scroll;
   }
 
   .configuration-edit {
     font-weight: 500;
     text-align: right;
-    // pointer-events: none;
     cursor: pointer;
-  }
-
-  .text-overflow-ellipsis {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
 </style>

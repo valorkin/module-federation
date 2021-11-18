@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "description": "Switch remote containers by using Module Federation",
   "permissions": [
-    "tabs"
+    "tabs",
+    "http://*/",
+    "https://*/"
   ],
   "content_scripts": [
     {

@@ -1405,6 +1405,11 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
+svelte-forms@1.1.51:
+  version "1.1.51"
+  resolved "https://registry.yarnpkg.com/svelte-forms/-/svelte-forms-1.1.51.tgz#b23b70173e08c232afe1dcb39fd0494eb1da610e"
+  integrity sha512-4SRwe0pJA9KvirkLAbi2uf4LWA3PoUS34bJkpqbgNFXERFVtSCbt9ZJ3Phu/bbRbYuQ6MptD7HuqsDZbCXd8Hw==
+
 svelte-hmr@^0.14.2:
   version "0.14.7"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.14.7.tgz#7fa8261c7b225d9409f0a86f3b9ea5c3ca6f6607"

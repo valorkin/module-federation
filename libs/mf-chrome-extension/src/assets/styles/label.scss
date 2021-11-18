@@ -1,0 +1,23 @@
+.label {
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  border-radius: 9999px;
+
+  &--active {
+    color: rgba(6, 95, 70, 1);
+    background-color: rgba(209, 250, 229, 1);
+  }
+
+  &--inactive {
+    color: rgba(70, 70, 70, 1);
+    background-color: rgba(243, 244, 246, 1)
+  }
+
+  &--error {
+    color: #890909e6;
+    background-color: #ef444421;
+  }
+}

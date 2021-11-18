@@ -5,6 +5,8 @@ export type MFCoreHooks = {
   hooks: {
     configurations: {
       updated: Function;
+      resolved: Function;
+      aborted: Function;
     },
 
     containers: {
@@ -17,7 +19,9 @@ export type MFCoreHooks = {
 window.mfCore = {
   hooks: {
     configurations: {
-      updated: () => {}
+      updated: () => {},
+      resolved: () => {},
+      aborted: () => {}
     },
 
     containers: {

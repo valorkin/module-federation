@@ -1,9 +1,11 @@
+.input,
+.select,
 .textarea {
   display: block;
   padding: 10px;
   font-family: inherit;
   font-size: 0.8125rem;
-  line-height: 1.25rem;
+  line-height: 1rem; //1.25rem
   appearance: none;
   outline: none;
   background-color: #fff;
@@ -27,6 +29,20 @@
       border-color: #ef4444;
     }
   }
+}
+
+.select {
+  appearance: auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
 }
 
 .form-message {

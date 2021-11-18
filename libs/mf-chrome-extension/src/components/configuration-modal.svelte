@@ -19,14 +19,15 @@
     }
 
     // we don't want `status`, `uuid` to be edited
-    const { uri, name, active, definitionUri, version } = store.selected;
+    const { uri, name, definitionUri, version, active, hasError } = store.selected;
 
     clippedConfiguration = {
       uri,
       name,
-      active,
       definitionUri,
-      version
+      active,
+      version,
+      hasError
     };
   });
 
@@ -34,6 +35,7 @@
    *
    */
   function onSubmitConfiguration(e: CustomEvent) {
+    console.log(e.detail);
     dispatch('submit', e.detail as ConfigurationObject);
   }
 
@@ -43,7 +45,7 @@
 </script>
 
 <h4>
-  Add Configuration Object
+  { $configurationSelected.editable ? 'Edit' : 'Add' } Configuration Object
 </h4>
 
 <ConfigurationForm configuration={clippedConfiguration}
