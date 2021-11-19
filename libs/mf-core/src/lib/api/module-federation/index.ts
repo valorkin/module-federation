@@ -4,13 +4,9 @@ import {
 } from './synchronization';
 
 import { ConfigurationObject, RemoteContainerConfiguration } from './interface';
-import { MFCoreHooks } from './hooks';
-import './hooks';
-
 
 declare global {
   interface Window {
-    mfCore: MFCoreHooks;
     mfCOs: ConfigurationObject[];
     _mfRCCs: RemoteContainerConfiguration[];
   }

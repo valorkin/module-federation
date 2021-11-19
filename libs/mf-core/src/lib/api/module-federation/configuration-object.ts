@@ -14,15 +14,6 @@ export function getConfigurationObjectIndexByName(name: string): number {
 }
 
 /**
- *
- */
- export function getConfigurationObjectIndexByRef(ref: ConfigurationObject): number {
-  return findIndexFromEnd(window.mfCOs, ((co) => {
-    return co === ref;
-  }));
-}
-
-/**
  * Returns a specific Configuration Object from COs list by name
  * Is used when we should get a last added CO by a specific name
  */
@@ -71,41 +62,12 @@ export function toggleActiveConfigurationObject(uuid: string, active: boolean) {
 /**
  * uuid or Configuration Object instance (reference)
  */
-export function toggleFailedConfigurationObject(ref: string | ConfigurationObject, hasError: boolean) {
-  if (typeof ref === 'string') {
-    const index = getConfigurationObjectIndexByUuid(ref);
-
-    if (index > -1) {
-      window.mfCOs[index].hasError = hasError;
-      return;
-    }
-  }
-
-  const index = getConfigurationObjectIndexByRef(ref as ConfigurationObject);
+export function toggleFailedConfigurationObject(uuid: string, hasError: boolean) {
+  const index = getConfigurationObjectIndexByUuid(uuid);
 
   if (index > -1) {
     window.mfCOs[index].hasError = hasError;
   }
-
-  /*let index = uuid ? getConfigurationObjectIndexByUuid(uuid) : -1;
-
-  if (index > -1) {
-    window.mfCOs[index].hasError = hasError;
-    return;
-  }
-
-  index = getLastActiveConfigurationObjectIndexByName(name);
-
-  if (index > -1) {
-    window.mfCOs[index].hasError = hasError;
-    return;
-  }
-
-  index = getConfigurationObjectIndexByName(name);
-
-  if (index > -1) {
-    window.mfCOs[index].hasError = hasError;
-  }*/
 }
 
 /**
@@ -140,11 +102,11 @@ export function deactivateLastActiveConfigurationObjectByName(name: string, uuid
 }
 
 /**
- * Updates Configuration Object and returns `true` if it's updated
+ * Updates Configuration Object and returns `uuid` if it's identified
  * In some cases when CO is added but never be resolved (has no Uuid and RCC) we should update it by a provided uri
  * and add some props such as uuid, name and etc
  */
-export function updateConfigurationObjectByUri(configurationObject: ConfigurationObject): boolean {
+export function updateConfigurationObjectByUri(configurationObject: ConfigurationObject): string {
   const trimmedUri = configurationObject.uri.trim();
 
   const index = findIndexFromEnd(window.mfCOs, ((co) => {
@@ -152,18 +114,19 @@ export function updateConfigurationObjectByUri(configurationObject: Configuratio
   }));
 
   if (index < 0) {
-    return false;
+    return null;
   }
 
   const oldConfigurationObject = window.mfCOs[index];
+  const uuid = oldConfigurationObject.uuid || configurationObject.uuid;
 
   window.mfCOs[index] = {
     ...oldConfigurationObject,
-    uuid: configurationObject.uuid,
+    uuid,
     version: configurationObject.version
   };
 
-  return true;
+  return uuid;
 }
 
 /**

@@ -66,7 +66,6 @@ export class LandingComponent implements OnInit {
 
   onError(error: Error) {
     console.log(error);
-
     this.dispatchUpdateToChromeExtEvent();
   }
 
@@ -75,8 +74,6 @@ export class LandingComponent implements OnInit {
   }
 
   onAddConfigurationObject(configurationObject: ConfigurationObject) {
-    console.log('add: ', configurationObject);
-
     // Case sync (bad)
     /*window.mfCOs = window.mfCOs || [];
     window.mfCOs.push(configurationObject);
@@ -92,19 +89,14 @@ export class LandingComponent implements OnInit {
 
     this.toggleRenderingModuleFederatedApps(false);
 
-    // Case async (good)
-    //if (configurationObject.active) {
-      addModuleFederatedAppAsync(configurationObject)
-        .finally(() => {
-          this.toggleRenderingModuleFederatedApps(true);
-          this.dispatchUpdateToChromeExtEvent();
-        });
-    //}
+    addModuleFederatedAppAsync(configurationObject)
+      .finally(() => {
+        this.toggleRenderingModuleFederatedApps(true);
+        this.dispatchUpdateToChromeExtEvent();
+      });
   }
 
   onUpdateConfigurationObject(configurationObject: ConfigurationObject) {
-    console.log('edit: ', configurationObject);
-
     this.toggleRenderingModuleFederatedApps(false);
 
     updateModuleFederatedAppAsync(configurationObject)

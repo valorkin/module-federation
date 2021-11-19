@@ -22,7 +22,7 @@ function rejectWithResolvingError(name: string, moduleName: string) {
 }
 
 /**
- * Removes webpack previous module resolution
+ * Removes webpack's previous module resolution
  */
 function unresolveRemoteModule(name: string) {
   window[name] = null;
