@@ -21,49 +21,49 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-				test: /\.svelte$/,
-				use: {
+        test: /\.svelte$/,
+        use: {
           loader: 'svelte-loader',
           options: {
             emitCss: true,
             preprocess: sveltePreprocess({})
           }
         }
-			},
+      },
       {
-				test: /node_modules\/svelte\/.*\.mjs$/,
-				resolve: {
-					fullySpecified: false
-				}
-			},
+        test: /node_modules\/svelte\/.*\.mjs$/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
       {
-				test: /\.(scss|sass)$/,
-				use: [
-					{
-						loader: MiniCssExtractPlugin.loader
-					},
-					'css-loader',
-					'sass-loader'
-				]
-			},
+        test: /\.(scss|sass)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader',
+          'sass-loader'
+        ]
+      },
       {
-				test: /\.css$/,
-				use: [
-					{
-						loader: MiniCssExtractPlugin.loader
-					},
-					'css-loader',
-				]
-			}
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader'
+        ]
+      }
     ],
   },
   resolve: {
     alias: {
-			// Note: Later in this config file, we'll automatically add paths from `tsconfig.compilerOptions.paths`
-			svelte: path.resolve('node_modules', 'svelte')
-		},
-		extensions: ['.mjs', '.js', '.ts', '.svelte'],
-		mainFields: ['svelte', 'browser', 'module', 'main']
+      // Note: Later in this config file, we'll automatically add paths from `tsconfig.compilerOptions.paths`
+      svelte: path.resolve('node_modules', 'svelte')
+    },
+    extensions: ['.mjs', '.js', '.ts', '.svelte'],
+    mainFields: ['svelte', 'browser', 'module', 'main']
   },
   output: {
     filename: '[name].js',
@@ -86,7 +86,7 @@ module.exports = {
       ]
     }),
     new MiniCssExtractPlugin({
-			filename: '[name].css'
-		})
+      filename: '[name].css'
+    })
   ]
 };

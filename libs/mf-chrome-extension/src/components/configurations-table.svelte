@@ -4,21 +4,21 @@
 
   export let configurations;
 
-	const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
   /**
    *
    */
   function onAddConfiguration() {
-		dispatch('add');
-	}
+    dispatch('add');
+  }
 
   /**
    *
    */
   function onEditConfiguration(configuration: ConfigurationObject) {
-		dispatch('edit', configuration);
-	}
+    dispatch('edit', configuration);
+  }
 
   /**
    *

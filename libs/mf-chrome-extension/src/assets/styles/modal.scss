@@ -1,0 +1,40 @@
+.modal {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: #4448;
+
+  &__body {
+    position: relative;
+    padding: 2em;
+    border-radius: 6px;
+    background: white;
+    border: 0;
+    filter: drop-shadow(2px 2px 1px #555);
+  }
+
+  &__close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.125rem;
+    cursor: pointer;
+    color: rgba(229, 231, 235, 1);
+
+    &:hover {
+      color: #555;
+    }
+  }
+
+  &__content {
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+    overflow: auto;
+  }
+}

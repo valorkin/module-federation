@@ -1,5 +1,5 @@
 <script lang="ts">
- 	import { onMount, afterUpdate, createEventDispatcher } from 'svelte';
+  import { onMount, afterUpdate, createEventDispatcher } from 'svelte';
   import { form } from 'svelte-forms';
   import { ConfigurationObject } from '@mf/core';
 
