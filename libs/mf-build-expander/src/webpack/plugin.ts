@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { resolve, join } from 'path';
 import { promises } from 'fs';
 import { WebpackOptionsNormalized } from 'webpack';
 import { camelToUnderscore, readFileAsJson, writeFileAsJson } from '../utils';
@@ -34,9 +34,9 @@ const readPackageJson = async function(packageJsonPath: string): Promise<any> {
 /**
  *
  */
-const readWebpackModuleFederationPlugin = (webpackKind: string | WebpackOptionsNormalized) => {
+const readWebpackModuleFederationPlugin = async (webpackKind: string | WebpackOptionsNormalized) => {
   const webpackConfig = typeof webpackKind === 'string'
-    ? require(webpackKind as string)
+    ? await import(webpackKind as string)
     : webpackKind;
 
   const moduleFederationPlugin = webpackConfig.plugins.find((plugin: FunctionConstructor) => {
@@ -63,13 +63,14 @@ const readExposedFile = async (filePath: string) => {
 /**
  *
  */
-const readModuleDescriptors = async (rootRemotesDir: string, webpackPath: string): Promise<object[]> => {
-  const remoteModuleFederationPlugin = readWebpackModuleFederationPlugin(webpackPath);
+const readModuleDescriptors = async (rootAppDir: string): Promise<object[]> => {
+  const webpackPath = resolve(rootAppDir, `./webpack.extra.js`);
+  const remoteModuleFederationPlugin = await readWebpackModuleFederationPlugin(webpackPath);
   const remoteModuleFederationPluginExposes: {[key: string]: string} = remoteModuleFederationPlugin.exposes;
   const modules: object[] = [];
 
   for (let [exposedModule, exposedPath] of Object.entries(remoteModuleFederationPluginExposes)) {
-    const exposedModulePath = join(rootRemotesDir, exposedPath);
+    const exposedModulePath = resolve(rootAppDir, `./${exposedPath}`);
     const exposedModuleFile = await readExposedFile(exposedModulePath);
 
     parsers.forEach((parser) => {
@@ -97,20 +98,20 @@ const writeOutputFile = async (filePath: string, data: any) => {
  *
  */
 export const executePlugin = async (options: IPluginsJsonGeneratorInternalOptions): Promise<void> => {
-  const moduleFederationPlugin = readWebpackModuleFederationPlugin(options.webpackOptions);
+  const moduleFederationPlugin = await readWebpackModuleFederationPlugin(options.webpackOptions);
   const moduleFederationPluginRemotes: {[key: string]: string} = moduleFederationPlugin.remotes;
   const descriptors: any[] = [];
 
   for (let [remoteName, remoteUrl] of Object.entries(moduleFederationPluginRemotes)) {
     const remoteAppName = camelToUnderscore(remoteName);
-    const remotePackageJsonPath = `${options.remotesDir}${remoteAppName}/package.json`;
+    const remotePackageJsonPath = resolve(options.remotesDir, `${remoteAppName}/package.json`);
     const remotePackageJson = await readPackageJson(remotePackageJsonPath);
-    const remoteUri = remoteUrl.split('@').pop();
+    const remoteParts = remoteUrl.split('@');
 
     const descriptor: any = {
-      name: remoteName,
+      name: remoteParts[0],
       version: remotePackageJson.version,
-      uri: remoteUri,
+      uri: remoteParts[1],
       modules: []
     }
 
@@ -120,9 +121,8 @@ export const executePlugin = async (options: IPluginsJsonGeneratorInternalOption
       descriptor.issues = issues;
     }
 
-    const rootRemotesDir = join(options.remotesDir, '../');
-    const remoteWebpackPath = `${options.remotesDir}${remoteAppName}/webpack.extra.js`;
-    descriptor.modules = await readModuleDescriptors(rootRemotesDir, remoteWebpackPath);
+    const rootAppDir = resolve(options.remotesDir, `./${remoteAppName}/`);
+    descriptor.modules = await readModuleDescriptors(rootAppDir);
     descriptors.push(descriptor);
   }
 

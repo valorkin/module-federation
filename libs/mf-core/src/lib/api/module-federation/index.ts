@@ -1,3 +1,8 @@
+import {
+  getSynchronizedConfigurationObjects,
+  getSynchronizedRemoteContainerConfigurations
+} from './synchronization';
+
 import { ConfigurationObject, RemoteContainerConfiguration } from './interface';
 
 declare global {
@@ -7,9 +12,11 @@ declare global {
   }
 }
 
-window.mfCOs = window.mfCOs || [];
-window._mfRCCs = window._mfRCCs || [];
+window.mfCOs = getSynchronizedConfigurationObjects();
+window._mfRCCs = getSynchronizedRemoteContainerConfigurations();
 
 export * from './interface';
 export * from './type';
+export * from './util';
+export * from './synchronization';
 export * from './module-federation';

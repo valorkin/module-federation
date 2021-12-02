@@ -14,11 +14,6 @@
       "implementation": "./src/karma",
       "schema": "./src/karma/schema.json",
       "description": "Extends and runs the test target from a local project"
-    },
-    "extract-i18n": {
-      "implementation": "./src/extract-i18n",
-      "schema": "./src/extract-i18n/schema.json",
-      "description": "Extends and extracts the I18n target from a local project"
     }
   }
 }
