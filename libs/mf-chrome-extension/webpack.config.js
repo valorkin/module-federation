@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     popup: './src/main.ts',
     content: './src/content.ts',
+    background: './src/background.ts',
     styles: [
       './src/assets/styles/index.scss'
     ]

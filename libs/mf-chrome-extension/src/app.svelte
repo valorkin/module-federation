@@ -100,15 +100,7 @@
    * Sends the json object to the content script
    */
   function sendMessage(action: MFChromeExtensionActions, payload: any) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(
-        tabs[0].id,
-        {
-          action,
-          payload
-        }
-      );
-    });
+    window.parent.postMessage({ action, payload }, '*');
   }
 
 </script>

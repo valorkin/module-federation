@@ -5,16 +5,15 @@ import { groupBy } from '../core/utils';
 
 export const configurations = writable<ConfigurationObject[]>([]);
 
-/**
- *
- */
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === MFChromeExtensionActions.ConfigurationObjectsUpdated) {
+window.addEventListener('message', (event) => {
+  const { action, payload } = event.data;
+
+  if (action === MFChromeExtensionActions.ConfigurationObjectsUpdated) {
     configurations.set(
-      serializeConfigurations(message.payload)
+      serializeConfigurations(payload)
     );
   }
-});
+}, false);
 
 /**
  *
