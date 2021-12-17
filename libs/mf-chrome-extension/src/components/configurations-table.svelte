@@ -25,12 +25,8 @@
    */
   function onToggleActiveConfiguration(configuration: ConfigurationObject, active: boolean) {
     const currentActive = !!active;
-
-    if (currentActive === configuration.active) {
-      return;
-    }
-
     configuration.active = currentActive;
+
     dispatch('toggleActive', configuration);
   }
 
@@ -77,7 +73,8 @@
           </td>
           <td>
             {#if hasError}
-              <span class="label label--error">
+              <span class="label label--error"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], true)}>
                 Offline
               </span>
             {:else}
@@ -147,9 +144,9 @@
   }
 
  .label {
-    &--active, &--inactive {
+    //&--active, &--inactive {
       cursor: pointer;
-    }
+    //}
   }
 
   .table {
