@@ -26,6 +26,11 @@ window.addEventListener('message', (event) => {
   const { action, payload } = event.data;
   console.log(event.data);
 
+  if (action === MFChromeExtensionActions.ClosePopup) {
+    closePopup();
+    return;
+  }
+
   if (outputActions.includes(action)) {
     dispatchEventToWindow(action, payload);
     return;
@@ -70,7 +75,7 @@ function togglePopup() {
   let popupElement = getPopup();
 
   if (popupElement) {
-    document.body.removeChild(popupElement);
+    closePopup();
     return;
   }
 
@@ -87,4 +92,12 @@ function togglePopup() {
   popupElement.style.borderTopLeftRadius = '5px';
   popupElement.src = chrome.runtime.getURL('popup.html');
   document.body.appendChild(popupElement);
+}
+
+/**
+ *
+ */
+function closePopup() {
+  let popupElement = getPopup();
+  document.body.removeChild(popupElement);
 }

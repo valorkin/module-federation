@@ -79,6 +79,12 @@
     });
   }
 
+  /**
+   *
+   */
+   function onClosePopup() {
+    sendMessage(MFChromeExtensionActions.ClosePopup, null);
+  }
 
   /**
    *
@@ -115,6 +121,7 @@
                        on:edit={onEditConfigurationDialog}
                        on:toggleActive={onToggleActiveConfiguration}
                        on:refresh={onRefreshPage}
+                       on:close={onClosePopup}
   />
 </main>
 

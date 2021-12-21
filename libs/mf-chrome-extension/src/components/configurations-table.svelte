@@ -37,6 +37,13 @@
     dispatch('refresh');
   }
 
+  /**
+   *
+   */
+   function onClosePage() {
+    dispatch('close');
+  }
+
 </script>
 
 <div class="table-wrapper">
@@ -120,6 +127,14 @@
     </span>
     Refresh page
   </button>
+  <button type="button"
+          class="button button--default close-button"
+          on:click={onClosePage}>
+    <span class="material-icons md-dark">
+      clear
+    </span>
+    Close window
+  </button>
 </div>
 
 <style lang="scss">
@@ -165,6 +180,11 @@
     font-weight: 500;
     text-align: right;
     cursor: pointer;
+  }
+
+  .close-button {
+    position: absolute;
+    right: 10px;
   }
 
 </style>
