@@ -1,12 +1,19 @@
+
+export enum ConfigurationObjectPriorities {
+  Error,
+  Initialized,
+  Inactive,
+  Active
+}
+
 export interface ConfigurationObject {
-  uri: string, // URI of remote entry.js
+  uri: string; // URI of remote entry.js
   uuid?: string;
-  name?: string,
-  active?: boolean,
-  hasError?: boolean;
-  status?: Promise<any>,
-  definitionUri?: string,
-  version?: string
+  name?: string;
+  priority?: ConfigurationObjectPriorities;
+  status?: Promise<any>;
+  definitionUri?: string;
+  version?: string;
 }
 
 export interface ConfigurationObjectResolve {

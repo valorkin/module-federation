@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { afterUpdate, createEventDispatcher } from 'svelte';
-  import { ConfigurationObject } from '@mf/core';
+  import { createEventDispatcher } from 'svelte';
+  import { ConfigurationObject, ConfigurationObjectPriorities } from '@mf/core';
 
   export let configurations;
 
@@ -23,10 +23,8 @@
   /**
    *
    */
-  function onToggleActiveConfiguration(configuration: ConfigurationObject, active: boolean) {
-    const currentActive = !!active;
-    configuration.active = currentActive;
-
+  function onToggleActiveConfiguration(configuration: ConfigurationObject, priority: ConfigurationObjectPriorities) {
+    configuration.priority = priority;
     dispatch('toggleActive', configuration);
   }
 
@@ -56,7 +54,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each $configurations as { uri, name, active, hasError }, i}
+      {#each $configurations as { uri, name, priority }, i}
         <tr>
           <td>
             <div class="configuration-col">
@@ -79,20 +77,20 @@
             </div>
           </td>
           <td>
-            {#if hasError}
+            {#if priority === ConfigurationObjectPriorities.Error}
               <span class="label label--error"
-                    on:click={() => onToggleActiveConfiguration($configurations[i], true)}>
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
                 Offline
               </span>
             {:else}
-              {#if active}
+              {#if priority === ConfigurationObjectPriorities.Active}
                 <span class="label label--active"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], false)}>
+                      on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Inactive)}>
                   Active
                 </span>
               {:else}
                 <span class="label label--inactive"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], true)}>
+                      on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
                   Inactive
                 </span>
               {/if}

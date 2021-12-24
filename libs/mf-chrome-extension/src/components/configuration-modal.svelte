@@ -19,15 +19,14 @@
     }
 
     // we don't want `status`, `uuid` to be edited
-    const { uri, name, definitionUri, version, active, hasError } = store.selected;
+    const { uri, name, definitionUri, version, priority } = store.selected;
 
     clippedConfiguration = {
       uri,
       name,
       definitionUri,
-      active,
-      version,
-      hasError
+      priority,
+      version
     };
   });
 

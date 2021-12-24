@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, afterUpdate, createEventDispatcher } from 'svelte';
   import { form } from 'svelte-forms';
-  import { ConfigurationObject } from '@mf/core';
+  import { ConfigurationObject, ConfigurationObjectPriorities } from '@mf/core';
 
   import { testForm } from '../core/validators/test-validator';
 
@@ -13,9 +13,9 @@
 
   let isError = false;
 
-  let {uri, name, version, definitionUri, active} = configuration || {};
+  let {uri, name, version, definitionUri, priority} = configuration || {};
 
-  let configurationForm, activeSelect;
+  let configurationForm;
 
   onMount(() => {
     configurationForm = form(() => ({
@@ -30,14 +30,16 @@
       definitionUri: {
         value: definitionUri,
         validators: []
+      },
+      priority: {
+        value: priority,
+        validators: []
       }
     }),
       {
           validateOnChange: false
       }
     );
-
-    activeSelect = Number(active || false);
   });
 
   afterUpdate(() => {
@@ -53,7 +55,7 @@
       name,
       version,
       definitionUri,
-      active: Boolean(activeSelect)
+      priority
     }
   }
 
@@ -89,7 +91,7 @@
     name = '';
     version = '';
     definitionUri = '';
-    activeSelect = 0;
+    priority = ConfigurationObjectPriorities.Inactive;
 
     hideMessage();
   }
@@ -189,16 +191,16 @@
 
   <div class="form-group">
     <label class="form-label"
-           for="active">
+           for="priority">
       Status
     </label>
-    <select id="active"
+    <select id="priority"
             class="select"
-            bind:value={activeSelect}>
-      <option value={0}>
+            bind:value={priority}>
+      <option value={ConfigurationObjectPriorities.Inactive}>
         Inactive
       </option>
-      <option value={1}>
+      <option value={ConfigurationObjectPriorities.Active}>
         Active
       </option>
     </select>

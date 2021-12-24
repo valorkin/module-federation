@@ -1,3 +1,4 @@
+import { transfromSafeConfigurationObjects } from '.';
 import { ConfigurationObject, RemoteContainerConfiguration } from './interface';
 
 const mfCOsLocalStorageKey = 'mfCOs';
@@ -7,20 +8,9 @@ const mfRCCsLocalStorageKey = 'mfRCCs';
  *
  */
 function synchronizeConfigurationObjects(): void {
-  const cos = window.mfCOs.map((co) => {
-    return {
-      uri: co.uri,
-      uuid: co.uuid,
-      name: co.name,
-      active: co.active,
-      hasError: false,
-      status: null,
-      definitionUri: co.definitionUri,
-      version: co.version
-    };
-  });
-
+  const cos = transfromSafeConfigurationObjects(window.mfCOs);
   const jsonStringCOs = JSON.stringify(cos);
+
   window.localStorage.setItem(mfCOsLocalStorageKey, jsonStringCOs);
 }
 

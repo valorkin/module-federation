@@ -9,7 +9,7 @@ window.addEventListener('message', (event) => {
   const { action, payload } = event.data;
 
   if (action === MFChromeExtensionActions.ConfigurationObjectsUpdated) {
-    configurations.set(
+    return configurations.set(
       serializeConfigurations(payload)
     );
   }

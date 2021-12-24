@@ -1,6 +1,7 @@
 import { ConfigurationObject, RemoteContainerConfigurationModule } from './interface';
+import { ConfigurationObjectPriorities } from '.';
 import { createRemoteModuleAsync } from './remote-module';
-import { findIndexFromEnd } from './util';
+import { findIndexFromEnd, uuidv4 } from './util';
 
 /**
  * Returns a specific Configuration Object from COs list by name
@@ -21,7 +22,7 @@ export function getActiveConfigurationObjectIndexByName(name: string): number {
   const trimmedName = name.trim();
 
   return findIndexFromEnd(window.mfCOs, ((co) => {
-    return co.name.trim() === trimmedName && co.active;
+    return co.name.trim() === trimmedName && co.priority === ConfigurationObjectPriorities.Active;
   }));
 };
 
@@ -36,14 +37,13 @@ export function getConfigurationObjectIndexByUuid(uuid: string): number {
 }
 
 /**
- * Marks a Configuration Object as has/n't an error by uuid
+ * Marks a Configuration Object with a priority
  */
-export function toggleFailedConfigurationObject(uuid: string, hasError: boolean) {
+ export function markConfigurationObjectPriority(uuid: string, priority: ConfigurationObjectPriorities) {
   const index = getConfigurationObjectIndexByUuid(uuid);
 
   if (index > -1) {
-    // force value to be a boolean
-    window.mfCOs[index].hasError = !!hasError;
+    window.mfCOs[index].priority = priority;
   }
 }
 
@@ -59,14 +59,16 @@ export function deactivateLastActiveConfigurationObjectByName(name: string, uuid
       ? co.uuid !== uuid
       : true;
 
-    return co.name === trimmedName && co.active && shouldExcludeUuid;
+    return co.name === trimmedName
+      && co.priority === ConfigurationObjectPriorities.Active
+      && shouldExcludeUuid;
   }));
 
   if (index < 0) {
     return;
   }
 
-  window.mfCOs[index].active = false;
+  window.mfCOs[index].priority = ConfigurationObjectPriorities.Inactive;
 }
 
 /**
@@ -95,6 +97,63 @@ export function updateConfigurationObjectByUri(configurationObject: Configuratio
   };
 
   return uuid;
+}
+
+/**
+ * Strips Functions, other unclonable objects and etc from an array of Configuration Objects
+ * Is used for the Local Storage, Cross-Domain messaging and etc.
+ */
+ export function transfromSafeConfigurationObjects(configurationObjects: ConfigurationObject[]): ConfigurationObject[] {
+  return configurationObjects.map((co) => {
+    return {
+      uuid: co.uuid,
+      uri: co.uri,
+      name: co.name,
+      priority: co.priority,
+      definitionUri: co.definitionUri,
+      version: co.version
+    };
+  });
+}
+
+/**
+ * Adds a Configuration Object to the list
+ */
+ export function addConfigurationObject(configurationObject: ConfigurationObject) {
+  const { name, priority } = configurationObject;
+
+  if (priority === ConfigurationObjectPriorities.Active) {
+    deactivateLastActiveConfigurationObjectByName(name);
+  }
+
+  configurationObject.uuid = uuidv4();
+  window.mfCOs = window.mfCOs || [];
+  window.mfCOs.push(configurationObject);
+}
+
+/**
+ * Updates a Configuration Object in the list
+ */
+export function updateConfigurationObject(configurationObject: ConfigurationObject) {
+  const { uri, name, uuid, definitionUri, priority } = configurationObject;
+  const index = getConfigurationObjectIndexByUuid(uuid);
+
+  if (index < 0) {
+    return;
+  }
+
+  const { name: oldName, uri: oldUri, definitionUri: oldDefinitionUri } = window.mfCOs[index];
+
+  // cases of a critical updating, we should unset the resolving status
+  if (name !== oldName || uri !== oldUri || definitionUri !== oldDefinitionUri) {
+    configurationObject.status = null;
+  }
+
+  if (priority === ConfigurationObjectPriorities.Active) {
+    deactivateLastActiveConfigurationObjectByName(name);
+  }
+
+  window.mfCOs[index] = configurationObject;
 }
 
 /**

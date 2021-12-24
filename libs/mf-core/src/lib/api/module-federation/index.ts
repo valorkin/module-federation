@@ -12,11 +12,12 @@ declare global {
   }
 }
 
-window.mfCOs = getSynchronizedConfigurationObjects();
-window._mfRCCs = getSynchronizedRemoteContainerConfigurations();
+window.mfCOs = []/*getSynchronizedConfigurationObjects()*/;
+window._mfRCCs = []/*getSynchronizedRemoteContainerConfigurations()*/;
 
 export * from './interface';
 export * from './type';
 export * from './util';
 export * from './synchronization';
+export * from './configuration-object';
 export * from './module-federation';

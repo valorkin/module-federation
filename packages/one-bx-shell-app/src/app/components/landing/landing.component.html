@@ -1,94 +1,86 @@
-<fd-layout-grid [col]="6">
-  <!-- Loading RCCs from json file -->
-  <ng-container *ngIf="isLoaded">
-    <fd-layout-panel [columnSpan]="4"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="contentReqApp"
-                         module="PrListComponent"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
-
-    <fd-layout-panel [columnSpan]="4"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="contentItemApp"
-                         module="YourFavoritesModule"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
-
-    <fd-layout-panel [columnSpan]="4"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="contentItemApp"
-                         module="ItemPageModule"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
-
-    <fd-layout-panel [columnSpan]="2"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector iframeUri="https://mf-demo-iframe-source-website.web.app">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
-
-    <fd-layout-panel [columnSpan]="5"
-                     fdLayoutGridSpan>
-      <ngx-mf-injector container="contentRecommendedCategories"
-                       module="RecommendedCategoriesComponent"
-                       (resolve)="onResolve()"
+<fd-layout-grid *ngIf="isLoaded" [col]="6">
+  <fd-layout-panel [columnSpan]="4"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="contentReqApp"
+                       module="PrListComponent"
                        (error)="onError($event)">
       </ngx-mf-injector>
-    </fd-layout-panel>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
 
-    <fd-layout-panel [columnSpan]="1"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="contentItemApp"
-                         module="YourFavoritesModule"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
+  <fd-layout-panel [columnSpan]="4"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="contentItemApp"
+                       module="YourFavoritesModule"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
 
-    <fd-layout-panel [columnSpan]="1"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="nxApp"
-                         module="YourFavoritesModule"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
+  <fd-layout-panel [columnSpan]="4"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="contentItemApp"
+                       module="ItemPageModule"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
 
-    <fd-layout-panel [columnSpan]="2"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <a routerLink="/calc">Navigate to calculation component</a>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
+  <fd-layout-panel [columnSpan]="2"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="iframe-source-website"
+                       module="landing"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
 
-    <fd-layout-panel [columnSpan]="3"
-                     fdLayoutGridSpan>
-      <fd-layout-panel-body>
-        <ngx-mf-injector container="authApp"
-                         module="elementName"
-                         (resolve)="onResolve()"
-                         (error)="onError($event)">
-        </ngx-mf-injector>
-      </fd-layout-panel-body>
-    </fd-layout-panel>
-  </ng-container>
+  <fd-layout-panel [columnSpan]="5"
+                   fdLayoutGridSpan>
+    <ngx-mf-injector container="contentRecommendedCategories"
+                     module="RecommendedCategoriesComponent"
+                     (error)="onError($event)">
+    </ngx-mf-injector>
+  </fd-layout-panel>
+
+  <fd-layout-panel [columnSpan]="1"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="contentItemApp"
+                       module="YourFavoritesModule"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
+
+  <fd-layout-panel [columnSpan]="1"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="nxApp"
+                       module="YourFavoritesModule"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
+
+  <fd-layout-panel [columnSpan]="2"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <a routerLink="/calc">Navigate to calculation component</a>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
+
+  <fd-layout-panel [columnSpan]="3"
+                   fdLayoutGridSpan>
+    <fd-layout-panel-body>
+      <ngx-mf-injector container="authApp"
+                       module="elementName"
+                       (error)="onError($event)">
+      </ngx-mf-injector>
+    </fd-layout-panel-body>
+  </fd-layout-panel>
 </fd-layout-grid>
