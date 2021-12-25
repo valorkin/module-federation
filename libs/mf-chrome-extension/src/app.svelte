@@ -67,7 +67,7 @@
    */
    function onToggleActiveConfiguration(e: CustomEvent) {
     const configuration = e.detail as ConfigurationObject;
-    sendMessage(MFChromeExtensionActions.UpdateConfigurationObject, configuration);
+    sendMessage(MFChromeExtensionActions.SwitchConfigurationObject, configuration);
   }
 
   /**

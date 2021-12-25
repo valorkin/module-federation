@@ -1,4 +1,5 @@
 import {
+  OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -36,6 +37,7 @@ import {
 
 import { ContainersService } from '../../services/containers.service';
 import { REMOTE_BASE_URL } from '../../tokens';
+import { ContainerComponentsService } from '../../services/container-components.service';
 
 @Component({
   selector: 'ngx-mf-injector',
@@ -53,7 +55,7 @@ import { REMOTE_BASE_URL } from '../../tokens';
     </iframe>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerInjectorComponent implements OnChanges, OnDestroy {
+export class ContainerInjectorComponent implements OnChanges, OnInit, OnDestroy {
   // Remote Container Configuration name
   @Input()
   container: string;
@@ -89,7 +91,8 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
     private readonly ngZone: NgZone,
     private readonly sanitizer: DomSanitizer,
     private readonly compiler: Compiler,
-    private readonly containersService: ContainersService
+    private readonly containersService: ContainersService,
+    private readonly containerComponentsService: ContainerComponentsService
   ) {}
 
   /**
@@ -97,58 +100,30 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes.container || changes.module) {
-      this.onResolveContainer();
+      this.resolve();
     }
+  }
+
+  /**
+   *
+   */
+  ngOnInit() {
+    this.containerComponentsService.use(this);
   }
 
   /**
    *
    */
   ngOnDestroy() {
-    this.unlisten();
-  }
-
-  /**
-   *
-   */
-  onUpdateContainer(configurationObject: ConfigurationObject) {
-    const {uuid, name, priority} = configurationObject;
-
-    // created active CO
-    if (this.containerUuid !== uuid) {
-      if (name === this.container) {
-        this.onResolveContainer();
-        //this.changeDetectorRef.detectChanges();
-        return;
-      }
-    }
-
-    // updated CO
-    this.container = name;
-
-    if (priority === ConfigurationObjectPriorities.Active) {
-      this.onResolveContainer();
-      //this.changeDetectorRef.detectChanges();
-    }
-  }
-
-  /**
-   *
-   */
-  onResolveContainer() {
-    this.containersService.resolve(this.container, this.module)
-      .then((resolvedConfiguration) => {
-        this.render(resolvedConfiguration);
-      })
-      .catch((error) => {
-        this.dispatchError(error);
-      });
+    this.containerComponentsService.unuse(this);
   }
 
   /**
    *
    */
   onLoadIframeError() {
+    this.containersService.updatePriority(this.containerUuid, ConfigurationObjectPriorities.Error);
+
     this.dispatchError(
       `PluginLauncherIframeLoadingError: Can't fetch resource from ${this.iframeEl.nativeElement.src}`
     );
@@ -157,12 +132,28 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
   /**
    *
    */
+  resolve() {
+    this.containersService.resolve(this.container, this.module)
+      .then((resolvedConfiguration) => {
+        this.containerUuid = resolvedConfiguration.configuration.uuid;
+        this.render(resolvedConfiguration);
+      })
+      .catch(({uuid, error}) => {
+        this.containerUuid = uuid;
+        this.dispatchError(error);
+      })
+      .finally(() => {
+        this.containersService.broadcast();
+      });
+  }
+
+  /**
+   *
+   */
   render(resolvedConfiguration: ConfigurationObjectResolve): void {
     const {configuration, configurationModule, module} = resolvedConfiguration;
-    const {uuid, uri} = configuration;
+    const {uri} = configuration;
     const {type, name} = configurationModule;
-
-    this.relisten(uuid);
 
     if (this.detectIframe(type)) {
       // if module type is an iframe we should not load one as a remote module
@@ -180,43 +171,6 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
     if (type === InjectorTypes.NgComponent) {
       this.renderComponent(moduleFactory, configurationModule as NgRemoteContainerConfigurationModule, module);
     }
-  }
-
-  /**
-   *
-   */
-  private listen() {
-    if (!this.containerUuid) {
-      return;
-    }
-
-    this.containerSubscription = this.containersService.on(this.containerUuid, this.onUpdateContainer.bind(this));
-  }
-
-  /**
-   *
-   */
-  private unlisten() {
-    if (!this.containerUuid) {
-      return;
-    }
-
-    this.containersService.off(this.containerUuid, this.containerSubscription);
-    this.containerUuid = undefined;
-    this.containerSubscription = null;
-  }
-
-  /**
-   *
-   */
-  private relisten(uuid: string) {
-    if (this.containerUuid === uuid) {
-      return;
-    }
-
-    this.unlisten();
-    this.containerUuid = uuid;
-    this.listen();
   }
 
   /**
@@ -251,6 +205,8 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
 
     // custom element is unknown in DOM
     if (!isCustomElement) {
+      this.containersService.updatePriority(this.containerUuid, ConfigurationObjectPriorities.Error);
+
       return this.dispatchError(
         `PluginLauncherCustomElementResolveError: An element with name ${elementName} is not registered`
       );
@@ -264,28 +220,35 @@ export class ContainerInjectorComponent implements OnChanges, OnDestroy {
    *
    */
   private async renderComponent(module: any, configurationModule: NgRemoteContainerConfigurationModule, remoteModule: RemoteContainerConfigurationModule): Promise<void> {
-    const pluginModuleName = configurationModule.name;
-    let pluginComponentName = configurationModule.component;
+    const moduleName = configurationModule.name;
+    let componentName = configurationModule.component;
 
     // if provided module name and component name we bootstrap both
-    if (pluginModuleName && pluginComponentName) {
-      this._ngModule = await this.compiler.compileModuleAsync(module);
-      this._ngComponent = remoteModule[pluginComponentName];
+    if (moduleName && componentName) {
+      try {
+        this._ngModule = await this.compiler.compileModuleAsync(module);
+      } catch {
+        this.containersService.updatePriority(this.containerUuid, ConfigurationObjectPriorities.Error);
+      }
+
+      this._ngComponent = remoteModule[componentName];
     }
 
     // if component name is not provided, we suppose that `name` is a component name
-    if (!pluginComponentName) {
-      pluginComponentName = pluginModuleName;
+    if (!componentName) {
+      componentName = moduleName;
       this._ngModule = void 0;
-      this._ngComponent = remoteModule[pluginComponentName];
+      this._ngComponent = remoteModule[componentName];
     }
 
     // check if component is a function
     const isComponentDefined = typeof this._ngComponent === 'function';
 
     if (!isComponentDefined) {
+      this.containersService.updatePriority(this.containerUuid, ConfigurationObjectPriorities.Error);
+
       return this.dispatchError(
-        `PluginLauncherComponentResolveError: Can't resolve a component with name ${pluginComponentName}`
+        `PluginLauncherComponentResolveError: Can't resolve a component with name ${componentName}`
       );
     }
 

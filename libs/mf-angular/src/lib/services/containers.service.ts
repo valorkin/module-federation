@@ -9,11 +9,12 @@ import {
   transfromSafeConfigurationObjects,
   addConfigurationObject,
   updateConfigurationObject,
-  markConfigurationObjectPriority
+  markConfigurationObjectPriority,
+  getConfigurationObjectIndexByUuid
 } from '@mf/core';
 
-import { ContainersObserver } from '../observers/containers.observer';
 import { ContainersWindowCrossDomainObserver } from '../observers/cross-window.observer';
+import { ContainerComponentsService } from './container-components.service';
 
 enum ContainerEvents {
   AllUpdated = 'mf-ext-configuration-objects-updated',
@@ -22,6 +23,7 @@ enum ContainerEvents {
 enum ContainerCrossDomainEvents {
   Add = 'mf-ext-add-configuration-object',
   Update = 'mf-ext-update-configuration-object',
+  Switch = 'mf-ext-switch-configuration-object',
   PopupOpened = 'mf-ext-popup-opened'
 }
 
@@ -33,8 +35,8 @@ enum ContainerCrossDomainEvents {
 })
 export class ContainersService {
   constructor(
-    private containersObserver: ContainersObserver,
-    private windowObserver: ContainersWindowCrossDomainObserver
+    private readonly windowObserver: ContainersWindowCrossDomainObserver,
+    private readonly containerComponentsService: ContainerComponentsService
   ) {
     //
     this.windowObserver.on(ContainerCrossDomainEvents.PopupOpened, () => {
@@ -50,6 +52,11 @@ export class ContainersService {
     this.windowObserver.on(ContainerCrossDomainEvents.Update, (configurationObject) => {
       this.onUpdate(configurationObject);
     });
+
+    //
+    this.windowObserver.on(ContainerCrossDomainEvents.Switch, (configurationObject) => {
+      this.onSwitch(configurationObject);
+    });
   }
 
   /**
@@ -57,24 +64,6 @@ export class ContainersService {
    */
   public resolve(container: string, module: string): Promise<ConfigurationObjectResolve> {
     return loadModuleFederatedApp(container, module);
-  }
-
-  /**
-   *
-   */
-  public on(uuid: string, fn: () => {}): Subscription {
-    return this.containersObserver.on(uuid, fn);
-  }
-
-  /**
-   *
-   */
-  public off(uuid: string, subscription: Subscription) {
-    this.containersObserver.off(uuid, subscription);
-
-    if (!this.containersObserver.has(uuid)) {
-      this.updatePriority(uuid, ConfigurationObjectPriorities.Inactive);
-    }
   }
 
   /**
@@ -99,10 +88,12 @@ export class ContainersService {
    *
    */
   private onCreate(configurationObject: ConfigurationObject) {
+    const {name, priority} = configurationObject;
+
     addConfigurationObject(configurationObject);
 
-    if (configurationObject.priority === ConfigurationObjectPriorities.Active) {
-      this.containersObserver.dispatchAll(configurationObject);
+    if (priority === ConfigurationObjectPriorities.Active) {
+      this.containerComponentsService.runByName(name);
     }
 
     this.broadcast();
@@ -112,8 +103,27 @@ export class ContainersService {
    *
    */
   private onUpdate(configurationObject: ConfigurationObject) {
+    const {name, priority} = configurationObject;
+
     updateConfigurationObject(configurationObject);
-    this.containersObserver.dispatch(configurationObject.uuid, configurationObject);
+
+    if (priority !== ConfigurationObjectPriorities.Initialized) {
+      this.containerComponentsService.runByContainer(configurationObject);
+    } else {
+      this.containerComponentsService.runByName(name);
+    }
+
+    this.broadcast();
+  }
+
+ /**
+  *
+  */
+  private onSwitch(configurationObject: ConfigurationObject) {
+    const {name} = configurationObject;
+
+    updateConfigurationObject(configurationObject);
+    this.containerComponentsService.runByName(name);
     this.broadcast();
   }
 }

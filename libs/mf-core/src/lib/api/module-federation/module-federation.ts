@@ -64,18 +64,14 @@ async function resolveModuleFederatedApp(containerName: string, moduleName: stri
 
   let { uuid, definitionUri, priority, status } = window.mfCOs[index];
 
-  // Case when a CO is updated and not resolved
-  const isNotResolvedConfigurationObject = uuid && definitionUri && !(status instanceof Promise);
-
-  // Case when a CO is added but never be resolved
-  const isNotIdentifiedConfigurationObject = (priority === ConfigurationObjectPriorities.Initialized && definitionUri);
-
   if (!uuid) {
     uuid = uuidv4();
     window.mfCOs[index].uuid = uuid;
   }
 
-  if (isNotResolvedConfigurationObject || isNotIdentifiedConfigurationObject) {
+  const isNotResolvedConfigurationObject = definitionUri && !(status instanceof Promise);
+
+  if (isNotResolvedConfigurationObject) {
     try {
       await addRemoteContainerConfigurationsByUri(definitionUri);
     } catch (error) {
@@ -138,11 +134,11 @@ export async function loadModuleFederatedApp(containerName: string, moduleName: 
         return resolvedData;
       });
   } catch (errorData) {
-    const { uuid, error } = errorData;
+    const { uuid } = errorData;
 
     markConfigurationObjectPriority(uuid, ConfigurationObjectPriorities.Error);
     synchronize();
-    return Promise.reject(error);
+    return Promise.reject(errorData);
   }
 }
 

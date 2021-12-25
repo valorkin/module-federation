@@ -82,18 +82,21 @@
                     on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
                 Offline
               </span>
+            {:else if priority === ConfigurationObjectPriorities.Active}
+              <span class="label label--active"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Inactive)}>
+                Active
+              </span>
+            {:else if priority === ConfigurationObjectPriorities.Inactive}
+              <span class="label label--inactive"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
+                Inactive
+              </span>
             {:else}
-              {#if priority === ConfigurationObjectPriorities.Active}
-                <span class="label label--active"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Inactive)}>
-                  Active
-                </span>
-              {:else}
-                <span class="label label--inactive"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
-                  Inactive
-                </span>
-              {/if}
+              <span class="label label--inactive"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
+                Initialized
+              </span>
             {/if}
           </td>
           <td>

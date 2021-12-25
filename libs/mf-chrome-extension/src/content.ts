@@ -3,7 +3,8 @@ import { MFChromeExtensionActions } from './core/constant';
 const outputActions = [
   MFChromeExtensionActions.PopupOpened,
   MFChromeExtensionActions.AddConfigurationObject,
-  MFChromeExtensionActions.UpdateConfigurationObject
+  MFChromeExtensionActions.UpdateConfigurationObject,
+  MFChromeExtensionActions.SwitchConfigurationObject
 ];
 
 const popupId = 'mf-chrome-extension-popup';

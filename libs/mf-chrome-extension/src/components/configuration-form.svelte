@@ -32,12 +32,14 @@
         validators: []
       },
       priority: {
-        value: priority,
+        value: typeof priority === 'number'
+          ? priority
+          : ConfigurationObjectPriorities.Initialized,
         validators: []
       }
     }),
       {
-          validateOnChange: false
+        validateOnChange: false
       }
     );
   });
@@ -197,6 +199,14 @@
     <select id="priority"
             class="select"
             bind:value={priority}>
+      <option value={ConfigurationObjectPriorities.Initialized}
+              disabled>
+        Initialized
+      </option>
+      <option value={ConfigurationObjectPriorities.Error}
+              disabled>
+        Offline
+      </option>
       <option value={ConfigurationObjectPriorities.Inactive}>
         Inactive
       </option>
