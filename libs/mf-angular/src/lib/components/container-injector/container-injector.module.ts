@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ContainerTypes } from '@mf/core';
 import { ContainerInjectorComponent } from './container-injector.component';
-// import { PluginPageLauncherComponent } from './plugin-page-launcher.component';
-import { IframeErrorDirective } from '../../directives/iframe-error/iframe-error.directive';
-import { UrlOverriderPipe } from '../../pipes/url/url-overrider.pipe'
+import { UrlOverriderPipe } from '../../pipes/url/url-overrider.pipe';
+import { CustomElementRendererRef } from '../../renderers/custom-element.renderer';
+import { IframeRendererRef } from '../../renderers/iframe.renderer';
+import { NgComponentRendererRef } from '../../renderers/ng-component.renderer';
 
 @NgModule({
   imports: [
@@ -11,14 +13,16 @@ import { UrlOverriderPipe } from '../../pipes/url/url-overrider.pipe'
   ],
   declarations: [
     ContainerInjectorComponent,
-    // PluginPageLauncherComponent,
-    IframeErrorDirective,
     UrlOverriderPipe,
+  ],
+  providers: [
+    { provide: ContainerTypes.Element, useClass: CustomElementRendererRef },
+    { provide: ContainerTypes.Iframe, useClass: IframeRendererRef },
+    { provide: ContainerTypes.Angular, useClass: NgComponentRendererRef }
   ],
   exports: [
     ContainerInjectorComponent,
-    // PluginPageLauncherComponent,
-    UrlOverriderPipe,
+    UrlOverriderPipe
   ]
 })
 export class ContainerInjectorModule {}
