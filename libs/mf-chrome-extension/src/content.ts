@@ -3,6 +3,7 @@ import { MFChromeExtensionActions } from './core/constant';
 const outputActions = [
   MFChromeExtensionActions.PopupOpened,
   MFChromeExtensionActions.AddConfigurationObject,
+  MFChromeExtensionActions.AddConfigurationObjectsByUri,
   MFChromeExtensionActions.UpdateConfigurationObject,
   MFChromeExtensionActions.SwitchConfigurationObject
 ];

@@ -16,6 +16,13 @@
   /**
    *
    */
+   function onAddConfigurationsByUri() {
+    dispatch('addByUri');
+  }
+
+  /**
+   *
+   */
   function onEditConfiguration(configuration: ConfigurationObject) {
     dispatch('edit', configuration);
   }
@@ -119,6 +126,14 @@
       add_circle
     </span>
     Add
+  </button>
+  <button type="button"
+          class="button button--blue"
+          on:click={onAddConfigurationsByUri}>
+    <span class="material-icons md-dark">
+      add_circle
+    </span>
+    Add by URI
   </button>
   <button type="button"
           class="button button--default"

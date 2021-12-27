@@ -1,24 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   RemoteContainerConfiguration,
   addModuleFederatedApps,
   isSynchronized
 } from '@mf/core';
+
+import { ContainerComponentsService } from '@mf/angular';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent implements AfterViewInit {
 
-  isLoaded = false;
+  isRemoved = false;
 
   containers: RemoteContainerConfiguration[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private containerComponentsService: ContainerComponentsService
+  ) {}
 
-  ngOnInit() {
+  ngAfterViewInit(): void {
     if (!isSynchronized()) {
       return this.onLoadRemoteContainerConfigurationsFromJsonFile();
     }
@@ -28,19 +33,21 @@ export class LandingComponent implements OnInit {
     console.log(error);
   }
 
+  onRemove() {
+    this.isRemoved = true;
+  }
+
   onLoadRemoteContainerConfigurationsFromJsonFile() {
     // https://mf-demo-one-bx-shell-app.web.app/assets/config/plugins.json
     const uri = 'http://localhost:4200/assets/config/plugins.json';
 
     this.http.get<RemoteContainerConfiguration[]>(uri)
-      .subscribe(
-        (containers) => {
-          this.isLoaded = true;
+      .subscribe((containers) => {
           this.containers = containers;
           addModuleFederatedApps(containers);
+          this.containerComponentsService.run();
         },
         () => {
-          this.isLoaded = true;
           this.onError(
             new Error(
               `LandingRemoteContainerConfigurationsJsonFileLoadingError: An error occurred while loading ${uri} file`

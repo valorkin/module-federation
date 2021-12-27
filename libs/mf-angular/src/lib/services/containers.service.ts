@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 import {
   ConfigurationObject,
@@ -8,9 +7,9 @@ import {
   loadModuleFederatedApp,
   transfromSafeConfigurationObjects,
   addConfigurationObject,
+  addRemoteContainerConfigurationsByUri,
   updateConfigurationObject,
-  markConfigurationObjectPriority,
-  getConfigurationObjectIndexByUuid
+  markConfigurationObjectPriority
 } from '@mf/core';
 
 import { ContainersWindowCrossDomainObserver } from '../observers/cross-window.observer';
@@ -22,6 +21,7 @@ enum ContainerEvents {
 
 enum ContainerCrossDomainEvents {
   Add = 'mf-ext-add-configuration-object',
+  AddByUri = 'mf-ext-add-configuration-objects-by-uri',
   Update = 'mf-ext-update-configuration-object',
   Switch = 'mf-ext-switch-configuration-object',
   PopupOpened = 'mf-ext-popup-opened'
@@ -46,6 +46,11 @@ export class ContainersService {
     //
     this.windowObserver.on(ContainerCrossDomainEvents.Add, (configurationObject) => {
       this.onCreate(configurationObject);
+    });
+
+    //
+    this.windowObserver.on(ContainerCrossDomainEvents.AddByUri, (uri) => {
+      this.onCreateByUri(uri);
     });
 
     //
@@ -87,6 +92,17 @@ export class ContainersService {
   /**
    *
    */
+  public unuse(uuid: string) {
+    if (this.containerComponentsService.findByUuid(uuid)) {
+      return;
+    }
+
+    this.updatePriority(uuid, ConfigurationObjectPriorities.Inactive);
+  }
+
+  /**
+   *
+   */
   private onCreate(configurationObject: ConfigurationObject) {
     const {name, priority} = configurationObject;
 
@@ -97,6 +113,18 @@ export class ContainersService {
     }
 
     this.broadcast();
+  }
+
+  /**
+   *
+   */
+  private async onCreateByUri(uri: string) {
+    try {
+      await addRemoteContainerConfigurationsByUri(uri);
+      this.broadcast();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**

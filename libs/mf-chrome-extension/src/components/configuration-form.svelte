@@ -2,7 +2,7 @@
   import { onMount, afterUpdate, createEventDispatcher } from 'svelte';
   import { form } from 'svelte-forms';
   import { ConfigurationObject, ConfigurationObjectPriorities } from '@mf/core';
-
+  import TestMessage from '../core/components/test-message.svelte';
   import { testForm } from '../core/validators/test-validator';
 
   export let configuration: ConfigurationObject;
@@ -216,25 +216,8 @@
     </select>
   </div>
 
-  {#if messageText}
-    <div class="form__messages">
-      {#if isError}
-        <span class="form-message form-message--error">
-          <i class="material-icons md-dark">
-            error_outline
-          </i>
-          {messageText}
-        </span>
-      {:else}
-        <span class="form-message form-message--success">
-          <i class="material-icons md-dark">
-            check_circle
-          </i>
-          {messageText}
-        </span>
-      {/if}
-    </div>
-  {/if}
+  <TestMessage isError={isError}
+               messageText={messageText}/>
 
   <div class="form__actions">
     <div class="form__actions-left">
@@ -275,14 +258,6 @@
 <style lang="scss">
   .form {
     width: 500px;
-
-    &__messages {
-      margin-bottom: 15px;
-    }
-
-    &-message {
-      margin-top: 5px;
-    }
 
     &__actions {
       display: flex;

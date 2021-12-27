@@ -28,7 +28,7 @@ import { ConfigurationObjectPriorities } from '.';
  * Loads Remote Container Configurations from a json file, adds them
  * and Configuration Objects to the lists by a uri
  */
-async function addRemoteContainerConfigurationsByUri(uri: string): Promise<void> {
+export async function addRemoteContainerConfigurationsByUri(uri: string): Promise<void> {
   try {
     await fetchByUri(uri)
       .then((response) => response.json())

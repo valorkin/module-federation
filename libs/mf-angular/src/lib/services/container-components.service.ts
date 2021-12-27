@@ -63,7 +63,7 @@ export class ContainerComponentsService {
    *
    */
   public unuse(component: IContainerComponent) {
-    const index = this.find(component);
+    const index = this.findIndex(component);
 
     if (index < 0) {
       return;
@@ -76,15 +76,15 @@ export class ContainerComponentsService {
    *
    */
   public has(component: IContainerComponent): boolean {
-    const index = this.find(component);
+    const index = this.findIndex(component);
     return index > -1;
   }
 
   /**
    *
    */
-  public findByUuid(uuid: string): number {
-    return this.components.findIndex((componentNext) => {
+  public findByUuid(uuid: string): IContainerComponent {
+    return this.components.find((componentNext) => {
       return uuid === componentNext.containerUuid;
     });
   }
@@ -92,7 +92,7 @@ export class ContainerComponentsService {
   /**
    *
    */
-  private find(component: IContainerComponent): number {
+  private findIndex(component: IContainerComponent): number {
     return this.components.findIndex((componentNext) => {
       return component === componentNext;
     });

@@ -8,6 +8,7 @@
   import { configurationSelected } from './stores/configuration-selected';
   import ConfigurationsTable from './components/configurations-table.svelte';
   import ConfigurationModal from './components/configuration-modal.svelte';
+  import ConfigurationsByUriForm from './components/configurations-by-uri-form.svelte'
 
   onMount(() => {
     sendMessage(MFChromeExtensionActions.PopupOpened, null);
@@ -65,7 +66,23 @@
   /**
    *
    */
-   function onToggleActiveConfiguration(e: CustomEvent) {
+  function onSubmitConfigurationsByUriDialog() {
+    const modal = getModal('configurationsByUriModal');
+    modal.open();
+  }
+
+  /**
+   *
+   */
+  function onSubmitConfigurationsByUri(e: CustomEvent) {
+    const uri = e.detail as ConfigurationObject;
+    sendMessage(MFChromeExtensionActions.AddConfigurationObjectsByUri, uri);
+  }
+
+  /**
+   *
+   */
+  function onToggleActiveConfiguration(e: CustomEvent) {
     const configuration = e.detail as ConfigurationObject;
     sendMessage(MFChromeExtensionActions.SwitchConfigurationObject, configuration);
   }
@@ -73,7 +90,7 @@
   /**
    *
    */
-   function onRefreshPage() {
+  function onRefreshPage() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.reload(tabs[0].id);
     });
@@ -82,7 +99,7 @@
   /**
    *
    */
-   function onClosePopup() {
+  function onClosePopup() {
     sendMessage(MFChromeExtensionActions.ClosePopup, null);
   }
 
@@ -116,8 +133,13 @@
     <ConfigurationModal on:submit={onSubmitConfiguration}/>
   </Modal>
 
+  <Modal id="configurationsByUriModal">
+    <ConfigurationsByUriForm on:submit={onSubmitConfigurationsByUri} />
+  </Modal>
+
   <ConfigurationsTable {configurations}
                        on:add={onAddConfigurationDialog}
+                       on:addByUri={onSubmitConfigurationsByUriDialog}
                        on:edit={onEditConfigurationDialog}
                        on:toggleActive={onToggleActiveConfiguration}
                        on:refresh={onRefreshPage}

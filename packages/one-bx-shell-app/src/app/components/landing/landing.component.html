@@ -1,7 +1,10 @@
-<fd-layout-grid *ngIf="isLoaded" [col]="6">
+<fd-layout-grid [col]="6">
   <fd-layout-panel [columnSpan]="4"
                    fdLayoutGridSpan>
-    <fd-layout-panel-body>
+    <fd-layout-panel-body *ngIf="!isRemoved">
+      <button (click)="onRemove()">
+        Delete component
+      </button>
       <ngx-mf-injector container="contentReqApp"
                        module="PrListComponent"
                        (error)="onError($event)">
