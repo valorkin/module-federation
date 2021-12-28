@@ -22,6 +22,7 @@ enum ContainerEvents {
 enum ContainerCrossDomainEvents {
   Add = 'mf-ext-add-configuration-object',
   AddByUri = 'mf-ext-add-configuration-objects-by-uri',
+  Clone = 'mf-ext-clone-configuration-object',
   Update = 'mf-ext-update-configuration-object',
   Switch = 'mf-ext-switch-configuration-object',
   PopupOpened = 'mf-ext-popup-opened'
@@ -51,6 +52,11 @@ export class ContainersService {
     //
     this.windowObserver.on(ContainerCrossDomainEvents.AddByUri, (uri) => {
       this.onCreateByUri(uri);
+    });
+
+    //
+    this.windowObserver.on(ContainerCrossDomainEvents.Clone, (configurationObject) => {
+      this.onClone(configurationObject);
     });
 
     //
@@ -134,6 +140,17 @@ export class ContainersService {
   /**
    *
    */
+  private onClone(configurationObject: ConfigurationObject) {
+    configurationObject.uuid = null;
+    configurationObject.priority = ConfigurationObjectPriorities.Initialized;
+
+    addConfigurationObject(configurationObject);
+    this.broadcast();
+  }
+
+  /**
+   *
+   */
   private onUpdate(configurationObject: ConfigurationObject) {
     const {name, priority} = configurationObject;
 
@@ -179,7 +196,7 @@ export class ContainersService {
     const {uuid, name} = configurationObject;
 
     const componentThatUsesConfiguration = this.containerComponentsService.some((component) => {
-      return component.container === name;
+      return component.container === name || component.containerUuid === uuid;
     });
 
     if (!componentThatUsesConfiguration) {

@@ -15,6 +15,7 @@ export enum MFChromeExtensionActions {
   ConfigurationObjectsUpdated = 'mf-ext-configuration-objects-updated',
   AddConfigurationObject = 'mf-ext-add-configuration-object',
   AddConfigurationObjectsByUri = 'mf-ext-add-configuration-objects-by-uri',
+  CloneConfigurationObject = 'mf-ext-clone-configuration-object',
   UpdateConfigurationObject = 'mf-ext-update-configuration-object',
   SwitchConfigurationObject = 'mf-ext-switch-configuration-object',
 }

@@ -23,6 +23,13 @@
   /**
    *
    */
+  function onCloneConfiguration(configuration: ConfigurationObject) {
+    dispatch('clone', configuration);
+  }
+
+  /**
+   *
+   */
   function onEditConfiguration(configuration: ConfigurationObject) {
     dispatch('edit', configuration);
   }
@@ -107,8 +114,18 @@
             {/if}
           </td>
           <td>
+            <a class="configuration-clone"
+               on:click={() => onCloneConfiguration($configurations[i])}>
+              <span class="material-icons md-dark">
+                note_add
+              </span>
+              Clone
+            </a>
             <a class="configuration-edit"
-              on:click={() => onEditConfiguration($configurations[i])}>
+               on:click={() => onEditConfiguration($configurations[i])}>
+              <span class="material-icons md-dark">
+                edit
+              </span>
               Edit
             </a>
           </td>
@@ -159,7 +176,7 @@
     flex-direction: column;
 
     &__name {
-      max-width: 500px;
+      max-width: 450px;
       //font-size: .875rem;
       line-height: 1.25rem;
       font-weight: 500;
@@ -167,7 +184,7 @@
     }
 
     &__uri {
-      max-width: 500px;
+      max-width: 450px;
       //font-size: .875rem;
       line-height: 1.25rem;
       color: rgba(107, 114, 128, 1);
@@ -192,10 +209,20 @@
     overflow-y: scroll;
   }
 
-  .configuration-edit {
-    font-weight: 500;
-    text-align: right;
-    cursor: pointer;
+  .configuration {
+    &-edit, &-clone {
+      font-weight: 500;
+      text-align: right;
+      cursor: pointer;
+
+      .material-icons {
+        font-size: inherit;
+      }
+    }
+
+    &-clone {
+      margin-right: 10px;
+    }
   }
 
   .close-button {

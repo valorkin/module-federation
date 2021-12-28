@@ -4,6 +4,7 @@ const outputActions = [
   MFChromeExtensionActions.PopupOpened,
   MFChromeExtensionActions.AddConfigurationObject,
   MFChromeExtensionActions.AddConfigurationObjectsByUri,
+  MFChromeExtensionActions.CloneConfigurationObject,
   MFChromeExtensionActions.UpdateConfigurationObject,
   MFChromeExtensionActions.SwitchConfigurationObject
 ];

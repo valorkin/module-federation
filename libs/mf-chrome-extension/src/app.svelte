@@ -83,6 +83,14 @@
   /**
    *
    */
+   function onCloneConfiguration(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+    sendMessage(MFChromeExtensionActions.CloneConfigurationObject, configuration);
+  }
+
+  /**
+   *
+   */
   function onToggleActiveConfiguration(e: CustomEvent) {
     const configuration = e.detail as ConfigurationObject;
     sendMessage(MFChromeExtensionActions.SwitchConfigurationObject, configuration);
@@ -125,6 +133,7 @@
   <ConfigurationsTable {configurations}
                        on:add={onAddConfigurationDialog}
                        on:addByUri={onSubmitConfigurationsByUriDialog}
+                       on:clone={onCloneConfiguration}
                        on:edit={onEditConfigurationDialog}
                        on:toggleActive={onToggleActiveConfiguration}
                        on:refresh={onRefreshPage}
