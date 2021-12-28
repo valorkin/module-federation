@@ -66,10 +66,7 @@ import { REMOTE_BASE_URL } from '../tokens';
     this.elementUrlsOverriderService.override(elementRef.nativeElement, parentComponentRef.baseUrl);
     parentComponentRef.changeDetectorRef.detectChanges();
 
-    return {
-      moduleRef,
-      viewContainerRef: parentComponentRef.viewContainerRef
-    };
+    return null;
   }
 
   /**
@@ -81,7 +78,8 @@ import { REMOTE_BASE_URL } from '../tokens';
   }
 
   /**
-   *
+   * Injects the domain name to dynamically created component
+   * To be used for UrlOverriderPipe
    */
   private createInjector(componentRef: NgParentComponentRef) {
     return Injector.create({

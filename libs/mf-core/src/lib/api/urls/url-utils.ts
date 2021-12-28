@@ -21,3 +21,13 @@ export const isAbsoluteUrl = (url: string): boolean => {
     // checks http(s):// only
     return /^https?:\/\//i.test(url);
 }
+
+/**
+ *
+ */
+export const isUrlFile = (url: string): boolean => {
+  return new URL(url).pathname
+    .split('/')
+    .pop()
+    .indexOf('.') > 0;
+}

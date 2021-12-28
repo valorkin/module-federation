@@ -2,6 +2,7 @@ import { ConfigurationObject, RemoteContainerConfigurationModule } from './inter
 import { ConfigurationObjectPriorities } from '.';
 import { createRemoteModuleAsync } from './remote-module';
 import { findIndexFromEnd, uuidv4 } from './util';
+import { isUrlFile } from '../urls';
 
 /**
  * Returns a specific Configuration Object from COs list by name
@@ -161,14 +162,20 @@ export function updateConfigurationObject(configurationObject: ConfigurationObje
  * or returns a Configuration Object status if the one was resolved before
  */
 export function resolveConfigurationObject(configurationObject: ConfigurationObject, module: RemoteContainerConfigurationModule): Promise<any> {
-  let index = getConfigurationObjectIndexByUuid(configurationObject.uuid);
+  const {uuid, uri} = configurationObject;
+
+  let index = getConfigurationObjectIndexByUuid(uuid);
 
   const foundConfigurationObject = window.mfCOs[index];
 
   if (!(foundConfigurationObject.status instanceof Promise)) {
     const configurationObjectWithStatus = {
       ...configurationObject,
-      status: createRemoteModuleAsync(configurationObject, module)
+      // if is remoteEntry.js => resolve
+      // if is not => don't resolve, it suppose to be an Iframe URI
+      status: isUrlFile(uri)
+        ? createRemoteModuleAsync(configurationObject, module)
+        : Promise.resolve(module)
     };
 
     window.mfCOs[index] = configurationObjectWithStatus;

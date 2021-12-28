@@ -83,6 +83,13 @@ export class ContainerComponentsService {
   /**
    *
    */
+  public some(fn: (arg: any) => {}): boolean {
+    return this.components.some(fn);
+  }
+
+  /**
+   *
+   */
   public findByUuid(uuid: string): IContainerComponent {
     return this.components.find((componentNext) => {
       return uuid === componentNext.containerUuid;

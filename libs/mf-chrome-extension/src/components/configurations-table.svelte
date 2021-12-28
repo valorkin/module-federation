@@ -149,7 +149,7 @@
     <span class="material-icons md-dark">
       clear
     </span>
-    Close window
+    Close
   </button>
 </div>
 

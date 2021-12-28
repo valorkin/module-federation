@@ -23,7 +23,7 @@
       editable: false
     });
 
-    openConfigurationDialog();
+    getModal('configurationModal')?.open();
   }
 
   /**
@@ -37,7 +37,7 @@
       editable: true
     });
 
-    openConfigurationDialog();
+    getModal('configurationModal')?.open();
   }
 
   /**
@@ -48,7 +48,7 @@
 
     const { selected, editable } = $configurationSelected;
 
-    closeConfigurationDialog();
+    getModal('configurationModal')?.close();
 
     if (editable) {
       const editedConfiguration = {
@@ -67,8 +67,7 @@
    *
    */
   function onSubmitConfigurationsByUriDialog() {
-    const modal = getModal('configurationsByUriModal');
-    modal.open();
+   getModal('configurationsByUriModal')?.open();
   }
 
   /**
@@ -76,6 +75,8 @@
    */
   function onSubmitConfigurationsByUri(e: CustomEvent) {
     const uri = e.detail as ConfigurationObject;
+
+    getModal('configurationsByUriModal')?.close();
     sendMessage(MFChromeExtensionActions.AddConfigurationObjectsByUri, uri);
   }
 
@@ -101,22 +102,6 @@
    */
   function onClosePopup() {
     sendMessage(MFChromeExtensionActions.ClosePopup, null);
-  }
-
-  /**
-   *
-   */
-  function openConfigurationDialog() {
-    const modal = getModal('configurationModal');
-    modal.open();
-  }
-
-  /**
-   *
-   */
-  function closeConfigurationDialog() {
-    const modal = getModal('configurationModal');
-    modal.close();
   }
 
   /**

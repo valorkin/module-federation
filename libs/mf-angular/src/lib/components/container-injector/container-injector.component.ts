@@ -120,8 +120,11 @@ export class ContainerInjectorComponent implements OnChanges, OnInit, OnDestroy 
    * Flushes Renderer data, is ushed before rendering a new Container
    */
   clear() {
+    this.viewContainerRef.clear();
+
     if (this.rendererRef) {
       this.rendererRef.destroy(this.rendererContext as any);
+      this.rendererContext = null;
     }
   }
 

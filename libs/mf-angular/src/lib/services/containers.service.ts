@@ -109,6 +109,10 @@ export class ContainersService {
     addConfigurationObject(configurationObject);
 
     if (priority === ConfigurationObjectPriorities.Active) {
+      if (this.deactivateWhenUnused(configurationObject)) {
+        return;
+      }
+
       this.containerComponentsService.runByName(name);
     }
 
@@ -135,6 +139,12 @@ export class ContainersService {
 
     updateConfigurationObject(configurationObject);
 
+    if (priority === ConfigurationObjectPriorities.Active) {
+      if (this.deactivateWhenUnused(configurationObject)) {
+        return;
+      }
+    }
+
     if (priority !== ConfigurationObjectPriorities.Initialized) {
       this.containerComponentsService.runByContainer(configurationObject);
     } else {
@@ -148,10 +158,35 @@ export class ContainersService {
   *
   */
   private onSwitch(configurationObject: ConfigurationObject) {
-    const {name} = configurationObject;
+    const {name, priority} = configurationObject;
 
     updateConfigurationObject(configurationObject);
+
+    if (priority === ConfigurationObjectPriorities.Active) {
+      if (this.deactivateWhenUnused(configurationObject)) {
+        return;
+      }
+    }
+
     this.containerComponentsService.runByName(name);
     this.broadcast();
+  }
+
+  /**
+   *
+   */
+  private deactivateWhenUnused(configurationObject: ConfigurationObject): boolean {
+    const {uuid, name} = configurationObject;
+
+    const componentThatUsesConfiguration = this.containerComponentsService.some((component) => {
+      return component.container === name;
+    });
+
+    if (!componentThatUsesConfiguration) {
+      this.updatePriority(uuid, ConfigurationObjectPriorities.Inactive);
+      return true;
+    }
+
+    return false;
   }
 }
