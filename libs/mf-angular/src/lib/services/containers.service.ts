@@ -114,12 +114,11 @@ export class ContainersService {
 
     addConfigurationObject(configurationObject);
 
-    if (priority === ConfigurationObjectPriorities.Active) {
-      if (this.deactivateWhenUnused(configurationObject)) {
-        return;
-      }
+    this.containerComponentsService.runByName(name);
 
-      this.containerComponentsService.runByName(name);
+    if (priority === ConfigurationObjectPriorities.Active) {
+      this.deactivateWhenUnused(configurationObject);
+      return;
     }
 
     this.broadcast();
@@ -152,20 +151,19 @@ export class ContainersService {
    *
    */
   private onUpdate(configurationObject: ConfigurationObject) {
-    const {name, priority} = configurationObject;
+    const {uuid, name, priority} = configurationObject;
 
     updateConfigurationObject(configurationObject);
 
-    if (priority === ConfigurationObjectPriorities.Active) {
-      if (this.deactivateWhenUnused(configurationObject)) {
-        return;
-      }
-    }
-
-    if (priority !== ConfigurationObjectPriorities.Initialized) {
+    if (this.containerComponentsService.findByUuid(uuid)) {
       this.containerComponentsService.runByContainer(configurationObject);
     } else {
       this.containerComponentsService.runByName(name);
+    }
+
+    if (priority === ConfigurationObjectPriorities.Active) {
+      this.deactivateWhenUnused(configurationObject);
+      return;
     }
 
     this.broadcast();
@@ -179,31 +177,28 @@ export class ContainersService {
 
     updateConfigurationObject(configurationObject);
 
+    this.containerComponentsService.runByName(name);
+
     if (priority === ConfigurationObjectPriorities.Active) {
-      if (this.deactivateWhenUnused(configurationObject)) {
-        return;
-      }
+      this.deactivateWhenUnused(configurationObject);
+      return;
     }
 
-    this.containerComponentsService.runByName(name);
     this.broadcast();
   }
 
   /**
    *
    */
-  private deactivateWhenUnused(configurationObject: ConfigurationObject): boolean {
+  private deactivateWhenUnused(configurationObject: ConfigurationObject) {
     const {uuid, name} = configurationObject;
 
     const componentThatUsesConfiguration = this.containerComponentsService.some((component) => {
-      return component.container === name || component.containerUuid === uuid;
+      return component.containerUuid === uuid;
     });
 
     if (!componentThatUsesConfiguration) {
       this.updatePriority(uuid, ConfigurationObjectPriorities.Inactive);
-      return true;
     }
-
-    return false;
   }
 }
