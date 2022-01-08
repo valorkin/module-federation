@@ -81,6 +81,9 @@ module.exports = {
           from: path.resolve(__dirname, 'manifest.json')
         },
         {
+          from: path.resolve(__dirname, 'package.json')
+        },
+        {
           from: path.resolve(__dirname, 'src/assets/images'),
           to: path.resolve(__dirname, `${outputDir}/assets/images`)
         }
