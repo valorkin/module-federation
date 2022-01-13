@@ -1,49 +1,106 @@
 import { MFChromeExtensionActions } from './core/constant';
 
-const actions = Object.keys(MFChromeExtensionActions)
-  .map((key) => MFChromeExtensionActions[key]);
+const outputActions = [
+  MFChromeExtensionActions.PopupOpened,
+  MFChromeExtensionActions.AddConfigurationObject,
+  MFChromeExtensionActions.AddConfigurationObjectsByUri,
+  MFChromeExtensionActions.CloneConfigurationObject,
+  MFChromeExtensionActions.UpdateConfigurationObject,
+  MFChromeExtensionActions.SwitchConfigurationObject
+];
+
+const popupId = 'mf-chrome-extension-popup';
 
 /**
- * Listens events from the popup script and redirects them to the web page's window object
+ * Listens 'TogglePopup' event from the background script
  */
 chrome.runtime.onMessage.addListener((payload: any) => {
-  if (actions.includes(payload.action)) {
-    dispatchWindowEvent(payload.action, payload.payload);
+  if (payload.action === MFChromeExtensionActions.TogglePopup) {
+    togglePopup();
   }
 
   return true;
 });
 
 /**
- * Listens events from the web page's window object and redirects them to the popup script
+ *
  */
 window.addEventListener('message', (event) => {
+  const { action, payload } = event.data;
   console.log(event.data);
-  if (actions.includes(event.data.action)) {
-    dispatchRuntimeEvent(event.data);
+
+  if (action === MFChromeExtensionActions.ClosePopup) {
+    closePopup();
+    return;
   }
+
+  if (outputActions.includes(action)) {
+    dispatchEventToWindow(action, payload);
+    return;
+  }
+
+  dispatchEventToPopup(event.data);
 }, false);
 
 /**
- * Triggers events to the web page's window object
+ *
  */
-function dispatchWindowEvent(action: MFChromeExtensionActions, payload: any) {
-  const event = new CustomEvent(
+function getPopup(): HTMLIFrameElement {
+  return document.getElementById(popupId) as HTMLIFrameElement;
+}
+
+/**
+ *
+ */
+function dispatchEventToPopup(payload: any) {
+  let popupElement = getPopup();
+  popupElement?.contentWindow?.postMessage(payload, '*');
+}
+
+/**
+ *
+ */
+ function dispatchEventToWindow(action: string, payload: any) {
+  const customEvent = new CustomEvent(
     action,
     {
       detail: payload
     }
   );
 
-  window.dispatchEvent(event);
+  window.dispatchEvent(customEvent);
 }
 
 /**
  *
  */
-function dispatchRuntimeEvent(payload: any) {
-  chrome.runtime.sendMessage({
-    action: payload.action,
-    payload: payload.payload
-  });
+function togglePopup() {
+  let popupElement = getPopup();
+
+  if (popupElement) {
+    closePopup();
+    return;
+  }
+
+  popupElement = document.createElement('iframe');
+  popupElement.id = popupId;
+  popupElement.style.position = 'fixed';
+  popupElement.style.zIndex = '99999999999999';
+  popupElement.style.width = '740px';
+  popupElement.style.height = '620px';
+  popupElement.style.top = '0px';
+  popupElement.style.right = '0px';
+  popupElement.style.border = '0';
+  popupElement.style.borderBottomLeftRadius = '5px';
+  popupElement.style.borderTopLeftRadius = '5px';
+  popupElement.src = chrome.runtime.getURL('popup.html');
+  document.body.appendChild(popupElement);
+}
+
+/**
+ *
+ */
+function closePopup() {
+  let popupElement = getPopup();
+  document.body.removeChild(popupElement);
 }

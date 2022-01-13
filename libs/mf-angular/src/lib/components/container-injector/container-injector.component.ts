@@ -1,293 +1,151 @@
 import {
-  AfterViewChecked,
+  OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Compiler,
   Component,
   Injector,
-  ElementRef,
   Input,
   Output,
   EventEmitter,
-  NgModuleFactory,
   OnChanges,
-  Renderer2,
   SimpleChanges,
-  Type,
-  ViewChild,
-  NgZone
+  ViewContainerRef
 } from '@angular/core';
 
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
 import {
-  InjectorTypes,
-  RemoteContainerConfiguration,
   ConfigurationObjectResolve,
-  IframeRemoteContainerConfigurationModule,
-  NgRemoteContainerConfigurationModule,
-  RemoteContainerConfigurationModule,
-  loadModuleFederatedApp,
-  addModuleFederatedApps,
   getBaseUrl,
-  overrideElementUrls
+  wrapError
 } from '@mf/core';
 
-import { REMOTE_BASE_URL } from '../../tokens';
+import { ContainersService } from '../../services/containers.service';
+import { ContainerComponentsService } from '../../services/container-components.service';
+import { CustomElementRendererRef } from '../../renderers/custom-element.renderer';
+import { IframeRendererRef } from '../../renderers/iframe.renderer';
+import { NgComponentRendererRef } from '../../renderers/ng-component.renderer';
+import { IframeRendererContext, NgRendererContext } from '../../renderers/interface';
 
+/**
+ * Class is responsible to render 3 types of Module Federated Containers:
+ * Angular Component, Custom Element and Iframe
+ */
 @Component({
   selector: 'ngx-mf-injector',
   styleUrls: ['./container-injector.component.scss'],
-  template: `
-    <ng-container *ngComponentOutlet="_ngComponent; ngModuleFactory: _ngModule; injector: _ngComponentInjector">
-    </ng-container>
-    <iframe *ngIf="_safeIframeUri"
-            #iframe
-            class="responsive-wrapper"
-            [src]="_safeIframeUri"
-            [style.minHeight]="iframeAttrs?.height"
-            ngxMfIframeError
-            (ngxMfError)="onLoadIframeError()"
-            (error)="onLoadIframeError()">
-    </iframe>`,
+  template: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerInjectorComponent implements OnChanges, AfterViewChecked {
-  // Remote Container Configuration name
+export class ContainerInjectorComponent implements OnChanges, OnInit, OnDestroy {
+  // Container name of a Module Federated Container (resolved by Webpack)
   @Input()
   container: string;
 
-  // Remote Container Configuration Module name
+  // Name of a class to be injected
   @Input()
   module: string;
-
-  // Remote Container Configurations
-  @Input()
-  containers: RemoteContainerConfiguration[];
-
-  /** Iframe URI */
-  @Input()
-  iframeUri: string;
-
-  @Input()
-  iframeAttrs: Record<string, string | number>;
 
   @Output()
   error = new EventEmitter<Error>();
 
-  @Output()
-  resolve = new EventEmitter<void>();
+  // Unique id of a Container
+  containerUuid: string;
 
-  @ViewChild('iframe', { static: false })
-  iframeEl: ElementRef;
-
+  // Domain url of a remote Container
   baseUrl: string;
 
-  _ngComponentInjector: Injector;
-  _ngComponent: Type<any>;
-  _ngModule: NgModuleFactory<any>;
+  // Renderer which renders a Container depending on one's type
+  rendererRef: CustomElementRendererRef | IframeRendererRef | NgComponentRendererRef;
 
-  _safeIframeUri: SafeResourceUrl;
+  // Processed data of a Renderer
+  rendererContext: HTMLElement | IframeRendererContext | NgRendererContext;
 
   constructor(
-    private readonly _elementRef: ElementRef,
-    private readonly _cd: ChangeDetectorRef,
-    private readonly _render: Renderer2,
-    private readonly injector: Injector,
-    private readonly ngZone: NgZone,
-    private readonly sanitizer: DomSanitizer,
-    private readonly compiler: Compiler
+    public readonly viewContainerRef: ViewContainerRef,
+    public readonly injector: Injector,
+    public readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly containersService: ContainersService,
+    private readonly containerComponentsService: ContainerComponentsService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.iframeUri) {
-      this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(this.iframeUri);
-      return;
-    }
-
-    if (changes.containers) {
-      if (Array.isArray(this.containers)) {
-        this.onAddRemoteContainerConfigurations();
-      }
-    }
-
+  /**
+   * Handles component input data
+   */
+  ngOnChanges(changes: SimpleChanges) {
     if (changes.container || changes.module) {
-      this.onLoadRemoteContainerConfiguration();
-    }
-  }
-
-  ngAfterViewChecked(): void {
-    if (this._safeIframeUri && this.iframeAttrs) {
-      try {
-        this.updateAttrs(JSON.parse(this.iframeAttrs as unknown as string));
-      } finally {
-
-      }
+      this.resolve();
     }
   }
 
   /**
-   *
+   * Mounts the current injector component to be updated on Container lifecycle events
    */
-  onLoadRemoteContainerConfiguration() {
-    loadModuleFederatedApp(this.container, this.module)
+  ngOnInit() {
+    this.containerComponentsService.use(this);
+  }
+
+  /**
+   * Unmounts the injector component from Container lifecycle events
+   * Unmounts the Container for the injector component
+   * Flushes Renderer data to prevent memory leaks
+   */
+  ngOnDestroy() {
+    this.containerComponentsService.unuse(this);
+    this.containersService.unuse(this.containerUuid);
+    this.clear();
+  }
+
+  /**
+   * Resolves a Container by name and module
+   */
+  resolve() {
+    this.containersService.resolve(this.container, this.module)
       .then((resolvedConfiguration) => {
+        this.containerUuid = resolvedConfiguration.configuration.uuid;
+        this.clear();
         this.render(resolvedConfiguration);
       })
-      .catch((error) => {
+      .catch(({uuid, error}) => {
+        this.containerUuid = uuid;
+        this.clear();
         this.dispatchError(error);
+      })
+      .finally(() => {
+        // broadcast all events to the Chrome Extension
+        this.containersService.broadcast();
       });
   }
 
   /**
-   *
+   * Flushes Renderer data, is ushed before rendering a new Container
    */
-  onAddRemoteContainerConfigurations() {
-    addModuleFederatedApps(this.containers);
-  }
+  clear() {
+    this.viewContainerRef.clear();
 
-  onLoadIframeError() {
-    this.dispatchError(
-      `PluginLauncherIframeLoadingError: Can't fetch resource from ${this.iframeUri}`
-    );
-  }
-
-  render(resolvedConfiguration: ConfigurationObjectResolve): void {
-    const {configuration, configurationModule, module} = resolvedConfiguration;
-    const injectorType = configurationModule.type;
-
-    if (this.detectIframe(injectorType)) {
-      // if module type is an iframe we should not load one as a remote module
-      return this.renderIframe(configuration, configurationModule as IframeRemoteContainerConfigurationModule);
+    if (this.rendererRef) {
+      this.rendererRef.destroy(this.rendererContext as any);
+      this.rendererContext = null;
     }
-
-    this.baseUrl = getBaseUrl(configuration.uri);
-
-    const moduleFactory = module[configurationModule.name];
-
-    if (injectorType === InjectorTypes.NgCustomElement) {
-      return this.renderCustomElement(moduleFactory);
-    }
-
-    if (injectorType === InjectorTypes.NgComponent) {
-      this.renderComponent(moduleFactory, configurationModule as NgRemoteContainerConfigurationModule, module);
-    }
-  }
-
-  private detectIframe(injectorType: string): boolean {
-    const isNotIframeType = injectorType !== InjectorTypes.Iframe && !this.iframeUri;
-
-    if (isNotIframeType) {
-      this._safeIframeUri = null;
-      return false;
-    }
-
-    return true;
-  }
-
-  private updateAttrs(newValue: Record<string, string | number>, oldValue?: Record<string, string>): void {
-    if (!this._safeIframeUri) {
-      return;
-    }
-
-    if (oldValue) {
-      for (const key of Object.keys(oldValue)) {
-        this._render.removeAttribute(this.iframeEl.nativeElement, key);
-      }
-    }
-
-    if (newValue) {
-      for (const key of Object.keys(newValue)) {
-        this._render.setAttribute(this.iframeEl.nativeElement, key, `${newValue[key]}`);
-      }
-    }
-  }
-
-  private renderIframe(configuration: Partial<RemoteContainerConfiguration>, configurationModule: IframeRemoteContainerConfigurationModule): void {
-    const url = `${configuration.uri}${configurationModule.html}`;
-    this._safeIframeUri = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    this.resolve.emit();
-  }
-
-  private renderCustomElement(elementName: string): void {
-    const element = document.createElement(elementName);
-    const definedCustomElement = window.customElements.get(elementName);
-    const isCustomElement = definedCustomElement && element instanceof definedCustomElement;
-
-    // custom element is unknown in DOM
-    if (!isCustomElement) {
-      return this.dispatchError(
-        `PluginLauncherCustomElementResolveError: An element with name ${elementName} is not registered`
-      );
-    }
-
-    this._render.appendChild(this._elementRef.nativeElement, element);
-    this.overrideElementUrls();
-    this.resolve.emit();
-  }
-
-  private async renderComponent(module: any, configurationModule: NgRemoteContainerConfigurationModule, remoteModule: RemoteContainerConfigurationModule): Promise<void> {
-    const pluginModuleName = configurationModule.name;
-    let pluginComponentName = configurationModule.component;
-
-    // if provided module name and component name we bootstrap both
-    if (pluginModuleName && pluginComponentName) {
-      this._ngModule = await this.compiler.compileModuleAsync(module);
-      this._ngComponent = remoteModule[pluginComponentName];
-    }
-
-    // if component name is not provided, we suppose that `name` is a component name
-    if (!pluginComponentName) {
-      pluginComponentName = pluginModuleName;
-      this._ngModule = void 0;
-      this._ngComponent = remoteModule[pluginComponentName];
-    }
-
-    // check if component is a function
-    const isComponentDefined = typeof this._ngComponent === 'function';
-
-    if (!isComponentDefined) {
-      return this.dispatchError(
-        `PluginLauncherComponentResolveError: Can't resolve a component with name ${pluginComponentName}`
-      );
-    }
-
-    this.injectBaseUrlToComponent();
-    this.overrideElementUrls();
-    this._cd.detectChanges();
-    this.resolve.emit();
-  }
-
-  private dispatchError(error: string | Error) {
-    const message = typeof error === 'string'
-      ? new Error(error)
-      : error;
-
-    this.error.emit(message);
-  }
-
-  private overrideElementUrls() {
-    this.ngZone.runOutsideAngular(() =>
-      window.setTimeout(() => {
-        overrideElementUrls(this._elementRef.nativeElement, this.baseUrl);
-      })
-    );
   }
 
   /**
-   * Injects the domain name to dynamically created component
-   * To be used for UrlOverriderPipe
+   * Emits an error of the injector component
    */
-  private injectBaseUrlToComponent() {
-    this._ngComponentInjector = Injector.create({
-      providers: [
-        {
-          provide: REMOTE_BASE_URL,
-          deps: [],
-          useValue: this.baseUrl
-        },
-      ],
-      parent: this.injector
-    })
+   dispatchError(error: string | Error) {
+    const message = wrapError(error);
+    this.error.emit(message);
+  }
+
+  /**
+   * Renders a Container by its type
+   */
+  async render(resolvedConfiguration: ConfigurationObjectResolve) {
+    const {configuration, configurationModule} = resolvedConfiguration;
+
+    this.baseUrl = getBaseUrl(configuration.uri);
+    // getting a Renderer
+    this.rendererRef = this.injector.get(configurationModule.type);
+    // processing data of Renderer
+    this.rendererContext = await this.rendererRef.render(resolvedConfiguration, this);
   }
 }

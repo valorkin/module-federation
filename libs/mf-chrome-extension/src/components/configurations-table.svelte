@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { afterUpdate, createEventDispatcher } from 'svelte';
-  import { ConfigurationObject } from '@mf/core';
+  import { createEventDispatcher } from 'svelte';
+  import { ConfigurationObject, ConfigurationObjectPriorities } from '@mf/core';
 
   export let configurations;
 
@@ -16,6 +16,20 @@
   /**
    *
    */
+   function onAddConfigurationsByUri() {
+    dispatch('addByUri');
+  }
+
+  /**
+   *
+   */
+  function onCloneConfiguration(configuration: ConfigurationObject) {
+    dispatch('clone', configuration);
+  }
+
+  /**
+   *
+   */
   function onEditConfiguration(configuration: ConfigurationObject) {
     dispatch('edit', configuration);
   }
@@ -23,14 +37,8 @@
   /**
    *
    */
-  function onToggleActiveConfiguration(configuration: ConfigurationObject, active: boolean) {
-    const currentActive = !!active;
-
-    if (currentActive === configuration.active) {
-      return;
-    }
-
-    configuration.active = currentActive;
+  function onToggleActiveConfiguration(configuration: ConfigurationObject, priority: ConfigurationObjectPriorities) {
+    configuration.priority = priority;
     dispatch('toggleActive', configuration);
   }
 
@@ -39,6 +47,13 @@
    */
   function onRefreshPage() {
     dispatch('refresh');
+  }
+
+  /**
+   *
+   */
+   function onClosePage() {
+    dispatch('close');
   }
 
 </script>
@@ -53,7 +68,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each $configurations as { uri, name, active, hasError }, i}
+      {#each $configurations as { uri, name, priority }, i}
         <tr>
           <td>
             <div class="configuration-col">
@@ -76,27 +91,41 @@
             </div>
           </td>
           <td>
-            {#if hasError}
-              <span class="label label--error">
+            {#if priority === ConfigurationObjectPriorities.Error}
+              <span class="label label--error"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
                 Offline
               </span>
+            {:else if priority === ConfigurationObjectPriorities.Active}
+              <span class="label label--active"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Inactive)}>
+                Active
+              </span>
+            {:else if priority === ConfigurationObjectPriorities.Inactive}
+              <span class="label label--inactive"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
+                Inactive
+              </span>
             {:else}
-              {#if active}
-                <span class="label label--active"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], false)}>
-                  Active
-                </span>
-              {:else}
-                <span class="label label--inactive"
-                      on:click={() => onToggleActiveConfiguration($configurations[i], true)}>
-                  Inactive
-                </span>
-              {/if}
+              <span class="label label--inactive"
+                    on:click={() => onToggleActiveConfiguration($configurations[i], ConfigurationObjectPriorities.Active)}>
+                Initialized
+              </span>
             {/if}
           </td>
           <td>
+            <a class="configuration-clone"
+               on:click={() => onCloneConfiguration($configurations[i])}>
+              <span class="material-icons md-dark">
+                note_add
+              </span>
+              Clone
+            </a>
             <a class="configuration-edit"
-              on:click={() => onEditConfiguration($configurations[i])}>
+               on:click={() => onEditConfiguration($configurations[i])}>
+              <span class="material-icons md-dark">
+                edit
+              </span>
               Edit
             </a>
           </td>
@@ -116,12 +145,28 @@
     Add
   </button>
   <button type="button"
+          class="button button--blue"
+          on:click={onAddConfigurationsByUri}>
+    <span class="material-icons md-dark">
+      add_circle
+    </span>
+    Add by URI
+  </button>
+  <button type="button"
           class="button button--default"
           on:click={onRefreshPage}>
     <span class="material-icons md-dark">
       refresh
     </span>
     Refresh page
+  </button>
+  <button type="button"
+          class="button button--default close-button"
+          on:click={onClosePage}>
+    <span class="material-icons md-dark">
+      clear
+    </span>
+    Close
   </button>
 </div>
 
@@ -131,7 +176,7 @@
     flex-direction: column;
 
     &__name {
-      max-width: 500px;
+      max-width: 450px;
       //font-size: .875rem;
       line-height: 1.25rem;
       font-weight: 500;
@@ -139,7 +184,7 @@
     }
 
     &__uri {
-      max-width: 500px;
+      max-width: 450px;
       //font-size: .875rem;
       line-height: 1.25rem;
       color: rgba(107, 114, 128, 1);
@@ -147,9 +192,9 @@
   }
 
  .label {
-    &--active, &--inactive {
+    //&--active, &--inactive {
       cursor: pointer;
-    }
+    //}
   }
 
   .table {
@@ -164,10 +209,25 @@
     overflow-y: scroll;
   }
 
-  .configuration-edit {
-    font-weight: 500;
-    text-align: right;
-    cursor: pointer;
+  .configuration {
+    &-edit, &-clone {
+      font-weight: 500;
+      text-align: right;
+      cursor: pointer;
+
+      .material-icons {
+        font-size: inherit;
+      }
+    }
+
+    &-clone {
+      margin-right: 10px;
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    right: 10px;
   }
 
 </style>

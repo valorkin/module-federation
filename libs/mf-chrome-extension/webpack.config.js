@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     popup: './src/main.ts',
     content: './src/content.ts',
+    background: './src/background.ts',
     styles: [
       './src/assets/styles/index.scss'
     ]
@@ -78,6 +79,9 @@ module.exports = {
         },
         {
           from: path.resolve(__dirname, 'manifest.json')
+        },
+        {
+          from: path.resolve(__dirname, 'package.json')
         },
         {
           from: path.resolve(__dirname, 'src/assets/images'),

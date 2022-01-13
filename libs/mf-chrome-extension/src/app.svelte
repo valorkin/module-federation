@@ -8,6 +8,7 @@
   import { configurationSelected } from './stores/configuration-selected';
   import ConfigurationsTable from './components/configurations-table.svelte';
   import ConfigurationModal from './components/configuration-modal.svelte';
+  import ConfigurationsByUriForm from './components/configurations-by-uri-form.svelte'
 
   onMount(() => {
     sendMessage(MFChromeExtensionActions.PopupOpened, null);
@@ -22,7 +23,7 @@
       editable: false
     });
 
-    openConfigurationDialog();
+    getModal('configurationModal')?.open();
   }
 
   /**
@@ -36,7 +37,7 @@
       editable: true
     });
 
-    openConfigurationDialog();
+    getModal('configurationModal')?.open();
   }
 
   /**
@@ -47,7 +48,7 @@
 
     const { selected, editable } = $configurationSelected;
 
-    closeConfigurationDialog();
+    getModal('configurationModal')?.close();
 
     if (editable) {
       const editedConfiguration = {
@@ -65,50 +66,57 @@
   /**
    *
    */
-   function onToggleActiveConfiguration(e: CustomEvent) {
-    const configuration = e.detail as ConfigurationObject;
-    sendMessage(MFChromeExtensionActions.UpdateConfigurationObject, configuration);
+  function onSubmitConfigurationsByUriDialog() {
+   getModal('configurationsByUriModal')?.open();
   }
 
   /**
    *
    */
-   function onRefreshPage() {
+  function onSubmitConfigurationsByUri(e: CustomEvent) {
+    const uri = e.detail as ConfigurationObject;
+
+    getModal('configurationsByUriModal')?.close();
+    sendMessage(MFChromeExtensionActions.AddConfigurationObjectsByUri, uri);
+  }
+
+  /**
+   *
+   */
+   function onCloneConfiguration(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+    sendMessage(MFChromeExtensionActions.CloneConfigurationObject, configuration);
+  }
+
+  /**
+   *
+   */
+  function onToggleActiveConfiguration(e: CustomEvent) {
+    const configuration = e.detail as ConfigurationObject;
+    sendMessage(MFChromeExtensionActions.SwitchConfigurationObject, configuration);
+  }
+
+  /**
+   *
+   */
+  function onRefreshPage() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.reload(tabs[0].id);
     });
   }
 
-
   /**
    *
    */
-  function openConfigurationDialog() {
-    const modal = getModal('configurationModal');
-    modal.open();
-  }
-
-  /**
-   *
-   */
-  function closeConfigurationDialog() {
-    const modal = getModal('configurationModal');
-    modal.close();
+  function onClosePopup() {
+    sendMessage(MFChromeExtensionActions.ClosePopup, null);
   }
 
   /**
    * Sends the json object to the content script
    */
   function sendMessage(action: MFChromeExtensionActions, payload: any) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(
-        tabs[0].id,
-        {
-          action,
-          payload
-        }
-      );
-    });
+    window.parent.postMessage({ action, payload }, '*');
   }
 
 </script>
@@ -118,11 +126,18 @@
     <ConfigurationModal on:submit={onSubmitConfiguration}/>
   </Modal>
 
+  <Modal id="configurationsByUriModal">
+    <ConfigurationsByUriForm on:submit={onSubmitConfigurationsByUri} />
+  </Modal>
+
   <ConfigurationsTable {configurations}
                        on:add={onAddConfigurationDialog}
+                       on:addByUri={onSubmitConfigurationsByUriDialog}
+                       on:clone={onCloneConfiguration}
                        on:edit={onEditConfigurationDialog}
                        on:toggleActive={onToggleActiveConfiguration}
                        on:refresh={onRefreshPage}
+                       on:close={onClosePopup}
   />
 </main>
 

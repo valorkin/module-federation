@@ -1,4 +1,5 @@
-import { ConfigurationObject, RemoteContainerConfiguration, fetchByUri } from "@mf/core";
+import { ConfigurationObject, RemoteContainerConfiguration, fetchByUri } from '@mf/core';
+import { testDefinitionUriForm } from './definition-uri-form-validator';
 
 /**
  *
@@ -32,30 +33,12 @@ export async function testForm(json: ConfigurationObject): Promise<string> {
   }
 
   const { definitionUri } = json;
-  const isDefinitionUriValid = typeof definitionUri === 'string' && definitionUri.trim() !== '';
 
-  if (isDefinitionUriValid) {
-    let containers: RemoteContainerConfiguration[];
-
+  if (definitionUri) {
     try {
-      containers = await fetchByUri(definitionUri)
-        .then((response) => {
-          return response.json();
-        });
+      await testDefinitionUriForm(definitionUri);
     } catch (e) {
-      return Promise.reject(
-        new Error(
-          `TestValidationError: Container Definitions cannot be loaded`
-        )
-      );
-    }
-
-    if (!Array.isArray(containers) || containers.length < 1) {
-      return Promise.reject(
-        new Error(
-          `TestValidationError: Container Definitions cannot be resolved`
-        )
-      );
+      return Promise.reject(e);
     }
   }
 

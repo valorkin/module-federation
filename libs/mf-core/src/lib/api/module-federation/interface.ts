@@ -1,12 +1,19 @@
+
+export enum ConfigurationObjectPriorities {
+  Error,
+  Initialized,
+  Inactive,
+  Active
+}
+
 export interface ConfigurationObject {
-  uri: string, // URI of remote entry.js
+  uri: string; // URI of remote entry.js
   uuid?: string;
-  name?: string,
-  active?: boolean,
-  hasError?: boolean;
-  status?: Promise<any>,
-  definitionUri?: string,
-  version?: string
+  name?: string;
+  priority?: ConfigurationObjectPriorities;
+  status?: Promise<any>;
+  definitionUri?: string;
+  version?: string;
 }
 
 export interface ConfigurationObjectResolve {
@@ -25,6 +32,12 @@ export interface RemoteContainerConfiguration {
   modules?: RemoteContainerConfigurationModule[]
 }
 
+export enum ContainerTypes {
+  Angular = 'angular-ivy-component',
+  Element = 'custom-element',
+  Iframe = 'iframe'
+}
+
 export type RemoteContainerConfigurationModule = NgRemoteContainerConfigurationModule
   | IframeRemoteContainerConfigurationModule
   | CustomElementRemoteContainerConfigurationModule;
@@ -35,7 +48,7 @@ export interface NgRemoteContainerConfigurationModule {
   /** Component name we are planning to inject */
   component?: string;
   /** Type of a plugin module */
-  type: 'angular-ivy-component';
+  type: ContainerTypes.Angular;
   /** Exposed Angular Module */
   exposedModule: string;
   /** most likely this property will be removed, but as for this this is a way to register route for a component*/
@@ -46,7 +59,7 @@ export interface IframeRemoteContainerConfigurationModule {
   /** Uniq name of module in plugin */
   name: string;
   /** Type of a plugin module */
-  type: 'iframe';
+  type: ContainerTypes.Iframe;
   /** link to html relative to URI, where uri+html should give a valid URL */
   html: string
 }
@@ -55,7 +68,7 @@ export interface CustomElementRemoteContainerConfigurationModule {
   /** name */
   name: string;
   /** Type of a plugin module */
-  type: 'custom-element';
+  type: ContainerTypes.Element;
   /** Exposed Angular Module */
   exposedModule: string;
   /** Component name we are planning to inject */
